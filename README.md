@@ -1,1 +1,3 @@
 # SproutFund
+
+SproutFund is a web application designed to help beginners, (especially students from universities like FIU) learn how to invest their money wisely. The app allows users to input how much they want to invest, their desired profit timeline, and their risk tolerance, and then generates a personalized investment strategy based on those inputs. It also features a visual portfolio breakdown, market timing tips, and a student-specific mode aimed at helping people make smart decisions with money like FAFSA refunds instead of spending it impulsively. The goal is to make investing feel accessible and understandable for people who have never done it before.
