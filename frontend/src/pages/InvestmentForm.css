@@ -1,0 +1,28 @@
+.form-page {
+  min-height: 100vh;
+  background: var(--background);
+  padding: 24px 16px 48px;
+}
+
+.form-page-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1023px;
+  margin: 0 auto 48px;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+}
+
+.form-page-logo {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.form-page-logo span {
+  color: var(--accent);
+}

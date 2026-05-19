@@ -1,0 +1,61 @@
+@font-face {
+  font-family: "Maison Neue Extended";
+  src: url("/fonts/MaisonNeueExtended-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Capsule Sans Text Mono";
+  src: url("/fonts/CapsuleSansTextMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root {
+  --background: #ffffff;
+  --surface: #f4f4f5;
+  --text-primary: #110e08;
+  --text-muted: #bfbfbf;
+  --border: #35322d;
+  --accent: #ccff00;
+
+  --shadow-raised: rgb(128, 128, 128) 0px 0px 5px 0px;
+  --shadow-floating: 0 1px 12px rgba(48, 51, 51, 0.09);
+  --shadow-subtle: 0 1px 0 rgba(0, 0, 0, 0.06);
+
+  --radius: 10px;
+  --radius-sm: 4px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+
+  --font-heading: "Maison Neue Extended", system-ui, sans-serif;
+  --font-body: "Capsule Sans Text Mono", ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--background);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
