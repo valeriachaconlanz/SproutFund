@@ -5,14 +5,13 @@ import com.sproutfund.model.InvestmentResponse;
 import org.springframework.stereotype.Service;
 
 //Service layer responsible for building and generating personalized investment recommendation
-//based on user input for budget, timeline, and risk tolerance
+//based on user input for budget, and timeline
 @Service
 public class InvestmentService {
 
-    //Main method that builds recommendation response (Bsse recommendation + risk tolerance)
+    //Main method that builds recommendation response
     public InvestmentResponse buildRecommendation(InvestmentRequest request) {
         String recommendation = generateRecommendation(request.getBudget(), request.getTimeline());
-        recommendation = adjustForRisk(recommendation, request.getRiskTolerance());
         return new InvestmentResponse(request.getBudget(), request.getTimeline(), recommendation);
     }
 
@@ -44,21 +43,6 @@ public class InvestmentService {
                 default            -> "Growth-oriented equities and index funds are ideal for your long-term goals.";
             };
             default -> "Please consult a financial advisor to build a plan tailored to your goals.";
-        };
-    }
-
-    //Adjusts base recommnendation based on user's risk tolerance
-    //Risk Tolerance: low, medium, high
-    private String adjustForRisk(String recommendation, String riskTolerance) {
-        //Returns recommendation alone if no risk tolerance was applied
-        if (riskTolerance == null) return recommendation;
-
-        //Selects adjustment based on risk tolerance
-        return switch(riskTolerance.toLowerCase()) {
-            case "low" -> recommendation + " | Risk Adjustment: With a low-risk profile, your portfolio is adjusted toward stable assets like bonds, Treasury bills, and high-yield savings accounts to minimize volatility and protect your principal.";
-            case "medium" -> recommendation + " | Risk Adjustment: With a moderate-risk profile, your portfolio is balanced between index funds, ETFs, and bonds to provide steady growth while managing volatility.";
-            case "high" -> recommendation + " | Risk Adjustment: With a high-risk profile, your portfolio is weighted more heavily toward equities, growth ETFs, and emerging markets to maximize long-term returns despite higher volatility.";
-            default -> recommendation + " | Risk Adjustment: A balanced allocation has been applied based on standard risk assumptions.";
         };
     }
 }
