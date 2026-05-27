@@ -28,6 +28,31 @@ const TIMELINE_OPTIONS = [
     tradeoff: 'Higher risk, higher potential return. Time smooths out volatility.',
   },
 ]
+// Risk selection
+
+const RISK_OPTIONS = [
+  {
+    // Low Risk
+
+    value: 'low',
+    label: 'Low Risk',
+    description: 'Safer investments with lower potential returns. Best for protecting your money.',
+  },
+  {
+    // Medium Risk
+
+    value: 'medium',    
+    label: 'Medium Risk',
+    description: 'Balanced approach with moderate growth and moderate ups and downs.',
+  },
+  {
+    // High Risk
+
+    value: 'high',
+    label: 'High Risk',
+    description: 'Higher potential returns, but also higher chance of losses and volatility.',
+  },
+]
 
 function getBudgetTier(value) {
   const n = Number(value)
@@ -41,6 +66,7 @@ function BudgetInput() {
   const navigate = useNavigate()
   const [budget, setBudget] = useState('')
   const [timeline, setTimeline] = useState('')
+  const [riskLevel, setRiskLevel] = useState('')
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -56,6 +82,9 @@ function BudgetInput() {
     if (!timeline) {
       newErrors.timeline = 'Please select a timeline before submitting.'
     }
+    if (!riskLevel) {
+      newErrors.riskLevel = 'Please select a risk level before submitting.'
+    }
     return newErrors
   }
 
@@ -70,7 +99,7 @@ function BudgetInput() {
     setErrors({})
     setIsSubmitting(true)
 
-    const payload = { budget: Number(budget), timeline }
+    const payload = { budget: Number(budget), timeline, riskLevel }
 
     try {
       const response = await fetch('http://localhost:8080/api/investment', {
@@ -249,6 +278,39 @@ function BudgetInput() {
 
         <div className="section-divider" />
 
+        {/* Risk tolerance selection  */}
+        <section className="form-step">
+          <div className="step-header">
+            <span className="step-number">03</span>
+            <div>
+              <h2 className="step-title">How much risk are you comfortable with?</h2>
+              <p className="step-desc">Choose the level of risk that feels right for your money and goals.</p>
+            </div>
+          </div>
+
+          <div className="timeline-cards">
+            {RISK_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                className={`timeline-card ${riskLevel === opt.value ? 'selected' : ''}`}
+                onClick={() => setRiskLevel(opt.value)}
+              >
+                <div className="timeline-card-top">
+                  <div>
+                    <span className="timeline-label">{opt.label}</span>
+                  </div>
+                  <span className={`timeline-dot ${riskLevel === opt.value ? 'dot-active' : ''}`} />
+                </div>
+                <p className="timeline-best-for">{opt.description}</p>
+              </button>
+            ))}
+          </div>
+          {errors.riskLevel && <p className="error-message">{errors.riskLevel}</p>}
+        </section>
+
+        <div className="section-divider" />
+
         {/* What you get */}
         <section className="outcomes-section">
           <h2 className="section-heading">What you'll receive</h2>
@@ -284,6 +346,7 @@ function BudgetInput() {
       </form>
     </div>
   )
+
 }
 
 export default BudgetInput
