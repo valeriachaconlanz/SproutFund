@@ -4,17 +4,25 @@ import com.sproutfund.model.InvestmentRequest;
 import com.sproutfund.model.InvestmentResponse;
 import org.springframework.stereotype.Service;
 
+//Service layer responsible for building and generating personalized investment recommendation
+//based on user input for budget, and timeline
 @Service
 public class InvestmentService {
 
+    //Main method that builds recommendation response
     public InvestmentResponse buildRecommendation(InvestmentRequest request) {
         String recommendation = generateRecommendation(request.getBudget(), request.getTimeline());
         return new InvestmentResponse(request.getBudget(), request.getTimeline(), recommendation);
     }
 
+    //Generates a base recommendation using:
+    //Budget Tier: starter, growing, established
+    //Timeline: short, medium, long
     private String generateRecommendation(double budget, String timeline) {
+        //Determines budget tier based on user budget
         String tier = budget < 1000 ? "starter" : budget < 10000 ? "growing" : "established";
 
+        //Selects recommendation based on timeline and tier
         return switch (timeline.toLowerCase()) {
             case "short" -> switch (tier) {
                 case "starter"     -> "With your budget, a high-yield savings account or short-term CD is your safest move. You'll earn 4–5% APY while keeping your money accessible within the year.";
