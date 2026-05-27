@@ -28,6 +28,31 @@ const TIMELINE_OPTIONS = [
     tradeoff: 'Higher risk, higher potential return. Time smooths out volatility.',
   },
 ]
+// Risk selection
+
+const RISK_OPTIONS = [
+  {
+    // Low Risk
+
+    value: 'low',
+    label: 'Low Risk',
+    description: 'Safer investments with lower potential returns. Best for protecting your money.',
+  },
+  {
+    // Medium Risk
+
+    value: 'medium',    
+    label: 'Medium Risk',
+    description: 'Balanced approach with moderate growth and moderate ups and downs.',
+  },
+  {
+    // High Risk
+
+    value: 'high',
+    label: 'High Risk',
+    description: 'Higher potential returns, but also higher chance of losses and volatility',
+  },
+]
 
 function getBudgetTier(value) {
   const n = Number(value)
@@ -284,6 +309,7 @@ function BudgetInput() {
       </form>
     </div>
   )
+
 }
 
 export default BudgetInput
