@@ -449,6 +449,68 @@
   line-height: 1.5;
 }
 
+/* Risk options */
+.risk-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.risk-option {
+  min-height: 136px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  text-align: left;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  cursor: pointer;
+  transition: border-color 150ms ease-out, background 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.risk-option:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-raised);
+}
+
+.risk-option.selected {
+  border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: var(--shadow-raised);
+}
+
+.risk-marker {
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.risk-marker.risk-low { background: #27ae60; }
+.risk-marker.risk-medium { background: #e67e22; }
+.risk-marker.risk-high { background: #c0392b; }
+
+.risk-label {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.risk-description {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #4d4a46;
+  line-height: 1.5;
+}
+
 /* ── Outcomes section ── */
 .outcomes-section {
   padding: 40px 0;
@@ -535,9 +597,46 @@
   margin-bottom: 4px;
 }
 
+.error-toast {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 50;
+  width: min(360px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 18px;
+  background: var(--text-primary);
+  border: 1px solid rgba(192, 57, 43, 0.45);
+  border-left: 4px solid #c0392b;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-raised);
+  animation: toastIn 180ms ease-out both;
+}
+
+.error-toast-title {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.error-toast-message {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--background);
+  line-height: 1.5;
+}
+
 /* ── Animations ── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
@@ -555,5 +654,11 @@
   }
   .guide-note {
     grid-column: 1 / -1;
+  }
+  .risk-options {
+    grid-template-columns: 1fr;
+  }
+  .risk-option {
+    min-height: auto;
   }
 }
