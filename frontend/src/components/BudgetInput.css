@@ -36,7 +36,7 @@
 .hero-sub {
   font-family: var(--font-body);
   font-size: 16px;
-  color: #4d4a46;
+  color: var(--text-secondary);
   line-height: 1.6;
   max-width: 520px;
   margin-bottom: 36px;
@@ -123,7 +123,7 @@
 .why-desc {
   font-family: var(--font-body);
   font-size: 13px;
-  color: #4d4a46;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -411,7 +411,7 @@
 .timeline-best-for {
   font-family: var(--font-body);
   font-size: 13px;
-  color: #4d4a46;
+  color: var(--text-secondary);
   line-height: 1.5;
   margin-bottom: 12px;
 }
@@ -556,7 +556,7 @@
 .outcome-desc {
   font-family: var(--font-body);
   font-size: 13px;
-  color: #4d4a46;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -565,7 +565,7 @@
   width: 100%;
   padding: 16px;
   background: var(--accent);
-  color: var(--text-primary);
+  color: #110e08;
   font-family: var(--font-heading);
   font-size: 16px;
   font-weight: 700;

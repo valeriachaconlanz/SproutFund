@@ -26,6 +26,28 @@
   color: var(--accent);
 }
 
+.results-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.results-logout {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.results-logout:hover {
+  border-color: var(--accent);
+}
+
 .results-card {
   max-width: 540px;
   width: 100%;
@@ -130,7 +152,7 @@
   width: 100%;
   padding: 14px 16px;
   background: var(--accent);
-  color: var(--text-primary);
+  color: #110e08;
   font-family: var(--font-heading);
   font-size: 15px;
   font-weight: 700;

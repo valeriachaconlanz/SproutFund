@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import './BudgetInput.css'
 
 const TIMELINE_OPTIONS = [
@@ -64,6 +65,7 @@ function getBudgetTier(value) {
 
 function BudgetInput() {
   const navigate = useNavigate()
+  const { token } = useAuth()
   const fieldRefs = useRef({})
   const toastTimeoutRef = useRef(null)
   const [budget, setBudget] = useState('')
@@ -128,7 +130,10 @@ function BudgetInput() {
     try {
       const response = await fetch('http://localhost:8080/api/investment', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
         body: JSON.stringify(payload),
       })
       if (!response.ok) {

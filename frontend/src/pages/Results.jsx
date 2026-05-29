@@ -1,4 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import ThemeToggle from '../components/ThemeToggle'
 import './Results.css'
 
 const TIMELINE_LABELS = {
@@ -13,6 +15,26 @@ const RISK_LABELS = {
   high: 'High',
 }
 
+function ResultsNav() {
+  const { logout } = useAuth()
+  const navigate = useNavigate()
+
+  function handleLogout() {
+    logout()
+    navigate('/auth')
+  }
+
+  return (
+    <nav className="results-nav">
+      <span className="results-logo">Sprout<span>Fund</span></span>
+      <div className="results-nav-right">
+        <ThemeToggle />
+        <button className="results-logout" onClick={handleLogout}>Sign out</button>
+      </div>
+    </nav>
+  )
+}
+
 function Results() {
   const { state } = useLocation()
   const navigate = useNavigate()
@@ -20,9 +42,7 @@ function Results() {
   if (!state || !state.budget) {
     return (
       <div className="results-page">
-        <nav className="results-nav">
-          <span className="results-logo">Sprout<span>Fund</span></span>
-        </nav>
+        <ResultsNav />
         <div className="results-card">
           <h1 className="results-title">No data found.</h1>
           <p className="results-subtitle">Please fill out the investment form first.</p>
@@ -39,9 +59,7 @@ function Results() {
 
   return (
     <div className="results-page">
-      <nav className="results-nav">
-        <span className="results-logo">Sprout<span>Fund</span></span>
-      </nav>
+      <ResultsNav />
 
       <div className="results-card">
         <h1 className="results-title">Your Investment Plan</h1>

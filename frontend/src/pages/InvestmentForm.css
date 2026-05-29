@@ -26,3 +26,30 @@
 .form-page-logo span {
   color: var(--accent);
 }
+
+.form-page-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.form-page-user {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.form-page-logout {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.form-page-logout:hover {
+  border-color: var(--accent);
+}
