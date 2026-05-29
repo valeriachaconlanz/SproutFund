@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './BudgetInput.css'
 
@@ -64,13 +64,34 @@ function getBudgetTier(value) {
 
 function BudgetInput() {
   const navigate = useNavigate()
+  const fieldRefs = useRef({})
+  const toastTimeoutRef = useRef(null)
   const [budget, setBudget] = useState('')
   const [timeline, setTimeline] = useState('')
-  const [riskLevel, setRiskLevel] = useState('')
+  const [riskTolerance, setRiskTolerance] = useState('')
   const [errors, setErrors] = useState({})
+  const [toastMessage, setToastMessage] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const tier = getBudgetTier(budget)
+
+  function showErrorToast(message) {
+    setToastMessage(message)
+    window.clearTimeout(toastTimeoutRef.current)
+    toastTimeoutRef.current = window.setTimeout(() => setToastMessage(''), 4500)
+  }
+
+  function scrollToFirstError(validationErrors) {
+    const firstErrorKey = ['budget', 'timeline', 'riskTolerance'].find((key) => validationErrors[key])
+    if (!firstErrorKey) return
+
+    requestAnimationFrame(() => {
+      fieldRefs.current[firstErrorKey]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      })
+    })
+  }
 
   function validate() {
     const newErrors = {}
@@ -82,8 +103,8 @@ function BudgetInput() {
     if (!timeline) {
       newErrors.timeline = 'Please select a timeline before submitting.'
     }
-    if (!riskLevel) {
-      newErrors.riskLevel = 'Please select a risk level before submitting.'
+    if (!riskTolerance) {
+      newErrors.riskTolerance = 'Please select a risk tolerance before submitting.'
     }
     return newErrors
   }
@@ -93,13 +114,16 @@ function BudgetInput() {
     const validationErrors = validate()
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
+      scrollToFirstError(validationErrors)
+      showErrorToast(Object.values(validationErrors)[0])
       return
     }
 
     setErrors({})
+    setToastMessage('')
     setIsSubmitting(true)
 
-    const payload = { budget: Number(budget), timeline, riskLevel }
+    const payload = { budget: Number(budget), timeline, riskTolerance }
 
     try {
       const response = await fetch('http://localhost:8080/api/investment', {
@@ -107,10 +131,13 @@ function BudgetInput() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
+      if (!response.ok) {
+        throw new Error('Investment recommendation request failed.')
+      }
       const data = await response.json()
       navigate('/results', { state: { ...payload, recommendation: data.recommendation } })
     } catch {
-      navigate('/results', { state: payload })
+      showErrorToast('There was an error generating your plan. Please try again later.')
     } finally {
       setIsSubmitting(false)
     }
@@ -180,7 +207,7 @@ function BudgetInput() {
       <form className="investment-form" onSubmit={handleSubmit} noValidate>
 
         {/* Step 1 */}
-        <section className="form-step">
+        <section className="form-step" ref={(node) => { fieldRefs.current.budget = node }}>
           <div className="step-header">
             <span className="step-number">01</span>
             <div>
@@ -239,7 +266,7 @@ function BudgetInput() {
         <div className="section-divider" />
 
         {/* Step 2 */}
-        <section className="form-step">
+        <section className="form-step" ref={(node) => { fieldRefs.current.timeline = node }}>
           <div className="step-header">
             <span className="step-number">02</span>
             <div>
@@ -279,7 +306,7 @@ function BudgetInput() {
         <div className="section-divider" />
 
         {/* Risk tolerance selection  */}
-        <section className="form-step">
+        <section className="form-step" ref={(node) => { fieldRefs.current.riskTolerance = node }}>
           <div className="step-header">
             <span className="step-number">03</span>
             <div>
@@ -293,20 +320,20 @@ function BudgetInput() {
               <button
                 key={opt.value}
                 type="button"
-                className={`timeline-card ${riskLevel === opt.value ? 'selected' : ''}`}
-                onClick={() => setRiskLevel(opt.value)}
+                className={`timeline-card ${riskTolerance === opt.value ? 'selected' : ''}`}
+                onClick={() => setRiskTolerance(opt.value)}
               >
                 <div className="timeline-card-top">
                   <div>
                     <span className="timeline-label">{opt.label}</span>
                   </div>
-                  <span className={`timeline-dot ${riskLevel === opt.value ? 'dot-active' : ''}`} />
+                  <span className={`timeline-dot ${riskTolerance === opt.value ? 'dot-active' : ''}`} />
                 </div>
                 <p className="timeline-best-for">{opt.description}</p>
               </button>
             ))}
           </div>
-          {errors.riskLevel && <p className="error-message">{errors.riskLevel}</p>}
+          {errors.riskTolerance && <p className="error-message">{errors.riskTolerance}</p>}
         </section>
 
         <div className="section-divider" />
@@ -344,6 +371,13 @@ function BudgetInput() {
         </button>
         <p className="submit-footnote">No account required · Free to use · Results in seconds</p>
       </form>
+
+      {toastMessage && (
+        <div className="error-toast" role="alert" aria-live="assertive">
+          <span className="error-toast-title">Needs attention</span>
+          <span className="error-toast-message">{toastMessage}</span>
+        </div>
+      )}
     </div>
   )
 

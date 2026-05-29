@@ -34,7 +34,8 @@ function Results() {
     )
   }
 
-  const { budget, timeline, riskLevel, recommendation } = state
+  const { budget, timeline, riskTolerance, riskLevel, recommendation } = state
+  const selectedRisk = riskTolerance || riskLevel
 
   return (
     <div className="results-page">
@@ -59,7 +60,7 @@ function Results() {
           </div>
           <div className="summary-item">
             <span className="summary-label">Risk Level</span>
-            <span className={`summary-value risk-${riskLevel}`}>{RISK_LABELS[riskLevel]}</span>
+            <span className={`summary-value risk-${selectedRisk}`}>{RISK_LABELS[selectedRisk]}</span>
           </div>
         </div>
 
