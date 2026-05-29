@@ -1,14 +1,38 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
+import { ThemeProvider } from './context/ThemeContext'
+import ProtectedRoute from './components/ProtectedRoute'
 import InvestmentForm from './pages/InvestmentForm'
 import Results from './pages/Results'
+import Auth from './pages/Auth'
 import './App.css'
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<InvestmentForm />} />
-      <Route path="/results" element={<Results />} />
-    </Routes>
+    <ThemeProvider>
+    <AuthProvider>
+      <Routes>
+        <Route path="/auth" element={<Auth />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <InvestmentForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/results"
+          element={
+            <ProtectedRoute>
+              <Results />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </AuthProvider>
+    </ThemeProvider>
   )
 }
 
