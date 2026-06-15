@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import BudgetInput from '../components/BudgetInput'
 import ThemeToggle from '../components/ThemeToggle'
@@ -19,6 +19,9 @@ function InvestmentForm() {
         <span className="form-page-logo">Sprout<span>Fund</span></span>
         <div className="form-page-nav-right">
           {user && <span className="form-page-user">Hi, {user.name.split(' ')[0]}</span>}
+          <Link className="form-page-glossary-link" to="/glossary">
+            Glossary
+          </Link>
           <ThemeToggle />
           <button className="form-page-logout" onClick={handleLogout}>Sign out</button>
         </div>

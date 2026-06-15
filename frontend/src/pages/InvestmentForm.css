@@ -38,6 +38,23 @@
   color: var(--text-muted);
 }
 
+.form-page-glossary-link {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.form-page-glossary-link:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
 .form-page-logout {
   background: var(--surface);
   border: 1px solid var(--border);

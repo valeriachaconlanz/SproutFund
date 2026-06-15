@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import InvestmentForm from './pages/InvestmentForm'
 import Results from './pages/Results'
 import Auth from './pages/Auth'
+import Glossary from './pages/Glossary'
 import './App.css'
 
 function App() {
@@ -27,6 +28,12 @@ function App() {
             <ProtectedRoute>
               <Results />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/glossary"
+          element={
+            <Glossary />
           }
         />
         <Route path="*" element={<Navigate to="/" replace />} />

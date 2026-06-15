@@ -26,6 +26,18 @@
   color: var(--accent);
 }
 
+.auth-glossary-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 600;
+  transition: color 0.15s ease;
+}
+
+.auth-glossary-link:hover {
+  color: var(--text-primary);
+}
+
 /* ── Layout ── */
 
 .auth-container {

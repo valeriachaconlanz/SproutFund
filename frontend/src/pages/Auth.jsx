@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import ThemeToggle from '../components/ThemeToggle'
 import './Auth.css'
@@ -84,6 +84,9 @@ function Auth() {
     <div className="auth-page">
       <nav className="auth-nav">
         <span className="auth-logo">Sprout<span>Fund</span></span>
+        <Link className="auth-glossary-link" to="/glossary">
+          Glossary
+        </Link>
         <ThemeToggle />
       </nav>
 
