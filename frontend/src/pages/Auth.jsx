@@ -197,6 +197,15 @@ function Auth() {
               <li>Free to use, no credit card required</li>
             </ul>
           </div>
+          <div className="auth-tips-section">
+            <button
+              type="button"
+              className="auth-tips-btn"
+              onClick={() => navigate('/tips')}
+            >
+              Browse Market Tips
+            </button>
+          </div>
         </div>
       </div>
     </div>

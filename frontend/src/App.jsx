@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import InvestmentForm from './pages/InvestmentForm'
 import Results from './pages/Results'
 import Auth from './pages/Auth'
+import MarketTips from './pages/MarketTips'
 import './App.css'
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
     <AuthProvider>
       <Routes>
         <Route path="/auth" element={<Auth />} />
+        <Route path="/tips" element={<MarketTips />} />
         <Route
           path="/"
           element={

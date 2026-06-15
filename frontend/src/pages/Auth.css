@@ -229,6 +229,34 @@
   color: var(--accent);
 }
 
+/* ── Tips link (temporary) ── */
+
+.auth-tips-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.auth-tips-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  border-radius: var(--radius);
+  padding: 10px 16px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.auth-tips-btn:hover {
+  background: var(--background);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 /* ── Dark mode overrides ── */
 
 html[data-theme="dark"] .auth-server-error {
