@@ -1,4 +1,7 @@
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import ThemeToggle from '../components/ThemeToggle'
+import marketTipsHeader from '../assets/market-tips-header.jpg'
 import './MarketTips.css'
 
 const topics = ['all', 'getting started', 'risk', 'timing', 'goals', 'fees', 'emotions']
@@ -239,6 +242,7 @@ function TipIcon({ type }) {
 }
 
 function MarketTips() {
+  const navigate = useNavigate()
   const [selectedTopic, setSelectedTopic] = useState('all')
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('recommended')
@@ -285,6 +289,19 @@ function MarketTips() {
 
   return (
     <main className="tips-page">
+      <nav className="tips-nav">
+        <span className="tips-logo">Sprout<span>Fund</span></span>
+        <div className="tips-nav-actions">
+          <button
+            className="tips-back-btn"
+            onClick={() => navigate('/auth')}
+            type="button"
+          >
+            ← Back to Authorization
+          </button>
+          <ThemeToggle />
+        </div>
+      </nav>
 
       <section className="tips-header">
         <p className="tips-kicker">Market Tips</p>
@@ -294,7 +311,7 @@ function MarketTips() {
         </p>
         <img
           className="tips-header-image"
-          src="https://images.pexels.com/photos/12944726/pexels-photo-12944726.jpeg?auto=compress&cs=tinysrgb&w=1200"
+          src={marketTipsHeader}
           alt="Two people reviewing financial charts and cash at a desk"
         />
       </section>
