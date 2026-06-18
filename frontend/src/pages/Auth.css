@@ -2,16 +2,7 @@
   min-height: 100vh;
   background: var(--background);
   padding: 24px 16px 48px;
-}
-
-.auth-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 1023px;
-  margin: 0 auto 48px;
-  padding: 0 8px 16px;
-  border-bottom: 1px solid var(--border);
+  padding-top: 110px;
 }
 
 .auth-logo {

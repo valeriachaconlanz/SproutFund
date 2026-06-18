@@ -7,35 +7,46 @@ import Results from './pages/Results'
 import Auth from './pages/Auth'
 import MarketTips from './pages/MarketTips'
 import './App.css'
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+
 
 function App() {
   return (
     <ThemeProvider>
-    <AuthProvider>
-      <Routes>
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/tips" element={<MarketTips />} />
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <InvestmentForm />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/results"
-          element={
-            <ProtectedRoute>
-              <Results />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </AuthProvider>
+      <AuthProvider>
+        <Navbar />
+
+        <Routes>
+          <Route path="/" element={<Home />} />
+
+          <Route path="/auth" element={<Auth />} />
+
+          <Route path="/tips" element={<MarketTips />} />
+
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <InvestmentForm />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/results"
+            element={
+              <ProtectedRoute>
+                <Results />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
     </ThemeProvider>
-  )
+  );
 }
 
-export default App
+export default App;

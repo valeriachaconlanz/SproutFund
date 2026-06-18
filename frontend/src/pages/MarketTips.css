@@ -11,7 +11,8 @@
     var(--tips-background);
   background-size: 22px 22px, 42px 42px, auto;
   color: var(--text-primary);
-  padding: 24px 16px 56px;
+  padding: 110px 16px 56px;
+  padding-top: 110px;
 }
 
 html[data-theme="dark"] .tips-page {
@@ -19,16 +20,6 @@ html[data-theme="dark"] .tips-page {
   --tips-background: var(--background);
   --tips-texture-dot: rgba(0, 0, 0, 0.36);
   --tips-texture-line: rgba(0, 0, 0, 0.24);
-}
-
-.tips-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 1023px;
-  margin: 0 auto 48px;
-  padding: 0 8px 16px;
-  border-bottom: 1px solid var(--border);
 }
 
 .tips-logo {

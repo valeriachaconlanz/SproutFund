@@ -288,19 +288,6 @@ function MarketTips() {
 
   return (
     <main className="tips-page">
-      <nav className="tips-nav">
-        <span className="tips-logo">Sprout<span>Fund</span></span>
-        <div className="tips-nav-actions">
-          <button
-            className="tips-back-btn"
-            onClick={() => navigate('/auth')}
-            type="button"
-          >
-            ← Back to Authorization
-          </button>
-          <ThemeToggle />
-        </div>
-      </nav>
 
       <section className="tips-header">
         <p className="tips-kicker">Market Tips</p>

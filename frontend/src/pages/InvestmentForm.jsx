@@ -15,14 +15,7 @@ function InvestmentForm() {
 
   return (
     <div className="form-page">
-      <nav className="form-page-nav">
-        <span className="form-page-logo">Sprout<span>Fund</span></span>
-        <div className="form-page-nav-right">
-          {user && <span className="form-page-user">Hi, {user.name.split(' ')[0]}</span>}
-          <ThemeToggle />
-          <button className="form-page-logout" onClick={handleLogout}>Sign out</button>
-        </div>
-      </nav>
+      
       <BudgetInput />
     </div>
   )

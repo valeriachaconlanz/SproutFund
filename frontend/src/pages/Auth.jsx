@@ -82,10 +82,6 @@ function Auth() {
 
   return (
     <div className="auth-page">
-      <nav className="auth-nav">
-        <span className="auth-logo">Sprout<span>Fund</span></span>
-        <ThemeToggle />
-      </nav>
 
       <div className="auth-container">
         <div className="auth-card">
