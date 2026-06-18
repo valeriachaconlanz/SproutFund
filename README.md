@@ -93,13 +93,35 @@ export JWT_SECRET=...                 # Token signing secret
 
 ### 3. Start the backend
 
-Open a terminal in the `backend/` folder, load the env file, and start the server:
+Open a terminal in the `backend/` folder, load the env file, and start the server.
+
+**Mac / Linux:**
 
 ```bash
 cd backend
 source .env
+ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY mvn spring-boot:run
+```
+
+**Windows (Command Prompt):**
+
+```cmd
+cd backend
+set ANTHROPIC_API_KEY=sk-ant-...
+set JWT_SECRET=...
 mvn spring-boot:run
 ```
+
+**Windows (PowerShell):**
+
+```powershell
+cd backend
+$env:ANTHROPIC_API_KEY="sk-ant-..."
+$env:JWT_SECRET="..."
+mvn spring-boot:run
+```
+
+> Replace the values above with the ones from the `.env` file shared in the group chat.
 
 Wait until you see this line before moving on:
 
@@ -140,7 +162,7 @@ The frontend runs at `http://localhost:5173`.
 
 ### "There was an error generating your plan"
 
-- Make sure you ran `source .env` in the same terminal before `mvn spring-boot:run`
+- Make sure you loaded the env variables in the same terminal before `mvn spring-boot:run` (see step 3 for your OS)
 - Check the backend terminal for error logs — a line starting with `ERROR` will tell you what went wrong
 
 ### Backend won't start
