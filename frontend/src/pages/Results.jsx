@@ -17,16 +17,6 @@ const RISK_LABELS = {
 
 const COLORS = ['#ccff00', '#7eb8f7', '#f7a07e']
 
-function ResultsNav() {
-  const { logout, user } = useAuth()
-  const navigate = useNavigate()
-
-  function handleLogout() {
-    logout()
-    navigate('/auth')
-  }
-}
-
 function AllocationBar({ strategies }) {
   return (
     <div className="allocation-wrap">
@@ -105,7 +95,6 @@ function Results() {
   if (!state || !state.budget) {
     return (
       <div className="results-page">
-        <ResultsNav />
         <div className="results-empty">
           <h1 className="results-title">No plan found.</h1>
           <p className="results-subtitle">Please fill out the investment form first.</p>
@@ -120,7 +109,6 @@ function Results() {
 
   return (
     <div className="results-page">
-      <ResultsNav />
 
       <div className="results-content">
         <div className="results-header">

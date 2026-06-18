@@ -1,6 +1,4 @@
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import ThemeToggle from '../components/ThemeToggle'
 import './MarketTips.css'
 
 const topics = ['all', 'getting started', 'risk', 'timing', 'goals', 'fees', 'emotions']
@@ -241,7 +239,6 @@ function TipIcon({ type }) {
 }
 
 function MarketTips() {
-  const navigate = useNavigate()
   const [selectedTopic, setSelectedTopic] = useState('all')
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('recommended')
