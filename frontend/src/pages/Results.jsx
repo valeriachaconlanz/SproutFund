@@ -17,27 +17,6 @@ const RISK_LABELS = {
 
 const COLORS = ['#ccff00', '#7eb8f7', '#f7a07e']
 
-function ResultsNav() {
-  const { logout, user } = useAuth()
-  const navigate = useNavigate()
-
-  function handleLogout() {
-    logout()
-    navigate('/auth')
-  }
-
-  return (
-    <nav className="results-nav">
-      <span className="results-logo">Sprout<span>Fund</span></span>
-      <div className="results-nav-right">
-        {user && <span className="results-user">Hi, {user.name.split(' ')[0]}</span>}
-        <ThemeToggle />
-        <button className="results-logout" onClick={handleLogout}>Sign out</button>
-      </div>
-    </nav>
-  )
-}
-
 function AllocationBar({ strategies }) {
   return (
     <div className="allocation-wrap">
@@ -116,11 +95,10 @@ function Results() {
   if (!state || !state.budget) {
     return (
       <div className="results-page">
-        <ResultsNav />
         <div className="results-empty">
           <h1 className="results-title">No plan found.</h1>
           <p className="results-subtitle">Please fill out the investment form first.</p>
-          <button className="back-btn" onClick={() => navigate('/')}>Go to Form</button>
+          <button className="back-btn" onClick={() => navigate('/dashboard')}>Go to Form</button>
         </div>
       </div>
     )
@@ -131,7 +109,6 @@ function Results() {
 
   return (
     <div className="results-page">
-      <ResultsNav />
 
       <div className="results-content">
         <div className="results-header">

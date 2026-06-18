@@ -2,6 +2,7 @@
   min-height: 100vh;
   background: var(--background);
   padding: 24px 16px 64px;
+  padding-top: 110px;
 }
 
 /* ── Nav ── */

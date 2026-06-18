@@ -1,0 +1,64 @@
+.home-page {
+  --home-accent-readable: #3f7d00;
+  --home-background: #f7f8f2;
+  --home-texture-dot: rgba(17, 14, 8, 0.06);
+  --home-texture-line: rgba(17, 14, 8, 0.035);
+
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 1px 1px, var(--home-texture-dot) 1px, transparent 0),
+    linear-gradient(135deg, transparent 0 48%, var(--home-texture-line) 49% 51%, transparent 52% 100%),
+    var(--home-background);
+  background-size: 22px 22px, 42px 42px, auto;
+
+  color: var(--text-primary);
+  padding: 110px 16px 56px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+html[data-theme="dark"] .home-page {
+  --home-accent-readable: var(--accent);
+  --home-background: var(--background);
+  --home-texture-dot: rgba(0, 0, 0, 0.36);
+  --home-texture-line: rgba(0, 0, 0, 0.24);
+}
+
+.hero {
+  max-width: 760px;
+}
+
+.hero h1 {
+  margin: 0 0 16px;
+  font-family: var(--font-heading);
+  font-size: clamp(40px, 7vw, 72px);
+  line-height: 1;
+}
+
+.hero p {
+  margin: 0 auto 28px;
+  max-width: 620px;
+  color: var(--text-muted);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.hero-button {
+  background: var(--home-accent-readable);
+  border: 1px solid var(--home-accent-readable);
+  border-radius: var(--radius-pill);
+  color: #110e08;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 10px 18px;
+}
+
+.hero-button:hover {
+  background: var(--surface);
+  color: var(--home-accent-readable);
+}
