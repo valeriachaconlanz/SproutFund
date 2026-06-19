@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import ThemeToggle from '../components/ThemeToggle'
 import './Auth.css'
 
 const API = 'http://localhost:8080/api/auth'
@@ -82,14 +81,6 @@ function Auth() {
 
   return (
     <div className="auth-page">
-      <nav className="auth-nav">
-        <span className="auth-logo">Sprout<span>Fund</span></span>
-        <Link className="auth-glossary-link" to="/glossary">
-          Glossary
-        </Link>
-        <ThemeToggle />
-      </nav>
-
       <div className="auth-container">
         <div className="auth-card">
 
@@ -199,6 +190,15 @@ function Auth() {
               <li>Built for first-time investors</li>
               <li>Free to use, no credit card required</li>
             </ul>
+          </div>
+          <div className="auth-tips-section">
+            <button
+              type="button"
+              className="auth-tips-btn"
+              onClick={() => navigate('/tips')}
+            >
+              Browse Market Tips
+            </button>
           </div>
         </div>
       </div>

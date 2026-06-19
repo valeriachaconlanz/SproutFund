@@ -1,6 +1,6 @@
 # SproutFund
 
-SproutFund is a web application designed to help beginners (especially students from universities like FIU) learn how to invest their money wisely. The app allows users to input how much they want to invest, their desired profit timeline, and their risk tolerance, and then generates a personalized investment strategy based on those inputs. It also features a visual portfolio breakdown, market timing tips, and a student-specific mode aimed at helping people make smart decisions with money like FAFSA refunds instead of spending it impulsively. The goal is to make investing feel accessible and understandable for people who have never done it before.
+SproutFund helps first-time investors — especially college students — make smart decisions with their money. Users enter a budget, timeline, and risk tolerance, and the app generates personalized investment strategies powered by the Claude AI. Results include specific fund names, allocation percentages, platform recommendations, and a visual portfolio breakdown.
 
 ---
 
@@ -10,7 +10,7 @@ SproutFund is a web application designed to help beginners (especially students 
 
 - **React 19** — UI framework
 - **Vite** — build tool and dev server
-- **React Router v7** — client-side routing between pages
+- **React Router v7** — client-side routing
 - **Plain CSS** — styling (no Tailwind or CSS frameworks)
 
 ### Backend
@@ -18,10 +18,11 @@ SproutFund is a web application designed to help beginners (especially students 
 - **Java 17+** — language
 - **Spring Boot 3** — REST API framework
 - **Maven** — dependency management and build tool
+- **Anthropic Java SDK** — Claude AI integration
 
 ### Design System
 
-- Located in `green-design/` — contains fonts, color tokens, spacing rules, and component patterns used across the UI
+- Located in `green-design/` — fonts, color tokens, spacing rules, and component patterns
 - Primary font: **Maison Neue Extended** (headings) + **Capsule Sans Text Mono** (body)
 - Accent color: `#ccff00`
 
@@ -31,52 +32,153 @@ SproutFund is a web application designed to help beginners (especially students 
 
 ```text
 SproutFund/
-├── frontend/          # React app (Vite)
+├── frontend/                        # React app (Vite)
 │   ├── public/
-│   │   └── fonts/     # Design system fonts
+│   │   └── fonts/                   # Design system fonts
 │   └── src/
-│       ├── components/ # Reusable components (BudgetInput, etc.)
-│       ├── pages/      # Page-level components (InvestmentForm, Results)
+│       ├── components/              # Reusable components (BudgetInput, etc.)
+│       ├── context/                 # Auth and Theme context providers
+│       ├── pages/                   # Page-level components (InvestmentForm, Results)
 │       ├── App.jsx
 │       └── main.jsx
-├── backend/           # Spring Boot API
+├── backend/                         # Spring Boot API
+│   ├── .env                         # Local env vars — never commit this
 │   └── src/main/java/com/sproutfund/
-│       ├── controller/ # REST controllers
-│       ├── model/      # Request/Response models
-│       └── service/    # Business logic
-└── green-design/      # Design system reference (fonts, tokens, guidelines)
+│       ├── config/                  # Spring beans (Claude API client setup)
+│       ├── controller/              # REST controllers
+│       ├── dto/                     # Auth request/response DTOs
+│       ├── model/                   # Domain models (User, InvestmentRequest, etc.)
+│       ├── security/                # JWT auth filter and Spring Security config
+│       └── service/                 # Business logic (Claude API calls, auth)
+└── green-design/                    # Design system reference
 ```
 
 ---
 
-## Running the Project Locally
+## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ — [nodejs.org](https://nodejs.org)
-- Java 17+ — [adoptium.net](https://adoptium.net)
-- Maven 3.9+ — [maven.apache.org](https://maven.apache.org)
+Make sure these are installed before you begin:
 
-### Start the Frontend
+- **Node.js 18+** — [nodejs.org](https://nodejs.org)
+- **Java 17+** — [adoptium.net](https://adoptium.net)
+- **Maven 3.9+** — [maven.apache.org](https://maven.apache.org)
+
+### 1. Clone the repo
 
 ```bash
-cd frontend
-npm install
-npm run dev
+git clone https://github.com/valeriachaconlanz/SproutFund.git
+cd SproutFund
 ```
 
-Runs at `http://localhost:5173`
+### 2. Set up environment variables
 
-### Start the Backend
+The backend requires two environment variables. Get the `.env` file from the group chat and save it inside the `backend/` folder:
+
+```text
+SproutFund/
+└── backend/
+    └── .env   ← place it here
+```
+
+The file contains:
+
+```bash
+export ANTHROPIC_API_KEY=sk-ant-...   # Claude AI key
+export JWT_SECRET=...                 # Token signing secret
+```
+
+> `.env` is gitignored — it will never be committed. Do not share it anywhere other than the group chat.
+
+### 3. Start the backend
+
+Open a terminal in the `backend/` folder, load the env file, and start the server.
+
+**Mac / Linux:**
 
 ```bash
 cd backend
+source .env
+ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY mvn spring-boot:run
+```
+
+**Windows (Command Prompt):**
+
+```cmd
+cd backend
+set ANTHROPIC_API_KEY=sk-ant-...
+set JWT_SECRET=...
 mvn spring-boot:run
 ```
 
-Runs at `http://localhost:8080`
+**Windows (PowerShell):**
 
-> Both must be running at the same time for full functionality. The frontend falls back gracefully if the backend is offline.
+```powershell
+cd backend
+$env:ANTHROPIC_API_KEY="sk-ant-..."
+$env:JWT_SECRET="..."
+mvn spring-boot:run
+```
+
+> Replace the values above with the ones from the `.env` file shared in the group chat.
+
+Wait until you see this line before moving on:
+
+```text
+Started SproutFundApplication in X seconds
+```
+
+The backend runs at `http://localhost:8080`.
+
+> The backend uses an in-memory H2 database that resets on every restart. Any accounts you created will be gone after a restart — just register again.
+
+### 4. Start the frontend
+
+Open a **second terminal** in the `frontend/` folder:
+
+```bash
+cd frontend
+npm install   # only needed the first time
+npm run dev
+```
+
+The frontend runs at `http://localhost:5173`.
+
+> Both the backend and frontend must be running at the same time.
+
+### 5. Test the full flow
+
+1. Go to `http://localhost:5173`
+2. Click **Sign up** and create an account with any name, email, and password
+3. Log in with those credentials
+4. Fill out the investment form — enter a budget, select a timeline, select a risk level
+5. Click **Get My Investment Plan**
+6. You should see a results page with an allocation bar, strategy cards, and platform recommendations generated by Claude
+
+---
+
+## Troubleshooting
+
+### "There was an error generating your plan"
+
+- Make sure you loaded the env variables in the same terminal before `mvn spring-boot:run` (see step 3 for your OS)
+- Check the backend terminal for error logs — a line starting with `ERROR` will tell you what went wrong
+
+### Backend won't start
+
+- Confirm Java 17+ is installed: `java -version`
+- Confirm Maven is installed: `mvn -version`
+- Make sure you're running `mvn spring-boot:run` from inside the `backend/` folder, not the root
+
+### Frontend shows a blank page or routing error
+
+- Make sure the backend is running first
+- Try a hard refresh (`Cmd + Shift + R`)
+
+### Registered but can't log in after restarting the backend
+
+- The database resets on every backend restart — register a new account
 
 ---
 
@@ -109,11 +211,7 @@ Then open a **Pull Request** on GitHub from your branch → `main` and request a
 
 ## Recommended IDE & Extensions
 
-### IDE
-
 **Visual Studio Code** — [code.visualstudio.com](https://code.visualstudio.com)
-
-### VS Code Extensions
 
 | Extension | Purpose |
 | --- | --- |
@@ -127,30 +225,86 @@ Then open a **Pull Request** on GitHub from your branch → `main` and request a
 | **Path Intellisense** | Autocompletes file paths in imports |
 | **CSS Variable Autocomplete** | Suggests `--var` tokens defined in your CSS |
 
-### Enable Format on Save
-
-1. Open Settings (`Cmd + ,`)
-2. Search "format on save"
-3. Check the box
+**Enable Format on Save:** `Cmd + ,` → search "format on save" → check the box.
 
 ---
 
 ## API Reference
 
+All endpoints except `/api/auth/**` require an `Authorization: Bearer <token>` header.
+
+### POST /api/auth/register
+
+Creates a new user account.
+
+**Request body:**
+
+```json
+{
+  "name": "Valeria Chacon",
+  "email": "valeria@example.com",
+  "password": "yourpassword"
+}
+```
+
+**Response:**
+
+```json
+{
+  "token": "eyJhbGci..."
+}
+```
+
+---
+
+### POST /api/auth/login
+
+Logs in and returns a JWT token. Use this token in all subsequent requests.
+
+**Request body:**
+
+```json
+{
+  "email": "valeria@example.com",
+  "password": "yourpassword"
+}
+```
+
+**Response:**
+
+```json
+{
+  "token": "eyJhbGci..."
+}
+```
+
+---
+
 ### POST /api/investment
 
-Accepts the user's investment inputs and returns a personalized recommendation.
+Accepts the user's investment inputs and returns AI-generated strategies from Claude.
+
+**Headers:**
+
+```text
+Authorization: Bearer <token>
+```
 
 **Request body:**
 
 ```json
 {
   "budget": 5000,
-  "timeline": "medium"
+  "timeline": "medium",
+  "riskTolerance": "high"
 }
 ```
 
-**Timeline values:** `"short"` · `"medium"` · `"long"`
+| Field | Type | Values |
+| --- | --- | --- |
+| `budget` | number | Any positive number |
+| `timeline` | string | `"short"` · `"medium"` · `"long"` |
+| `riskTolerance` | string | `"low"` · `"medium"` · `"high"` |
 
 **Response:**
 
@@ -158,6 +312,22 @@ Accepts the user's investment inputs and returns a personalized recommendation.
 {
   "budget": 5000,
   "timeline": "medium",
-  "recommendation": "A balanced ETF portfolio..."
+  "strategies": [
+    {
+      "name": "Index Fund Core",
+      "allocation": 60,
+      "description": "A low-cost, diversified approach...",
+      "vehicles": ["VTI (Vanguard Total Stock Market ETF)", "FZROX (Fidelity Zero)"],
+      "platform": "Fidelity or Schwab"
+    },
+    {
+      "name": "Growth ETFs",
+      "allocation": 40,
+      "description": "Higher-upside exposure...",
+      "vehicles": ["QQQ (Invesco QQQ Trust)"],
+      "platform": "Robinhood or Fidelity"
+    }
+  ],
+  "disclaimer": "Always consult a licensed financial advisor before making investment decisions."
 }
 ```

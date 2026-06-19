@@ -140,7 +140,7 @@ function BudgetInput() {
         throw new Error('Investment recommendation request failed.')
       }
       const data = await response.json()
-      navigate('/results', { state: { ...payload, recommendation: data.recommendation } })
+      navigate('/results', { state: { ...payload, strategies: data.strategies, disclaimer: data.disclaimer } })
     } catch {
       showErrorToast('There was an error generating your plan. Please try again later.')
     } finally {

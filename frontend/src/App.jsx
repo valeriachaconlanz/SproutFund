@@ -6,39 +6,47 @@ import InvestmentForm from './pages/InvestmentForm'
 import Results from './pages/Results'
 import Auth from './pages/Auth'
 import Glossary from './pages/Glossary'
+import MarketTips from './pages/MarketTips'
+import Navbar from './components/Navbar'
+import Home from './pages/Home'
 import './App.css'
 
 function App() {
   return (
     <ThemeProvider>
-    <AuthProvider>
-      <Routes>
-        <Route path="/auth" element={<Auth />} />
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <InvestmentForm />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/results"
-          element={
-            <ProtectedRoute>
-              <Results />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/glossary"
-          element={
-            <Glossary />
-          }
-        />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </AuthProvider>
+      <AuthProvider>
+        <Navbar />
+
+        <Routes>
+          <Route path="/" element={<Home />} />
+
+          <Route path="/auth" element={<Auth />} />
+
+          <Route path="/tips" element={<MarketTips />} />
+
+          <Route path="/glossary" element={<Glossary />} />
+
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <InvestmentForm />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/results"
+            element={
+              <ProtectedRoute>
+                <Results />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
     </ThemeProvider>
   )
 }

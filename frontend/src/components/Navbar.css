@@ -1,0 +1,120 @@
+.navbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+
+  padding: 24px 0 16px;
+
+  border-bottom: 1px solid var(--border);
+
+  background: transparent;
+  z-index: 100;
+}
+
+.navbar-content {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 32px;
+  box-sizing: border-box;
+}
+
+.logo {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.logo span {
+  color: var(--accent);
+}
+
+.nav-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px;
+  border-radius: var(--radius-pill);
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.nav-pill a,
+.nav-button {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+
+  padding: 8px 14px;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.nav-pill a:hover,
+.nav-button:hover {
+  background: var(--surface);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.cta-link {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+
+.cta-link:hover {
+  background: var(--accent) !important;
+  color: #110e08 !important;
+}
+
+.settings-wrapper {
+  position: relative;
+}
+
+.settings-menu {
+  position: absolute;
+  top: 46px;
+  right: 0;
+
+  min-width: 160px;
+  padding: 8px;
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.settings-menu button {
+  width: 100%;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.settings-menu button:hover {
+  background: var(--background);
+  border-color: var(--accent);
+  color: var(--accent);
+}
