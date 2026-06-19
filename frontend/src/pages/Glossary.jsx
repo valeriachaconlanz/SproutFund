@@ -1,6 +1,4 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import glossaryTerms from "../assets/glossaryTerm";
 import "./Glossary.css";
 
@@ -8,7 +6,6 @@ function Glossary() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("All");
 
-  const { user } = useAuth();
 
   const topics = useMemo(
     () => [
@@ -51,9 +48,6 @@ function Glossary() {
           Browse simple definitions for common investing terms used throughout SproutFund.
         </p>
 
-        <Link to={user ? "/" : "/auth"} className="glossary-home-link">
-          ← Back to SproutFund
-        </Link>
 
         <div className="glossary-search-card">
           <input
