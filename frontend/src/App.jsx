@@ -5,11 +5,11 @@ import ProtectedRoute from './components/ProtectedRoute'
 import InvestmentForm from './pages/InvestmentForm'
 import Results from './pages/Results'
 import Auth from './pages/Auth'
+import Glossary from './pages/Glossary'
 import MarketTips from './pages/MarketTips'
+import Navbar from './components/Navbar'
+import Home from './pages/Home'
 import './App.css'
-import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-
 
 function App() {
   return (
@@ -23,6 +23,8 @@ function App() {
           <Route path="/auth" element={<Auth />} />
 
           <Route path="/tips" element={<MarketTips />} />
+
+          <Route path="/glossary" element={<Glossary />} />
 
           <Route
             path="/dashboard"
@@ -46,7 +48,7 @@ function App() {
         </Routes>
       </AuthProvider>
     </ThemeProvider>
-  );
+  )
 }
 
-export default App;
+export default App

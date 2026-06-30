@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import './BudgetInput.css'
 
@@ -185,7 +185,7 @@ function BudgetInput() {
             <span className="why-icon">↑</span>
             <h3 className="why-title">Beat Inflation</h3>
             <p className="why-desc">
-              Savings accounts earn 0.5–1% APY while inflation averages 3–4% per year.
+              Savings accounts earn 0.5–1% APY while <Link to="/glossary#term-inflation" className="glossary-inline-link">inflation</Link> averages 3–4% per year.
               Investing is how your money keeps its value over time.
             </p>
           </div>
@@ -252,17 +252,26 @@ function BudgetInput() {
               <div className={`guide-row ${tier?.label === 'Starter' ? 'guide-active' : ''}`}>
                 <span className="guide-range">$1 – $999</span>
                 <span className="guide-tier">Starter</span>
-                <span className="guide-note">High-yield savings, CDs, money market</span>
+                <span className="guide-note">
+                  <Link to="/glossary#term-high-yield-savings-account" className="glossary-inline-link">High-yield savings</Link>,{' '}
+                  <Link to="/glossary#term-cds" className="glossary-inline-link">CDs</Link>, money market
+                </span>
               </div>
               <div className={`guide-row ${tier?.label === 'Growing' ? 'guide-active' : ''}`}>
                 <span className="guide-range">$1,000 – $9,999</span>
                 <span className="guide-tier">Growing</span>
-                <span className="guide-note">Index funds, ETFs, mutual funds</span>
+                <span className="guide-note">
+                  <Link to="/glossary#term-index-fund" className="glossary-inline-link">Index funds</Link>,{' '}
+                  <Link to="/glossary#term-etf" className="glossary-inline-link">ETFs</Link>, mutual funds
+                </span>
               </div>
               <div className={`guide-row ${tier?.label === 'Established' ? 'guide-active' : ''}`}>
                 <span className="guide-range">$10,000+</span>
                 <span className="guide-tier">Established</span>
-                <span className="guide-note">Diversified portfolio, bonds, growth stocks</span>
+                <span className="guide-note">
+                  Diversified <Link to="/glossary#term-portfolio" className="glossary-inline-link">portfolio</Link>,{' '}
+                  <Link to="/glossary#term-bonds" className="glossary-inline-link">bonds</Link>, growth stocks
+                </span>
               </div>
             </div>
           </div>

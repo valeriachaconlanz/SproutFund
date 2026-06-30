@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import ThemeToggle from '../components/ThemeToggle'
 import './Auth.css'
 
 const API = 'http://localhost:8080/api/auth'
@@ -82,7 +81,6 @@ function Auth() {
 
   return (
     <div className="auth-page">
-
       <div className="auth-container">
         <div className="auth-card">
 

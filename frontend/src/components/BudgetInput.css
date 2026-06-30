@@ -332,6 +332,19 @@
   color: var(--text-muted);
 }
 
+.glossary-inline-link {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--text-primary);
+  text-underline-offset: 3px;
+  transition: opacity 0.15s ease;
+}
+
+.glossary-inline-link:hover {
+  opacity: 0.75;
+}
+
 /* ── Section divider ── */
 .section-divider {
   height: 1px;

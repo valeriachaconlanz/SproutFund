@@ -26,8 +26,9 @@ function Navbar() {
           {user ? (
             <>
               <Link to="/dashboard">Dashboard</Link>
-              <Link to="/dashboard">Results</Link>
+              <Link to="/results">Results</Link>
               <Link to="/tips">Tips</Link>
+              <Link to="/glossary">Glossary</Link>
 
               <div className="settings-wrapper">
                 <button
@@ -53,6 +54,7 @@ function Navbar() {
             <>
               <Link to="/">Home</Link>
               <Link to="/tips">Tips</Link>
+              <Link to="/glossary">Glossary</Link>
 
               <ThemeToggle />
 
