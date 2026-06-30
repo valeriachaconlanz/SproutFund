@@ -97,8 +97,8 @@ function Glossary() {
                     className="glossary-card"
                     id={`term-${item.term
                       .toLowerCase()
-                      .replaceAll(" ", "-")
-                      .replaceAll("&", "and")}`}
+                      .replaceAll("&", "-and-")
+                      .replaceAll(" ", "-")}`}
                     key={item.id}
                   >
                     <div className="glossary-card-header">
