@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ThemeToggle from '../components/ThemeToggle'
-import marketTipsHeader from '../assets/market-tips-header.jpg'
 import './MarketTips.css'
 
 const topics = ['all', 'getting started', 'risk', 'timing', 'goals', 'fees', 'emotions']
@@ -311,7 +310,7 @@ function MarketTips() {
         </p>
         <img
           className="tips-header-image"
-          src={marketTipsHeader}
+          src="https://images.pexels.com/photos/12944726/pexels-photo-12944726.jpeg?auto=compress&cs=tinysrgb&w=1200"
           alt="Two people reviewing financial charts and cash at a desk"
         />
       </section>
