@@ -10,8 +10,8 @@ function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  function handleLogout() {
-    logout();
+  async function handleLogout() {
+    await logout();
     navigate("/auth");
   }
 
@@ -27,6 +27,7 @@ function Navbar() {
             <>
               <Link to="/dashboard">Dashboard</Link>
               <Link to="/results">Results</Link>
+              <Link to="/history">Saved Plans</Link>
               <Link to="/tips">Tips</Link>
               <Link to="/glossary">Glossary</Link>
 

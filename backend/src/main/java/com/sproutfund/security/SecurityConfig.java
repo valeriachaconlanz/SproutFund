@@ -1,31 +1,30 @@
 package com.sproutfund.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.jwt.JwtClaimValidator;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtValidators;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+// Auth itself lives entirely in Supabase now — this app only verifies the
+// Supabase-issued access token on incoming requests (resource server), it
+// never issues tokens or checks passwords.
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    private final JwtAuthFilter jwtAuthFilter;
-
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
-        this.jwtAuthFilter = jwtAuthFilter;
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -35,15 +34,26 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // /api/auth/** is public; everything else requires a valid token
-                .requestMatchers("/api/auth/**", "/h2-console/**").permitAll()
                 .anyRequest().authenticated()
             )
-            // Needed so the H2 console iframe renders in dev
-            .headers(headers -> headers.frameOptions(frame -> frame.disable()))
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {}));
 
         return http.build();
+    }
+
+    // Supabase access tokens carry aud=authenticated. Spring's default JWT
+    // validation only checks timestamps, so we add an explicit audience
+    // check to make sure we only accept tokens actually meant for our API.
+    @Bean
+    public JwtDecoder jwtDecoder(@Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}") String jwkSetUri) {
+        NimbusJwtDecoder decoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
+
+        OAuth2TokenValidator<org.springframework.security.oauth2.jwt.Jwt> withTimestamps = JwtValidators.createDefault();
+        OAuth2TokenValidator<org.springframework.security.oauth2.jwt.Jwt> withAudience =
+                new JwtClaimValidator<List<String>>("aud", aud -> aud != null && aud.contains("authenticated"));
+
+        decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(withTimestamps, withAudience));
+        return decoder;
     }
 
     @Bean
@@ -57,15 +67,5 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
     }
 }

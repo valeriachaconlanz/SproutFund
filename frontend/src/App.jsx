@@ -4,6 +4,7 @@ import { ThemeProvider } from './context/ThemeContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import InvestmentForm from './pages/InvestmentForm'
 import Results from './pages/Results'
+import History from './pages/History'
 import Auth from './pages/Auth'
 import Glossary from './pages/Glossary'
 import MarketTips from './pages/MarketTips'
@@ -40,6 +41,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <Results />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/history"
+            element={
+              <ProtectedRoute>
+                <History />
               </ProtectedRoute>
             }
           />

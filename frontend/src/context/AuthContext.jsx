@@ -1,38 +1,63 @@
-import { createContext, useContext, useState, useCallback } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback } from 'react'
+import { supabase } from '../lib/supabaseClient'
 
 const AuthContext = createContext(null)
 
-// localStorage so the JWT and user info survive a page refresh without re-hitting the server
-const TOKEN_KEY = 'sproutfund_token'
-const USER_KEY = 'sproutfund_user'
+function toUser(session) {
+  if (!session?.user) return null
+  return { name: session.user.user_metadata?.name || '', email: session.user.email }
+}
 
 export function AuthProvider({ children }) {
-  // Read from storage on first render so the app boots already authenticated
-  const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY))
-  const [user, setUser] = useState(() => {
-    const stored = localStorage.getItem(USER_KEY)
-    return stored ? JSON.parse(stored) : null
-  })
+  // Supabase persists the session itself (localStorage) and handles token
+  // refresh in the background — we just mirror its current session here.
+  const [session, setSession] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  const login = useCallback((authData) => {
-    localStorage.setItem(TOKEN_KEY, authData.token)
-    localStorage.setItem(USER_KEY, JSON.stringify({ name: authData.name, email: authData.email }))
-    setToken(authData.token)
-    setUser({ name: authData.name, email: authData.email })
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session)
+      setLoading(false)
+    })
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession)
+    })
+
+    return () => listener.subscription.unsubscribe()
   }, [])
 
-  const logout = useCallback(() => {
-    localStorage.removeItem(TOKEN_KEY)
-    localStorage.removeItem(USER_KEY)
-    setToken(null)
-    setUser(null)
+  const signIn = useCallback(async (email, password) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    return { error }
   }, [])
 
-  return (
-    <AuthContext.Provider value={{ token, user, isAuthenticated: !!token, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  )
+  const signUp = useCallback(async (name, email, password) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { name } },
+    })
+    // If email confirmation is required, Supabase returns a user but no
+    // session — the caller needs to know so it doesn't treat this as login.
+    return { error, needsEmailConfirmation: !error && !data.session }
+  }, [])
+
+  const logout = useCallback(async () => {
+    await supabase.auth.signOut()
+  }, [])
+
+  const value = {
+    token: session?.access_token || null,
+    user: toUser(session),
+    isAuthenticated: !!session,
+    loading,
+    signIn,
+    signUp,
+    logout,
+  }
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {

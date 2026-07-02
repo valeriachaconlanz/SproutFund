@@ -1,19 +1,8 @@
+import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import ThemeToggle from '../components/ThemeToggle'
+import { TIMELINE_LABELS, RISK_LABELS } from '../lib/labels'
 import './Results.css'
-
-const TIMELINE_LABELS = {
-  short: 'Short Term (Under 1 year)',
-  medium: 'Medium Term (1–5 years)',
-  long: 'Long Term (5+ years)',
-}
-
-const RISK_LABELS = {
-  low: 'Low',
-  medium: 'Medium',
-  high: 'High',
-}
 
 const COLORS = ['#ccff00', '#7eb8f7', '#f7a07e']
 
@@ -91,6 +80,8 @@ function StrategyCard({ strategy, index, budget }) {
 function Results() {
   const { state } = useLocation()
   const navigate = useNavigate()
+  const { token } = useAuth()
+  const [saveState, setSaveState] = useState('idle') // idle | saving | saved | error
 
   if (!state || !state.budget) {
     return (
@@ -106,6 +97,24 @@ function Results() {
 
   const { budget, timeline, riskTolerance, riskLevel, strategies, disclaimer } = state
   const selectedRisk = riskTolerance || riskLevel
+
+  async function handleSave() {
+    setSaveState('saving')
+    try {
+      const response = await fetch('http://localhost:8080/api/investment/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ budget, timeline, riskTolerance: selectedRisk, strategies, disclaimer }),
+      })
+      if (!response.ok) throw new Error('Save failed.')
+      setSaveState('saved')
+    } catch {
+      setSaveState('error')
+    }
+  }
 
   return (
     <div className="results-page">
@@ -151,9 +160,21 @@ function Results() {
           </div>
         )}
 
-        <button className="back-btn" onClick={() => navigate('/')}>
-          Adjust My Plan
-        </button>
+        <div className="results-actions">
+          <button
+            className="save-btn"
+            onClick={handleSave}
+            disabled={saveState === 'saving' || saveState === 'saved'}
+          >
+            {saveState === 'saving' ? 'Saving...' : saveState === 'saved' ? 'Saved ✓' : 'Save This Plan'}
+          </button>
+          <button className="back-btn" onClick={() => navigate('/')}>
+            Adjust My Plan
+          </button>
+        </div>
+        {saveState === 'error' && (
+          <p className="save-error">Couldn't save your plan. Please try again.</p>
+        )}
       </div>
     </div>
   )
