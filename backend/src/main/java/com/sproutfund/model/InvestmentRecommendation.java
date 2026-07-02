@@ -39,6 +39,9 @@ public class InvestmentRecommendation {
 
     private String disclaimer;
 
+    // User-assigned label, set later via rename — blank until then.
+    private String title;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -62,5 +65,7 @@ public class InvestmentRecommendation {
     public String getRiskTolerance() { return riskTolerance; }
     public List<InvestmentStrategy> getStrategies() { return strategies; }
     public String getDisclaimer() { return disclaimer; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
     public Instant getCreatedAt() { return createdAt; }
 }

@@ -62,6 +62,7 @@ create table if not exists public.investment_recommendations (
   risk_tolerance text not null,
   strategies jsonb not null,
   disclaimer text,
+  title text,
   created_at timestamptz not null default now()
 );
 
@@ -76,6 +77,17 @@ create policy "recommendations_insert_own"
   on public.investment_recommendations for insert
   to authenticated
   with check ( (select auth.uid()) = user_id );
+
+create policy "recommendations_update_own"
+  on public.investment_recommendations for update
+  to authenticated
+  using ( (select auth.uid()) = user_id )
+  with check ( (select auth.uid()) = user_id );
+
+create policy "recommendations_delete_own"
+  on public.investment_recommendations for delete
+  to authenticated
+  using ( (select auth.uid()) = user_id );
 
 create index if not exists investment_recommendations_user_id_created_at_idx
   on public.investment_recommendations (user_id, created_at desc);

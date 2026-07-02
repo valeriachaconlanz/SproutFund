@@ -5,7 +5,13 @@ const AuthContext = createContext(null)
 
 function toUser(session) {
   if (!session?.user) return null
-  return { name: session.user.user_metadata?.name || '', email: session.user.email }
+  const meta = session.user.user_metadata || {}
+  return {
+    name: meta.name || '',
+    email: session.user.email,
+    avatar: meta.avatar || 'indigo',
+    photo: meta.photo || '',
+  }
 }
 
 export function AuthProvider({ children }) {
@@ -47,6 +53,24 @@ export function AuthProvider({ children }) {
     await supabase.auth.signOut()
   }, [])
 
+  // Profile page calls this for name/email/password/avatar/photo edits.
+  // avatar/photo live in Supabase user_metadata — there's no dedicated
+  // column for them, so they ride along with `data` like `name` does.
+  const updateProfile = useCallback(async ({ name, email, password, avatar, photo }) => {
+    const payload = {}
+    if (email !== undefined) payload.email = email
+    if (password) payload.password = password
+
+    const data = {}
+    if (name !== undefined) data.name = name
+    if (avatar !== undefined) data.avatar = avatar
+    if (photo !== undefined) data.photo = photo
+    if (Object.keys(data).length > 0) payload.data = data
+
+    const { error } = await supabase.auth.updateUser(payload)
+    return { error }
+  }, [])
+
   const value = {
     token: session?.access_token || null,
     user: toUser(session),
@@ -55,6 +79,7 @@ export function AuthProvider({ children }) {
     signIn,
     signUp,
     logout,
+    updateProfile,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

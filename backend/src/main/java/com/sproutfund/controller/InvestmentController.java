@@ -1,5 +1,6 @@
 package com.sproutfund.controller;
 
+import com.sproutfund.dto.RenameInvestmentRequest;
 import com.sproutfund.dto.SaveInvestmentRequest;
 import com.sproutfund.model.InvestmentRecommendation;
 import com.sproutfund.model.InvestmentRequest;
@@ -53,5 +54,29 @@ public class InvestmentController {
     public ResponseEntity<List<InvestmentRecommendation>> history(@AuthenticationPrincipal Jwt jwt) {
         UUID userId = UUID.fromString(jwt.getSubject());
         return ResponseEntity.ok(recommendationRepository.findByUserIdOrderByCreatedAtDesc(userId));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<InvestmentRecommendation> rename(@PathVariable Long id,
+                                                             @RequestBody RenameInvestmentRequest request,
+                                                             @AuthenticationPrincipal Jwt jwt) {
+        UUID userId = UUID.fromString(jwt.getSubject());
+        return recommendationRepository.findByIdAndUserId(id, userId)
+                .map(recommendation -> {
+                    recommendation.setTitle(request.getTitle());
+                    return ResponseEntity.ok(recommendationRepository.save(recommendation));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
+        UUID userId = UUID.fromString(jwt.getSubject());
+        return recommendationRepository.findByIdAndUserId(id, userId)
+                .map(recommendation -> {
+                    recommendationRepository.delete(recommendation);
+                    return ResponseEntity.noContent().<Void>build();
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 }
