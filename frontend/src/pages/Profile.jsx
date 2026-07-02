@@ -215,7 +215,7 @@ function Profile() {
 
         <div className="profile-nav-actions">
           <ThemeToggle />
-          <button className="profile-nav-btn" onClick={() => navigate('/')}>
+          <button className="profile-nav-btn" onClick={() => navigate('/dashboard')}>
             Back to dashboard
           </button>
           <UserMenu />

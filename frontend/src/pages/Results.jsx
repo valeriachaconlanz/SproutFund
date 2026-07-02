@@ -180,7 +180,7 @@ function Results() {
         <div className="results-empty">
           <h1 className="results-title">No plan found.</h1>
           <p className="results-subtitle">Please fill out the investment form first.</p>
-          <button className="back-btn" onClick={() => navigate('/')}>Go to Form</button>
+          <button className="back-btn" onClick={() => navigate('/dashboard')}>Go to Form</button>
         </div>
       </div>
     )
@@ -285,7 +285,7 @@ function Results() {
           </div>
         )}
 
-        <button className="back-btn" onClick={() => navigate('/')}>
+        <button className="back-btn" onClick={() => navigate('/dashboard')}>
           Adjust My Plan
         </button>
       </div>
