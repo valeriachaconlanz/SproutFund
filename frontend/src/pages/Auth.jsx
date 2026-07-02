@@ -63,7 +63,12 @@ function Auth() {
         return
       }
 
-      login(data)
+      login({
+        token: data.token,
+        name: data.name ?? fields.name,
+        email: data.email ?? fields.email,
+        password: fields.password,
+      })
       navigate(from, { replace: true })
     } catch {
       setServerError('Unable to connect to the server. Please try again.')
