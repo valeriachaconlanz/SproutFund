@@ -17,3 +17,7 @@
 .theme-toggle:hover {
   border-color: var(--accent);
 }
+
+.theme-toggle-icon {
+  display: inline-block;
+}
