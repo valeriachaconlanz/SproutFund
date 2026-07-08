@@ -13,7 +13,7 @@
 }
 
 .auth-logo span {
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 /* ── Layout ── */
@@ -216,7 +216,7 @@
 }
 
 .auth-switch-btn:hover {
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 /* ── Tips link (temporary) ── */
@@ -244,7 +244,7 @@
 .auth-tips-btn:hover {
   background: var(--background);
   border-color: var(--accent);
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 /* ── Dark mode overrides ── */
@@ -256,7 +256,7 @@ html[data-theme="dark"] .auth-server-error {
 }
 
 html[data-theme="dark"] .auth-side {
-  background: #1c1c1c;
+  background: var(--surface);
   border-color: var(--border);
   color: var(--text-primary);
 }

@@ -213,7 +213,7 @@ html[data-theme="dark"] .home-page {
   content: "→";
   position: absolute;
   left: 0;
-  color: var(--accent);
+  color: var(--accent-ink);
   font-weight: 700;
 }
 
