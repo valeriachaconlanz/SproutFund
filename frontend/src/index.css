@@ -32,6 +32,9 @@
 
   --font-heading: "Maison Neue Extended", system-ui, sans-serif;
   --font-body: "Capsule Sans Text Mono", ui-monospace, monospace;
+
+  --nav-transition-fast: 0.15s ease;
+  --nav-transition-bounce: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 html[data-theme="dark"] {
@@ -46,6 +49,17 @@ html[data-theme="dark"] {
   --shadow-raised: rgba(0, 0, 0, 0.6) 0px 0px 8px 0px;
   --shadow-floating: 0 1px 12px rgba(0, 0, 0, 0.5);
   --shadow-subtle: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+@keyframes nav-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 * {
