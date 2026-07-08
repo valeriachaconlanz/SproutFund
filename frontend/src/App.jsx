@@ -15,7 +15,7 @@ import './App.css'
 
 // These routes render their own nav bar (logo, theme toggle, user menu),
 // so the global Navbar would just duplicate it.
-const ROUTES_WITH_OWN_NAV = ['/dashboard', '/results', '/profile']
+const ROUTES_WITH_OWN_NAV = ['/dashboard', '/results', '/profile', '/tips']
 
 function AppRoutes() {
   const location = useLocation()
