@@ -43,7 +43,7 @@ html[data-theme="dark"] .profile-page {
 
 .profile-label {
   margin: 0 0 8px;
-  color: var(--accent);
+  color: var(--accent-ink);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;

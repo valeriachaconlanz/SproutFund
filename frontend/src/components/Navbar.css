@@ -79,7 +79,7 @@
 }
 
 .nav-link-label.active {
-  color: #110e08;
+  color: var(--on-accent);
   font-weight: 600;
 }
 
