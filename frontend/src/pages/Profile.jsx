@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { AVATAR_OPTIONS, getInitials } from '../lib/avatar'
 import ThemeToggle from '../components/ThemeToggle'
 import UserMenu from '../components/UserMenu'
+import { useScrolled } from '../hooks/useScrolled'
 import './Profile.css'
 
 const API = 'http://localhost:8080/api/investment'
@@ -32,6 +33,7 @@ function getPlanTitle(recommendation, index) {
 function Profile() {
   const navigate = useNavigate()
   const { user, token, updateProfile } = useAuth()
+  const { isScrolled } = useScrolled()
 
   const [formValues, setFormValues] = useState({
     name: user?.name || '',
@@ -246,7 +248,7 @@ function Profile() {
 
   return (
     <main className="profile-page">
-      <nav className="profile-nav">
+      <nav className={`profile-nav${isScrolled ? ' scrolled' : ''}`}>
         <span className="profile-logo">
           Sprout<span>Fund</span>
         </span>

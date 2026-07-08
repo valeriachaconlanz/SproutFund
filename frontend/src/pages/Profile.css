@@ -25,6 +25,17 @@ html[data-theme="dark"] .profile-page {
   padding: 0 8px 16px;
   border-bottom: 1px solid var(--border);
   gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--background);
+  animation: nav-enter 0.5s ease-out both;
+  transition: box-shadow 0.25s ease, padding-bottom 0.25s ease;
+}
+
+.profile-nav.scrolled {
+  padding-bottom: 10px;
+  box-shadow: var(--shadow-floating);
 }
 
 .profile-logo {

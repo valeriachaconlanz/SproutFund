@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { TIMELINE_LABELS, RISK_LABELS } from '../lib/labels'
 import ThemeToggle from '../components/ThemeToggle'
 import UserMenu from '../components/UserMenu'
+import { useScrolled } from '../hooks/useScrolled'
 import './Results.css'
 
 const COLORS = ['#ccff00', '#7eb8f7', '#f7a07e']
@@ -72,9 +73,10 @@ function buildPrintablePlan({ budget, timeline, risk, strategies, disclaimer }) 
 
 function ResultsNav() {
   const { user } = useAuth()
+  const { isScrolled } = useScrolled()
 
   return (
-    <nav className="results-nav">
+    <nav className={`results-nav${isScrolled ? ' scrolled' : ''}`}>
       <span className="results-logo">Sprout<span>Fund</span></span>
       <div className="results-nav-right">
         {user && <span className="results-user">Hi, {user.name?.split(' ')[0]}</span>}
