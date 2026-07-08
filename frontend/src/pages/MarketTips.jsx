@@ -1,7 +1,4 @@
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import ThemeToggle from '../components/ThemeToggle'
 import './MarketTips.css'
 
 const topics = ['all', 'getting started', 'risk', 'timing', 'goals', 'fees', 'emotions']
@@ -242,8 +239,6 @@ function TipIcon({ type }) {
 }
 
 function MarketTips() {
-  const navigate = useNavigate()
-  const { user } = useAuth()
   const [selectedTopic, setSelectedTopic] = useState('all')
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('recommended')
@@ -290,20 +285,6 @@ function MarketTips() {
 
   return (
     <main className="tips-page">
-      <nav className="tips-nav">
-        <span className="tips-logo">Sprout<span>Fund</span></span>
-        <div className="tips-nav-actions">
-          <button
-            className="tips-back-btn"
-            onClick={() => navigate(user ? '/dashboard' : '/auth')}
-            type="button"
-          >
-            ← {user ? 'Back to Dashboard' : 'Back to Authorization'}
-          </button>
-          <ThemeToggle />
-        </div>
-      </nav>
-
       <section className="tips-header">
         <p className="tips-kicker">Market Tips</p>
         <h1>Browse investing tips anytime</h1>

@@ -1,7 +1,7 @@
 .auth-page {
   min-height: 100vh;
   background: var(--background);
-  padding: 24px 16px 48px;
+  padding: 96px 16px 48px;
 }
 
 .auth-logo {

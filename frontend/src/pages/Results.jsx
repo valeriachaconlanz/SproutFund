@@ -2,12 +2,22 @@ import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { TIMELINE_LABELS, RISK_LABELS } from '../lib/labels'
-import ThemeToggle from '../components/ThemeToggle'
-import UserMenu from '../components/UserMenu'
-import { useScrolled } from '../hooks/useScrolled'
 import './Results.css'
 
 const COLORS = ['#ccff00', '#7eb8f7', '#f7a07e']
+
+// A logged-out visitor who hits "Save" gets bounced to /auth; we stash their
+// built plan here so they land back on it (and can save) after signing up.
+const PENDING_PLAN_KEY = 'sproutfund_pending_plan'
+
+function readPendingPlan() {
+  try {
+    const stored = sessionStorage.getItem(PENDING_PLAN_KEY)
+    return stored ? JSON.parse(stored) : null
+  } catch {
+    return null
+  }
+}
 
 function formatCurrency(value) {
   return Number(value).toLocaleString('en-US', {
@@ -69,22 +79,6 @@ function buildPrintablePlan({ budget, timeline, risk, strategies, disclaimer }) 
       </body>
     </html>
   `
-}
-
-function ResultsNav() {
-  const { user } = useAuth()
-  const { isScrolled } = useScrolled()
-
-  return (
-    <nav className={`results-nav${isScrolled ? ' scrolled' : ''}`}>
-      <span className="results-logo">Sprout<span>Fund</span></span>
-      <div className="results-nav-right">
-        {user && <span className="results-user">Hi, {user.name?.split(' ')[0]}</span>}
-        <ThemeToggle />
-        <UserMenu />
-      </div>
-    </nav>
-  )
 }
 
 function AllocationBar({ strategies }) {
@@ -163,11 +157,13 @@ function Results() {
   const navigate = useNavigate()
   const { token } = useAuth()
   const [saveState, setSaveState] = useState('idle') // idle | saving | saved | error
+  // Prefer a freshly-navigated plan (router state); otherwise fall back to a
+  // plan stashed before an auth detour so it survives the round trip.
+  const [plan] = useState(() => state || readPendingPlan())
 
-  if (!state || !state.budget) {
+  if (!plan || !plan.budget) {
     return (
       <div className="results-page">
-        <ResultsNav />
         <div className="results-empty">
           <h1 className="results-title">No plan found.</h1>
           <p className="results-subtitle">Please fill out the investment form first.</p>
@@ -177,7 +173,7 @@ function Results() {
     )
   }
 
-  const { budget, timeline, riskTolerance, riskLevel, strategies, disclaimer } = state
+  const { budget, timeline, riskTolerance, riskLevel, strategies, disclaimer } = plan
   const selectedRisk = riskTolerance || riskLevel
   const timelineLabel = TIMELINE_LABELS[timeline] || timeline
   const riskLabel = RISK_LABELS[selectedRisk] || selectedRisk
@@ -202,6 +198,14 @@ function Results() {
   }
 
   async function handleSave() {
+    // Saving requires an account. Stash the plan and send them to sign up;
+    // they'll return here (via readPendingPlan) able to save it.
+    if (!token) {
+      sessionStorage.setItem(PENDING_PLAN_KEY, JSON.stringify(plan))
+      navigate('/auth', { state: { from: { pathname: '/results' } } })
+      return
+    }
+
     setSaveState('saving')
     try {
       const response = await fetch('http://localhost:8080/api/investment/save', {
@@ -213,6 +217,7 @@ function Results() {
         body: JSON.stringify({ budget, timeline, riskTolerance: selectedRisk, strategies, disclaimer }),
       })
       if (!response.ok) throw new Error('Save failed.')
+      sessionStorage.removeItem(PENDING_PLAN_KEY)
       setSaveState('saved')
     } catch {
       setSaveState('error')
@@ -221,8 +226,6 @@ function Results() {
 
   return (
     <div className="results-page">
-      <ResultsNav />
-
       <div className="results-content">
         <div className="results-header">
           <h1 className="results-title">Your Investment Plan</h1>
@@ -271,7 +274,13 @@ function Results() {
             onClick={handleSave}
             disabled={saveState === 'saving' || saveState === 'saved'}
           >
-            {saveState === 'saving' ? 'Saving...' : saveState === 'saved' ? 'Saved ✓' : 'Save This Plan'}
+            {!token
+              ? 'Create an account to save'
+              : saveState === 'saving'
+                ? 'Saving...'
+                : saveState === 'saved'
+                  ? 'Saved ✓'
+                  : 'Save This Plan'}
           </button>
           <button
             type="button"

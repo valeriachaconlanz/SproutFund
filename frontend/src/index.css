@@ -35,6 +35,13 @@
 
   --nav-transition-fast: 0.15s ease;
   --nav-transition-bounce: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Floating pill navbar — a dark pill on the light page for contrast. */
+  --nav-bg: #110e08;
+  --nav-fg: rgba(255, 255, 255, 0.7);
+  --nav-fg-active: #ffffff;
+  --nav-cta-bg: #ffffff;
+  --nav-cta-text: #110e08;
 }
 
 html[data-theme="dark"] {
@@ -49,6 +56,13 @@ html[data-theme="dark"] {
   --shadow-raised: rgba(0, 0, 0, 0.6) 0px 0px 8px 0px;
   --shadow-floating: 0 1px 12px rgba(0, 0, 0, 0.5);
   --shadow-subtle: 0 1px 0 rgba(0, 0, 0, 0.4);
+
+  /* On the dark page, a slightly-raised surface pill keeps it distinct. */
+  --nav-bg: #1c1c1c;
+  --nav-fg: rgba(242, 239, 233, 0.65);
+  --nav-fg-active: #f2efe9;
+  --nav-cta-bg: var(--accent);
+  --nav-cta-text: #110e08;
 }
 
 @keyframes nav-enter {
