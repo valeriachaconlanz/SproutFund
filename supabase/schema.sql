@@ -57,7 +57,7 @@ create trigger on_auth_user_created
 create table if not exists public.investment_recommendations (
   id bigint generated always as identity primary key,
   user_id uuid not null references auth.users(id) on delete cascade,
-  budget numeric not null,
+  budget double precision not null,
   timeline text not null,
   risk_tolerance text not null,
   strategies jsonb not null,
