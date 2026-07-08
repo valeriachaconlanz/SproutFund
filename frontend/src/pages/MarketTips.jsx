@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import ThemeToggle from '../components/ThemeToggle'
 import './MarketTips.css'
 
@@ -242,6 +243,7 @@ function TipIcon({ type }) {
 
 function MarketTips() {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [selectedTopic, setSelectedTopic] = useState('all')
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('recommended')
@@ -293,10 +295,10 @@ function MarketTips() {
         <div className="tips-nav-actions">
           <button
             className="tips-back-btn"
-            onClick={() => navigate('/auth')}
+            onClick={() => navigate(user ? '/dashboard' : '/auth')}
             type="button"
           >
-            ← Back to Authorization
+            ← {user ? 'Back to Dashboard' : 'Back to Authorization'}
           </button>
           <ThemeToggle />
         </div>

@@ -1,26 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { getAvatarBackground, getInitials } from '../lib/avatar'
 import './UserMenu.css'
-
-const AVATAR_BACKGROUNDS = {
-  indigo: 'linear-gradient(135deg, #7c3aed, #4338ca)',
-  emerald: 'linear-gradient(135deg, #10b981, #047857)',
-  sunset: 'linear-gradient(135deg, #f59e0b, #ef4444)',
-  coral: 'linear-gradient(135deg, #f472b6, #ec4899)',
-  teal: 'linear-gradient(135deg, #14b8a6, #0f766e)',
-  amber: 'linear-gradient(135deg, #fcd34d, #f59e0b)',
-}
-
-function getInitials(name) {
-  if (!name) return 'SF'
-  return name
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0].toUpperCase())
-    .join('')
-}
 
 function UserMenu() {
   const { user, logout } = useAuth()
@@ -41,7 +23,7 @@ function UserMenu() {
 
   const initials = getInitials(user?.name)
   const firstName = user?.name?.split(' ')[0] || 'Profile'
-  const avatarBg = AVATAR_BACKGROUNDS[user?.avatar] || AVATAR_BACKGROUNDS.indigo
+  const avatarBg = getAvatarBackground(user?.avatar)
 
   return (
     <div className="user-menu" ref={ref}>

@@ -1,21 +1,12 @@
 import { useMemo, useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { AVATAR_OPTIONS, getInitials } from '../lib/avatar'
 import ThemeToggle from '../components/ThemeToggle'
 import UserMenu from '../components/UserMenu'
 import './Profile.css'
 
 const API = 'http://localhost:8080/api/investment'
-
-function getInitials(name) {
-  if (!name) return 'SF'
-  return name
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0].toUpperCase())
-    .join('')
-}
 
 function formatCurrency(value) {
   return Number(value || 0).toLocaleString('en-US', {
@@ -37,15 +28,6 @@ function formatDate(value) {
 function getPlanTitle(recommendation, index) {
   return recommendation.title || `Plan ${index + 1}`
 }
-
-const AVATAR_OPTIONS = [
-  { id: 'indigo', label: 'Indigo', background: 'linear-gradient(135deg, #7c3aed, #4338ca)' },
-  { id: 'emerald', label: 'Emerald', background: 'linear-gradient(135deg, #10b981, #047857)' },
-  { id: 'sunset', label: 'Sunset', background: 'linear-gradient(135deg, #f59e0b, #ef4444)' },
-  { id: 'coral', label: 'Coral', background: 'linear-gradient(135deg, #f472b6, #ec4899)' },
-  { id: 'teal', label: 'Teal', background: 'linear-gradient(135deg, #14b8a6, #0f766e)' },
-  { id: 'amber', label: 'Amber', background: 'linear-gradient(135deg, #fcd34d, #f59e0b)' },
-]
 
 function Profile() {
   const navigate = useNavigate()
