@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { motion, useReducedMotion } from 'motion/react'
 import { useTheme } from '../context/ThemeContext'
 import { resolveTransition } from '../lib/motion'
 import './ThemeToggle.css'
@@ -6,32 +6,27 @@ import './ThemeToggle.css'
 function ThemeToggle() {
   const { theme, toggleTheme } = useTheme()
   const shouldReduceMotion = useReducedMotion()
+  const isDark = theme === 'dark'
 
   return (
     <button
-      className="theme-toggle"
+      type="button"
+      className={`theme-switch${isDark ? ' is-dark' : ''}`}
       onClick={toggleTheme}
-      aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+      role="switch"
+      aria-checked={isDark}
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.span
-          key={theme}
-          className="theme-toggle-icon"
-          initial={{ rotate: -90, opacity: 0 }}
-          animate={{
-            rotate: 0,
-            opacity: 1,
-            transition: resolveTransition({ duration: 0.25 }, shouldReduceMotion),
-          }}
-          exit={{
-            rotate: 90,
-            opacity: 0,
-            transition: resolveTransition({ duration: 0.15 }, shouldReduceMotion),
-          }}
-        >
-          {theme === 'light' ? '☽' : '○'}
-        </motion.span>
-      </AnimatePresence>
+      <span className="theme-switch-icon sun" aria-hidden="true">☀</span>
+      <span className="theme-switch-icon moon" aria-hidden="true">☾</span>
+      <motion.span
+        className="theme-switch-knob"
+        animate={{ x: isDark ? 22 : 0 }}
+        transition={resolveTransition(
+          { type: 'spring', stiffness: 500, damping: 32 },
+          shouldReduceMotion,
+        )}
+      />
     </button>
   )
 }

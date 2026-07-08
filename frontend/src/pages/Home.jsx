@@ -51,9 +51,9 @@ function Home() {
 
         <button
           className="hero-button"
-          onClick={() => navigate(user ? "/dashboard" : "/auth")}
+          onClick={() => navigate("/dashboard")}
         >
-          {user ? "Go to Dashboard" : "Get Started"}
+          {user ? "Go to Survey" : "Get Started"}
         </button>
 
         <div className="hero-ticker" aria-hidden="true">

@@ -128,12 +128,14 @@ function BudgetInput() {
     const payload = { budget: Number(budget), timeline, riskTolerance }
 
     try {
+      // Building a plan is public — only attach the token when logged in
+      // (a logged-out visitor taking the survey has none).
+      const headers = { 'Content-Type': 'application/json' }
+      if (token) headers.Authorization = `Bearer ${token}`
+
       const response = await fetch('http://localhost:8080/api/investment', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
+        headers,
         body: JSON.stringify(payload),
       })
       if (!response.ok) {
