@@ -82,16 +82,9 @@ git clone https://github.com/valeriachaconlanz/SproutFund.git
 cd SproutFund
 ```
 
-### 2. Set up Supabase
+### 2. Set up environment variables
 
-1. In your Supabase project's dashboard, open **SQL Editor → New query**, paste the contents of [`supabase/schema.sql`](supabase/schema.sql), and run it. This creates the `profiles` and `investment_recommendations` tables, the signup trigger, and RLS policies.
-2. Go to **Authentication → Sign In / Providers → JWT Keys**. If it shows a legacy shared secret, click **Migrate JWT secret** to switch to the modern asymmetric signing keys — the backend verifies tokens via the public JWKS endpoint, which only exists once you've migrated.
-3. Collect these values from **Project Settings**:
-   - **API → Project URL** and **anon/publishable key** (for the frontend)
-   - **Project Settings → General → Reference ID** (the `xxxx` in `https://xxxx.supabase.co`, for the backend's JWKS URL)
-   - **Database → Connection string → Direct connection** host, plus your database password (for the backend's datasource)
-
-### 3. Set up environment variables
+Both files have committed templates — [`backend/.env.example`](backend/.env.example) and [`frontend/.env.local.example`](frontend/.env.local.example). Copy the template and fill in the real values, or paste in the ready-made files from the group chat. The real `.env` / `.env.local` are gitignored and never committed.
 
 **Frontend** — get `frontend/.env.local` from the group chat, or create it yourself:
 
@@ -121,9 +114,23 @@ export SUPABASE_DB_URL=jdbc:postgresql://db.xxxx.supabase.co:5432/postgres
 export SUPABASE_DB_PASSWORD=...                   # Database password
 ```
 
+#### Creating the file in VS Code (Windows)
+
+On Windows, File Explorer and Notepad make files that start with a dot hard to create — they rename `.env` or add a hidden `.txt`. Create it inside VS Code instead:
+
+1. In the **Explorer** sidebar (left), click the **`backend`** folder to select it (or **`frontend`** for the frontend file).
+2. Click the **New File** icon at the top of the Explorer, or right-click the folder → **New File…**
+3. Type the name exactly, **including the leading dot** — `.env` for the backend, `.env.local` for the frontend — and press **Enter**.
+4. Paste in the variables, fill in the real values, and save with **Ctrl + S**.
+5. Check the name in the sidebar reads exactly `.env` (not `.env.txt` or `env`). If it's wrong, right-click → **Rename** and fix it.
+
+> **Fastest way:** right-click the matching `.env.example` in the sidebar → **Copy**, then **Paste**, then **Rename** the copy to `.env` (or `.env.local`) and fill in the values.
+
+**Loading it on Windows:** the frontend file needs nothing else — Vite reads `.env.local` automatically. For the backend, PowerShell can't `source` a file, so open a **Git Bash** terminal in VS Code (Terminal → New Terminal, then choose **Git Bash** from the dropdown on the right of the terminal panel) and run the same commands as the Mac steps: `source .env && mvn spring-boot:run`. Git Bash ships with Git, which you already have from cloning.
+
 > Both `.env` and `.env.local` are gitignored — they will never be committed. Do not share them anywhere other than the group chat.
 
-### 4. Start the backend
+### 3. Start the backend
 
 Open a terminal in the `backend/` folder, load the env file, and start the server.
 
@@ -154,7 +161,7 @@ Started SproutFundApplication in X seconds
 
 The backend runs at `http://localhost:8080`.
 
-### 5. Start the frontend
+### 4. Start the frontend
 
 Open a **second terminal** in the `frontend/` folder:
 
@@ -168,7 +175,7 @@ The frontend runs at `http://localhost:5173`.
 
 > Both the backend and frontend must be running at the same time.
 
-### 6. Test the full flow
+### 5. Test the full flow
 
 1. Go to `http://localhost:5173`
 2. Click **Sign up** and create an account with any name, email, and password (if your Supabase project requires email confirmation, confirm it before logging in)
@@ -184,7 +191,7 @@ The frontend runs at `http://localhost:5173`.
 
 ### "There was an error generating your plan"
 
-- Make sure you loaded the env variables in the same terminal before `mvn spring-boot:run` (see step 4)
+- Make sure you loaded the env variables in the same terminal before `mvn spring-boot:run` (see step 3)
 - Check the backend terminal for error logs — a line starting with `ERROR` will tell you what went wrong
 
 ### Backend won't start
@@ -192,8 +199,11 @@ The frontend runs at `http://localhost:5173`.
 - Confirm Java 17+ is installed: `java -version`
 - Confirm Maven is installed: `mvn -version`
 - Make sure you're running `mvn spring-boot:run` from inside the `backend/` folder, not the root
-- A `401`/JWKS error on startup usually means `SUPABASE_PROJECT_REF` is wrong, or the project hasn't been migrated to asymmetric JWT signing keys yet (see step 2)
+- A `401`/JWKS error on startup usually means `SUPABASE_PROJECT_REF` is wrong in your `.env`
 - A datasource connection error usually means `SUPABASE_DB_URL` / `SUPABASE_DB_PASSWORD` is wrong, or `supabase/schema.sql` hasn't been run yet
+- **`FATAL: password authentication failed for user "postgres"`** — your `.env` has an outdated or placeholder password. Get the current shared password from the group chat. Don't reset the password in the dashboard: it's shared, so a reset breaks everyone's `.env` until the new one is re-shared.
+- A connection **timeout** (not a password error) can happen on IPv4-only networks that can't reach `db.<ref>.supabase.co:5432`. Switch `SUPABASE_DB_URL` to the **Session pooler** connection string (Database → Connection string → Session pooler) and add `SUPABASE_DB_USER=postgres.<ref>` — same database, reachable host.
+- **`Schema-validation: wrong column type` / `missing column`** — the live database doesn't match the code. Re-run the latest [`supabase/schema.sql`](supabase/schema.sql) in the SQL Editor so the tables match the JPA entities (the backend boots with `ddl-auto=validate`).
 
 ### Frontend shows a blank page or routing error
 
