@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.jwt.JwtClaimValidator;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -52,7 +53,16 @@ public class SecurityConfig {
     // check to make sure we only accept tokens actually meant for our API.
     @Bean
     public JwtDecoder jwtDecoder(@Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}") String jwkSetUri) {
-        NimbusJwtDecoder decoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
+        // Supabase signs access tokens with ES256 (elliptic-curve P-256) when
+        // the project is on asymmetric JWT keys. NimbusJwtDecoder defaults to
+        // expecting RS256, so without this it rejects every token with
+        // "Signed JWT rejected: Another algorithm expected". RS256 is also
+        // accepted so the decoder keeps working if the project ever rotates to
+        // an RSA signing key.
+        NimbusJwtDecoder decoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri)
+                .jwsAlgorithm(SignatureAlgorithm.ES256)
+                .jwsAlgorithm(SignatureAlgorithm.RS256)
+                .build();
 
         OAuth2TokenValidator<org.springframework.security.oauth2.jwt.Jwt> withTimestamps = JwtValidators.createDefault();
         OAuth2TokenValidator<org.springframework.security.oauth2.jwt.Jwt> withAudience =
