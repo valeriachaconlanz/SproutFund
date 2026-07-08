@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
 import { useAuth } from '../context/AuthContext'
 import { getAvatarBackground, getInitials } from '../lib/avatar'
+import { bounceSpring, quickFade, resolveTransition } from '../lib/motion'
 import './UserMenu.css'
 
 function UserMenu() {
@@ -9,6 +11,7 @@ function UserMenu() {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
+  const shouldReduceMotion = useReducedMotion()
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -44,32 +47,49 @@ function UserMenu() {
         <span className="user-menu-name">{firstName}</span>
       </button>
 
-      {open && (
-        <div className="user-menu-dropdown">
-          <button
-            type="button"
-            className="user-menu-item"
-            onClick={() => {
-              setOpen(false)
-              navigate('/profile')
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className="user-menu-dropdown"
+            initial={{ opacity: 0, scale: 0.95, y: -10 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: 0,
+              transition: resolveTransition(bounceSpring, shouldReduceMotion),
+            }}
+            exit={{
+              opacity: 0,
+              scale: 0.95,
+              y: -10,
+              transition: resolveTransition(quickFade, shouldReduceMotion),
             }}
           >
-            Profile
-          </button>
-          <div className="user-menu-divider" />
-          <button
-            type="button"
-            className="user-menu-item user-menu-signout"
-            onClick={() => {
-              setOpen(false)
-              logout()
-              navigate('/auth')
-            }}
-          >
-            Sign out
-          </button>
-        </div>
-      )}
+            <button
+              type="button"
+              className="user-menu-item"
+              onClick={() => {
+                setOpen(false)
+                navigate('/profile')
+              }}
+            >
+              Profile
+            </button>
+            <div className="user-menu-divider" />
+            <button
+              type="button"
+              className="user-menu-item user-menu-signout"
+              onClick={() => {
+                setOpen(false)
+                logout()
+                navigate('/auth')
+              }}
+            >
+              Sign out
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
