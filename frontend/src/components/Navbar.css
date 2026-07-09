@@ -1,5 +1,5 @@
 .navbar {
-  position: absolute;
+  position: sticky;
   top: 0;
   left: 0;
 
@@ -9,7 +9,7 @@
 
   border-bottom: 1px solid var(--border);
 
-  background: transparent;
+  background: var(--surface);
   z-index: 100;
 }
 
@@ -84,6 +84,21 @@
 
 .settings-wrapper {
   position: relative;
+}
+
+.user-menu-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 4px;
+}
+
+.nav-user-greeting {
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0.6;
 }
 
 .settings-menu {

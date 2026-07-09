@@ -1,39 +1,42 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ThemeToggle from "./ThemeToggle";
+import UserMenu from "./UserMenu";
 import "./Navbar.css";
 
 function Navbar() {
   const [settingsOpen, setSettingsOpen] = useState(false);
-
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  function handleLogout() {
-    logout();
-    navigate("/auth");
-  }
+  const { user } = useAuth();
+  const firstName = user?.name?.split(" ")[0] || "User";
 
   return (
     <nav className="navbar">
       <div className="navbar-content">
-        <Link to="/" className="logo">
+        <Link to="/" className="logo" onClick={() => setSettingsOpen(false)}>
           Sprout<span>Fund</span>
         </Link>
 
         <div className="nav-pill">
           {user ? (
             <>
-              <Link to="/dashboard">Dashboard</Link>
-              <Link to="/results">Results</Link>
-              <Link to="/tips">Tips</Link>
-              <Link to="/glossary">Glossary</Link>
+              <Link to="/dashboard" onClick={() => setSettingsOpen(false)}>
+                Dashboard
+              </Link>
+              <Link to="/results" onClick={() => setSettingsOpen(false)}>
+                Results
+              </Link>
+              <Link to="/tips" onClick={() => setSettingsOpen(false)}>
+                Tips
+              </Link>
+              <Link to="/glossary" onClick={() => setSettingsOpen(false)}>
+                Glossary
+              </Link>
 
               <div className="settings-wrapper">
                 <button
                   className="nav-button"
-                  onClick={() => setSettingsOpen(!settingsOpen)}
+                  onClick={() => setSettingsOpen((current) => !current)}
                   type="button"
                 >
                   Settings
@@ -46,19 +49,43 @@ function Navbar() {
                 )}
               </div>
 
-              <button className="nav-button" onClick={handleLogout} type="button">
-                Logout
-              </button>
+              <div className="user-menu-inline">
+                <span className="nav-user-greeting">Hi, {firstName}</span>
+                <UserMenu />
+              </div>
             </>
           ) : (
             <>
-              <Link to="/">Home</Link>
-              <Link to="/tips">Tips</Link>
-              <Link to="/glossary">Glossary</Link>
+              <Link to="/" onClick={() => setSettingsOpen(false)}>
+                Home
+              </Link>
+              <Link to="/dashboard" onClick={() => setSettingsOpen(false)}>
+                Dashboard
+              </Link>
+              <Link to="/tips" onClick={() => setSettingsOpen(false)}>
+                Tips
+              </Link>
+              <Link to="/glossary" onClick={() => setSettingsOpen(false)}>
+                Glossary
+              </Link>
 
-              <ThemeToggle />
+              <div className="settings-wrapper">
+                <button
+                  className="nav-button"
+                  onClick={() => setSettingsOpen((current) => !current)}
+                  type="button"
+                >
+                  Settings
+                </button>
 
-              <Link to="/auth" className="cta-link">
+                {settingsOpen && (
+                  <div className="settings-menu">
+                    <ThemeToggle />
+                  </div>
+                )}
+              </div>
+
+              <Link to="/auth" className="cta-link" onClick={() => setSettingsOpen(false)}>
                 Get Started
               </Link>
             </>
