@@ -14,12 +14,24 @@
 
 :root {
   --background: #ffffff;
-  --surface: #f4f4f5;
-  --text-primary: #110e08;
-  --text-secondary: #4d4a46;
-  --text-muted: #bfbfbf;
-  --border: #35322d;
+  --surface: #f1f5f2;
+  --text-primary: #0f1c15;
+  --text-secondary: #4b544e;
+  --text-muted: #6f776f;
+  --border: #d9e0da;
   --accent: #ccff00;
+  --accent-deep: #a9d900;
+  /* Evergreen carries the brand's "growth" story — used for the nav pill and
+     structural elements (step numbers, markers) instead of a flat near-black. */
+  --forest: #0d3b26;
+  --forest-tint: #eaf3ec;
+  /* Text/icons that sit ON the lime accent. Always dark, in both themes, so
+     the lime never ends up with light-on-light (the old readability bug). */
+  --on-accent: #0c2417;
+  /* Accent-colored TEXT that sits on the page/surface (labels, arrow bullets).
+     Lime text is invisible on white, so in light mode this is a deep evergreen;
+     in dark mode it becomes the lime accent (see the dark block). */
+  --accent-ink: #12603a;
 
   --shadow-raised: rgb(128, 128, 128) 0px 0px 5px 0px;
   --shadow-floating: 0 1px 12px rgba(48, 51, 51, 0.09);
@@ -32,20 +44,57 @@
 
   --font-heading: "Maison Neue Extended", system-ui, sans-serif;
   --font-body: "Capsule Sans Text Mono", ui-monospace, monospace;
+
+  --nav-transition-fast: 0.15s ease;
+  --nav-transition-bounce: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Floating pill navbar — a rich evergreen pill on the light page. */
+  --nav-bg: var(--forest);
+  --nav-fg: rgba(255, 255, 255, 0.82);
+  --nav-fg-active: #ffffff;
+  --nav-cta-bg: var(--accent);
+  --nav-cta-text: var(--on-accent);
 }
 
 html[data-theme="dark"] {
-  --background: #111111;
-  --surface: #1c1c1c;
-  --text-primary: #f2efe9;
-  --text-secondary: #9a9793;
-  --text-muted: #717070;
-  --border: #3a3733;
+  /* Green-tinted near-blacks instead of flat charcoal — subtle, but it warms
+     the whole page and pulls it out of "boring grey". */
+  --background: #0e1410;
+  --surface: #16211b;
+  --text-primary: #eef2ec;
+  --text-secondary: #a4b0a6;
+  --text-muted: #808b81;
+  --border: #26362c;
   --accent: #ccff00;
+  --accent-deep: #b6e400;
+  --forest: #143324;
+  --forest-tint: #16211b;
+  --on-accent: #0c2417;
+  /* On the dark page, lime reads fine as accent text. */
+  --accent-ink: var(--accent);
 
   --shadow-raised: rgba(0, 0, 0, 0.6) 0px 0px 8px 0px;
   --shadow-floating: 0 1px 12px rgba(0, 0, 0, 0.5);
   --shadow-subtle: 0 1px 0 rgba(0, 0, 0, 0.4);
+
+  /* A deep-evergreen pill gives the nav presence against the dark page,
+     instead of the old grey-on-grey that vanished into the background. */
+  --nav-bg: #163a29;
+  --nav-fg: rgba(233, 242, 233, 0.78);
+  --nav-fg-active: #f4f7f3;
+  --nav-cta-bg: var(--accent);
+  --nav-cta-text: var(--on-accent);
+}
+
+@keyframes nav-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 * {

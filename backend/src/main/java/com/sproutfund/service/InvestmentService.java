@@ -82,7 +82,7 @@ public class InvestmentService {
                 .map(tb -> tb.text())
                 .orElse(null);
 
-            if (json == null) return fallbackResponse(budget, timeline);
+            if (json == null) return fallbackResponse(budget, timeline, riskTolerance);
 
             JsonNode root = objectMapper.readTree(json);
             List<InvestmentStrategy> strategies = new ArrayList<>();
@@ -100,22 +100,22 @@ public class InvestmentService {
                 ));
             }
             String disclaimer = root.get("disclaimer").asText();
-            return new InvestmentResponse(budget, timeline, strategies, disclaimer);
+            return new InvestmentResponse(budget, timeline, riskTolerance, strategies, disclaimer);
 
         } catch (AnthropicServiceException e) {
             log.error("Claude API error (HTTP {}): {}", e.statusCode(), e.getMessage());
-            return fallbackResponse(budget, timeline);
+            return fallbackResponse(budget, timeline, riskTolerance);
         } catch (AnthropicException e) {
             log.error("Claude client error: {}", e.getMessage());
-            return fallbackResponse(budget, timeline);
+            return fallbackResponse(budget, timeline, riskTolerance);
         } catch (Exception e) {
             log.error("Failed to parse Claude response: {}", e.getMessage());
-            return fallbackResponse(budget, timeline);
+            return fallbackResponse(budget, timeline, riskTolerance);
         }
     }
 
-    private InvestmentResponse fallbackResponse(double budget, String timeline) {
-        return new InvestmentResponse(budget, timeline,
+    private InvestmentResponse fallbackResponse(double budget, String timeline, String riskTolerance) {
+        return new InvestmentResponse(budget, timeline, riskTolerance,
             List.of(new InvestmentStrategy(
                 "Service Unavailable",
                 100,

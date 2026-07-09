@@ -3,12 +3,10 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import './Auth.css'
 
-const API = 'http://localhost:8080/api/auth'
-
 function Auth() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { login } = useAuth()
+  const { signIn, signUp } = useAuth()
 
   const [mode, setMode] = useState('login')
   const [fields, setFields] = useState({ name: '', email: '', password: '' })
@@ -45,31 +43,27 @@ function Auth() {
     setLoading(true)
     setServerError('')
 
-    const endpoint = mode === 'login' ? '/login' : '/register'
-    const body = mode === 'login'
-      ? { email: fields.email, password: fields.password }
-      : { name: fields.name, email: fields.email, password: fields.password }
-
     try {
-      const res = await fetch(`${API}${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      })
-      const data = await res.json()
-
-      if (!res.ok) {
-        setServerError(data.error || 'Something went wrong. Please try again.')
-        return
+      if (mode === 'login') {
+        const { error } = await signIn(fields.email, fields.password)
+        if (error) {
+          setServerError(error.message || 'Invalid email or password.')
+          return
+        }
+        navigate(from, { replace: true })
+      } else {
+        const { error, needsEmailConfirmation } = await signUp(fields.name, fields.email, fields.password)
+        if (error) {
+          setServerError(error.message || 'Something went wrong. Please try again.')
+          return
+        }
+        if (needsEmailConfirmation) {
+          setMode('login')
+          setServerError('Account created — check your email to confirm it before signing in.')
+          return
+        }
+        navigate(from, { replace: true })
       }
-
-      login({
-        token: data.token,
-        name: data.name ?? fields.name,
-        email: data.email ?? fields.email,
-        password: fields.password,
-      })
-      navigate(from, { replace: true })
     } catch {
       setServerError('Unable to connect to the server. Please try again.')
     } finally {

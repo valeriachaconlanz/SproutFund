@@ -1,95 +1,88 @@
-import { createContext, useContext, useState, useCallback } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback } from 'react'
+import { supabase } from '../lib/supabaseClient'
 
 const AuthContext = createContext(null)
 
-// localStorage so the JWT and user info survive a page refresh without re-hitting the server
-const TOKEN_KEY = 'sproutfund_token'
-const USER_KEY = 'sproutfund_user'
-const RECOMMENDATIONS_KEY = 'sproutfund_recommendations'
+function toUser(session) {
+  if (!session?.user) return null
+  const meta = session.user.user_metadata || {}
+  return {
+    name: meta.name || '',
+    email: session.user.email,
+    avatar: meta.avatar || 'indigo',
+    photo: meta.photo || '',
+  }
+}
 
 export function AuthProvider({ children }) {
-  // Read from storage on first render so the app boots already authenticated
-  const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY))
-  const [user, setUser] = useState(() => {
-    const stored = localStorage.getItem(USER_KEY)
-    return stored ? JSON.parse(stored) : null
-  })
-  const [recommendations, setRecommendations] = useState(() => {
-    const stored = localStorage.getItem(RECOMMENDATIONS_KEY)
-    return stored ? JSON.parse(stored) : []
-  })
+  // Supabase persists the session itself (localStorage) and handles token
+  // refresh in the background — we just mirror its current session here.
+  const [session, setSession] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  const login = useCallback((authData) => {
-    const nextUser = {
-      name: authData.name,
-      email: authData.email,
-      avatar: authData.avatar || 'indigo',
-      photo: authData.photo || '',
-    }
-    localStorage.setItem(TOKEN_KEY, authData.token)
-    localStorage.setItem(USER_KEY, JSON.stringify(nextUser))
-    setToken(authData.token)
-    setUser(nextUser)
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session)
+      setLoading(false)
+    })
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession)
+    })
+
+    return () => listener.subscription.unsubscribe()
   }, [])
 
-  const updateUser = useCallback((updatedUser) => {
-    const nextUser = {
-      name: updatedUser.name,
-      email: updatedUser.email,
-      password: updatedUser.password,
-      avatar: updatedUser.avatar ?? user?.avatar ?? 'indigo',
-      photo: updatedUser.photo ?? user?.photo ?? '',
-    }
-    localStorage.setItem(USER_KEY, JSON.stringify(nextUser))
-    setUser(nextUser)
-  }, [user])
-
-  const logout = useCallback(() => {
-    localStorage.removeItem(TOKEN_KEY)
-    localStorage.removeItem(USER_KEY)
-    setToken(null)
-    setUser(null)
+  const signIn = useCallback(async (email, password) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    return { error }
   }, [])
 
-  const addRecommendation = useCallback((recommendation) => {
-    const newRec = {
-      id: Date.now(),
-      createdAt: new Date().toISOString(),
-      title: recommendation.title || '',
-      budget: recommendation.budget,
-      timeline: recommendation.timeline,
-      riskLevel: recommendation.riskLevel,
-      riskTolerance: recommendation.riskTolerance || recommendation.riskLevel,
-      strategies: recommendation.strategies,
-      disclaimer: recommendation.disclaimer || '',
-    }
-    const updated = [newRec, ...recommendations]
-    localStorage.setItem(RECOMMENDATIONS_KEY, JSON.stringify(updated))
-    setRecommendations(updated)
-    return newRec
-  }, [recommendations])
+  const signUp = useCallback(async (name, email, password) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { name } },
+    })
+    // If email confirmation is required, Supabase returns a user but no
+    // session — the caller needs to know so it doesn't treat this as login.
+    return { error, needsEmailConfirmation: !error && !data.session }
+  }, [])
 
-  const updateRecommendation = useCallback((id, updates) => {
-    const updated = recommendations.map((recommendation) => (
-      recommendation.id === id
-        ? { ...recommendation, ...updates, updatedAt: new Date().toISOString() }
-        : recommendation
-    ))
-    localStorage.setItem(RECOMMENDATIONS_KEY, JSON.stringify(updated))
-    setRecommendations(updated)
-  }, [recommendations])
+  const logout = useCallback(async () => {
+    await supabase.auth.signOut()
+  }, [])
 
-  const removeRecommendation = useCallback((id) => {
-    const updated = recommendations.filter((recommendation) => recommendation.id !== id)
-    localStorage.setItem(RECOMMENDATIONS_KEY, JSON.stringify(updated))
-    setRecommendations(updated)
-  }, [recommendations])
+  // Profile page calls this for name/email/password/avatar/photo edits.
+  // avatar/photo live in Supabase user_metadata — there's no dedicated
+  // column for them, so they ride along with `data` like `name` does.
+  const updateProfile = useCallback(async ({ name, email, password, avatar, photo }) => {
+    const payload = {}
+    if (email !== undefined) payload.email = email
+    if (password) payload.password = password
 
-  return (
-    <AuthContext.Provider value={{ token, user, isAuthenticated: !!token, login, logout, updateUser, recommendations, addRecommendation, updateRecommendation, removeRecommendation }}>
-      {children}
-    </AuthContext.Provider>
-  )
+    const data = {}
+    if (name !== undefined) data.name = name
+    if (avatar !== undefined) data.avatar = avatar
+    if (photo !== undefined) data.photo = photo
+    if (Object.keys(data).length > 0) payload.data = data
+
+    const { error } = await supabase.auth.updateUser(payload)
+    return { error }
+  }, [])
+
+  const value = {
+    token: session?.access_token || null,
+    user: toUser(session),
+    isAuthenticated: !!session,
+    loading,
+    signIn,
+    signUp,
+    logout,
+    updateProfile,
+  }
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {

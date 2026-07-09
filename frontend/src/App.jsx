@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { ThemeProvider } from './context/ThemeContext'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -6,23 +6,17 @@ import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import InvestmentForm from './pages/InvestmentForm'
 import Results from './pages/Results'
+import History from './pages/History'
 import Auth from './pages/Auth'
 import Glossary from './pages/Glossary'
 import MarketTips from './pages/MarketTips'
 import Profile from './pages/Profile'
 import './App.css'
 
-// These routes render their own nav bar (logo, theme toggle, user menu),
-// so the global Navbar would just duplicate it.
-const ROUTES_WITH_OWN_NAV = ['/dashboard', '/results', '/profile']
-
 function AppRoutes() {
-  const location = useLocation()
-  const showGlobalNavbar = !ROUTES_WITH_OWN_NAV.includes(location.pathname)
-
   return (
     <>
-      {showGlobalNavbar && <Navbar />}
+      <Navbar />
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -33,20 +27,24 @@ function AppRoutes() {
 
         <Route path="/glossary" element={<Glossary />} />
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <InvestmentForm />
-            </ProtectedRoute>
-          }
-        />
+        {/* The survey is public — anyone can build a plan; only saving it
+            (on the Results page) requires an account. */}
+        <Route path="/dashboard" element={<InvestmentForm />} />
 
         <Route
           path="/results"
           element={
             <ProtectedRoute>
               <Results />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/history"
+          element={
+            <ProtectedRoute>
+              <History />
             </ProtectedRoute>
           }
         />

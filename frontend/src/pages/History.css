@@ -1,0 +1,131 @@
+.history-page {
+  min-height: 100vh;
+  background: var(--background);
+  padding: 24px 16px 64px;
+  padding-top: 110px;
+}
+
+.history-content {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.history-header { margin-bottom: 4px; }
+
+.history-title {
+  font-family: var(--font-heading);
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 6px;
+}
+
+.history-subtitle {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.history-status {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 32px 0;
+}
+
+.history-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.history-cta {
+  padding: 12px 20px;
+  background: var(--accent);
+  color: #110e08;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.history-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.history-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-date {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.history-risk {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.history-risk.risk-low    { color: #27ae60; }
+.history-risk.risk-medium { color: #e67e22; }
+.history-risk.risk-high   { color: #c0392b; }
+
+.history-card-main {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.history-budget {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.history-timeline {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.history-strategies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.history-strategy-tag {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-primary);
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+}

@@ -21,8 +21,13 @@ public class InvestmentStrategy {
     }
 
     public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
     public int getAllocation() { return allocation; }
+    public void setAllocation(int allocation) { this.allocation = allocation; }
     public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
     public List<String> getVehicles() { return vehicles; }
+    public void setVehicles(List<String> vehicles) { this.vehicles = vehicles; }
     public String getPlatform() { return platform; }
+    public void setPlatform(String platform) { this.platform = platform; }
 }

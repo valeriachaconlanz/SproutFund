@@ -1,23 +1,23 @@
-import { useLocation, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import ThemeToggle from '../components/ThemeToggle'
-import UserMenu from '../components/UserMenu'
+import { TIMELINE_LABELS, RISK_LABELS } from '../lib/labels'
 import './Results.css'
 
-const TIMELINE_LABELS = {
-  short: 'Short Term (Under 1 year)',
-  medium: 'Medium Term (1–5 years)',
-  long: 'Long Term (5+ years)',
-}
-
-const RISK_LABELS = {
-  low: 'Low',
-  medium: 'Medium',
-  high: 'High',
-}
-
 const COLORS = ['#ccff00', '#7eb8f7', '#f7a07e']
+
+// A logged-out visitor who hits "Save" gets bounced to /auth; we stash their
+// built plan here so they land back on it (and can save) after signing up.
+const PENDING_PLAN_KEY = 'sproutfund_pending_plan'
+
+function readPendingPlan() {
+  try {
+    const stored = sessionStorage.getItem(PENDING_PLAN_KEY)
+    return stored ? JSON.parse(stored) : null
+  } catch {
+    return null
+  }
+}
 
 function formatCurrency(value) {
   return Number(value).toLocaleString('en-US', {
@@ -79,21 +79,6 @@ function buildPrintablePlan({ budget, timeline, risk, strategies, disclaimer }) 
       </body>
     </html>
   `
-}
-
-function ResultsNav() {
-  const { user } = useAuth()
-
-  return (
-    <nav className="results-nav">
-      <span className="results-logo">Sprout<span>Fund</span></span>
-      <div className="results-nav-right">
-        {user && <span className="results-user">Hi, {user.name.split(' ')[0]}</span>}
-        <ThemeToggle />
-        <UserMenu />
-      </div>
-    </nav>
-  )
 }
 
 function AllocationBar({ strategies }) {
@@ -170,13 +155,15 @@ function StrategyCard({ strategy, index, budget }) {
 function Results() {
   const { state } = useLocation()
   const navigate = useNavigate()
-  const { addRecommendation } = useAuth()
-  const [savedPlanId, setSavedPlanId] = useState(state?.id || null)
+  const { token } = useAuth()
+  const [saveState, setSaveState] = useState('idle') // idle | saving | saved | error
+  // Prefer a freshly-navigated plan (router state); otherwise fall back to a
+  // plan stashed before an auth detour so it survives the round trip.
+  const [plan] = useState(() => state || readPendingPlan())
 
-  if (!state || !state.budget) {
+  if (!plan || !plan.budget) {
     return (
       <div className="results-page">
-        <ResultsNav />
         <div className="results-empty">
           <h1 className="results-title">No plan found.</h1>
           <p className="results-subtitle">Please fill out the investment form first.</p>
@@ -186,22 +173,10 @@ function Results() {
     )
   }
 
-  const { budget, timeline, riskTolerance, riskLevel, strategies, disclaimer } = state
+  const { budget, timeline, riskTolerance, riskLevel, strategies, disclaimer } = plan
   const selectedRisk = riskTolerance || riskLevel
   const timelineLabel = TIMELINE_LABELS[timeline] || timeline
   const riskLabel = RISK_LABELS[selectedRisk] || selectedRisk
-
-  function handleSavePlan() {
-    const savedPlan = addRecommendation({
-      budget,
-      timeline,
-      riskTolerance: selectedRisk,
-      riskLevel: selectedRisk,
-      strategies,
-      disclaimer,
-    })
-    setSavedPlanId(savedPlan.id)
-  }
 
   function handleDownloadPdf() {
     const printWindow = window.open('', '_blank')
@@ -222,10 +197,35 @@ function Results() {
     printWindow.print()
   }
 
+  async function handleSave() {
+    // Saving requires an account. Stash the plan and send them to sign up;
+    // they'll return here (via readPendingPlan) able to save it.
+    if (!token) {
+      sessionStorage.setItem(PENDING_PLAN_KEY, JSON.stringify(plan))
+      navigate('/auth', { state: { from: { pathname: '/results' } } })
+      return
+    }
+
+    setSaveState('saving')
+    try {
+      const response = await fetch('http://localhost:8080/api/investment/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ budget, timeline, riskTolerance: selectedRisk, strategies, disclaimer }),
+      })
+      if (!response.ok) throw new Error('Save failed.')
+      sessionStorage.removeItem(PENDING_PLAN_KEY)
+      setSaveState('saved')
+    } catch {
+      setSaveState('error')
+    }
+  }
+
   return (
     <div className="results-page">
-      <ResultsNav />
-
       <div className="results-content">
         <div className="results-header">
           <h1 className="results-title">Your Investment Plan</h1>
@@ -249,24 +249,6 @@ function Results() {
           </div>
         </div>
 
-        <div className="results-actions">
-          <button
-            type="button"
-            className="results-action-btn primary"
-            onClick={handleSavePlan}
-            disabled={!!savedPlanId}
-          >
-            {savedPlanId ? 'Plan saved' : 'Save plan'}
-          </button>
-          <button
-            type="button"
-            className="results-action-btn"
-            onClick={handleDownloadPdf}
-          >
-            Download PDF
-          </button>
-        </div>
-
         {strategies && strategies.length > 0 && (
           <>
             <AllocationBar strategies={strategies} />
@@ -285,6 +267,32 @@ function Results() {
           </div>
         )}
 
+        <div className="results-actions">
+          <button
+            type="button"
+            className="results-action-btn primary"
+            onClick={handleSave}
+            disabled={saveState === 'saving' || saveState === 'saved'}
+          >
+            {!token
+              ? 'Create an account to save'
+              : saveState === 'saving'
+                ? 'Saving...'
+                : saveState === 'saved'
+                  ? 'Saved ✓'
+                  : 'Save This Plan'}
+          </button>
+          <button
+            type="button"
+            className="results-action-btn"
+            onClick={handleDownloadPdf}
+          >
+            Download PDF
+          </button>
+        </div>
+        {saveState === 'error' && (
+          <p className="save-error">Couldn't save your plan. Please try again.</p>
+        )}
         <button className="back-btn" onClick={() => navigate('/dashboard')}>
           Adjust My Plan
         </button>

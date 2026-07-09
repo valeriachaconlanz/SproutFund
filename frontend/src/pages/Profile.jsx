@@ -1,19 +1,10 @@
 import { useMemo, useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import ThemeToggle from '../components/ThemeToggle'
-import UserMenu from '../components/UserMenu'
+import { AVATAR_OPTIONS, getInitials } from '../lib/avatar'
 import './Profile.css'
 
-function getInitials(name) {
-  if (!name) return 'SF'
-  return name
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0].toUpperCase())
-    .join('')
-}
+const API = 'http://localhost:8080/api/investment'
 
 function formatCurrency(value) {
   return Number(value || 0).toLocaleString('en-US', {
@@ -36,37 +27,26 @@ function getPlanTitle(recommendation, index) {
   return recommendation.title || `Plan ${index + 1}`
 }
 
-const AVATAR_OPTIONS = [
-  { id: 'indigo', label: 'Indigo', background: 'linear-gradient(135deg, #7c3aed, #4338ca)' },
-  { id: 'emerald', label: 'Emerald', background: 'linear-gradient(135deg, #10b981, #047857)' },
-  { id: 'sunset', label: 'Sunset', background: 'linear-gradient(135deg, #f59e0b, #ef4444)' },
-  { id: 'coral', label: 'Coral', background: 'linear-gradient(135deg, #f472b6, #ec4899)' },
-  { id: 'teal', label: 'Teal', background: 'linear-gradient(135deg, #14b8a6, #0f766e)' },
-  { id: 'amber', label: 'Amber', background: 'linear-gradient(135deg, #fcd34d, #f59e0b)' },
-]
-
 function Profile() {
   const navigate = useNavigate()
-  const {
-    user,
-    updateUser,
-    recommendations,
-    updateRecommendation,
-    removeRecommendation,
-  } = useAuth()
+  const { user, token, updateProfile } = useAuth()
 
   const [formValues, setFormValues] = useState({
     name: user?.name || '',
     email: user?.email || '',
-    password: user?.password || '',
+    password: '',
     avatar: user?.avatar || 'indigo',
     photo: user?.photo || '',
   })
   const [saved, setSaved] = useState(false)
+  const [saveError, setSaveError] = useState('')
   const [pickerOpen, setPickerOpen] = useState(false)
   const [editingPlanId, setEditingPlanId] = useState(null)
   const [editingTitle, setEditingTitle] = useState('')
   const [pendingDeleteId, setPendingDeleteId] = useState(null)
+
+  const [recStatus, setRecStatus] = useState('loading') // loading | ready | error
+  const [recommendations, setRecommendations] = useState([])
 
   const pickerRef = useRef(null)
   const fileInputRef = useRef(null)
@@ -93,17 +73,40 @@ function Profile() {
     return () => document.removeEventListener('keydown', handleEscape)
   }, [])
 
-  const profileStats = useMemo(() => {
-    const totalSaved = recommendations?.length || 0
+  useEffect(() => {
+    let cancelled = false
 
-    const totalBudget = (recommendations || []).reduce(
+    async function load() {
+      try {
+        const response = await fetch(`${API}/history`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        if (!response.ok) throw new Error('Failed to load history.')
+        const data = await response.json()
+        if (!cancelled) {
+          setRecommendations(data)
+          setRecStatus('ready')
+        }
+      } catch {
+        if (!cancelled) setRecStatus('error')
+      }
+    }
+
+    load()
+    return () => { cancelled = true }
+  }, [token])
+
+  const profileStats = useMemo(() => {
+    const totalSaved = recommendations.length
+
+    const totalBudget = recommendations.reduce(
       (sum, rec) => sum + Number(rec.budget || 0),
       0
-  )
+    )
     const averageBudget = totalSaved ? totalBudget / totalSaved : 0
-    const latestSaved = recommendations?.[0]?.createdAt
-    const riskCounts = (recommendations || []).reduce((counts, rec) => {
-      const risk = rec.riskLevel || rec.riskTolerance || 'unknown'
+    const latestSaved = recommendations[0]?.createdAt
+    const riskCounts = recommendations.reduce((counts, rec) => {
+      const risk = rec.riskTolerance || 'unknown'
       counts[risk] = (counts[risk] || 0) + 1
       return counts
     }, {})
@@ -122,7 +125,7 @@ function Profile() {
   const hasUnsavedChanges = useMemo(() => (
     formValues.name !== (user?.name || '') ||
     formValues.email !== (user?.email || '') ||
-    formValues.password !== (user?.password || '')
+    formValues.password.length > 0
   ), [formValues.email, formValues.name, formValues.password, user])
 
   function handleChange(key, value) {
@@ -130,12 +133,11 @@ function Profile() {
     setFormValues((prev) => ({ ...prev, [key]: value }))
   }
 
-  function handleAvatarSelect(avatar) {
-    const next = { ...formValues, avatar }
-    setFormValues(next)
-    updateUser(next)
-    setSaved(true)
+  async function handleAvatarSelect(avatar) {
+    setFormValues((prev) => ({ ...prev, avatar }))
     setPickerOpen(false)
+    const { error } = await updateProfile({ avatar })
+    setSaved(!error)
   }
 
   function handlePhotoUpload(e) {
@@ -143,29 +145,38 @@ function Profile() {
     if (!file) return
 
     const reader = new FileReader()
-    reader.onload = () => {
-      const next = { ...formValues, photo: reader.result }
-      setFormValues(next)
-      updateUser(next)
-      setSaved(true)
+    reader.onload = async () => {
+      const photo = reader.result
+      setFormValues((prev) => ({ ...prev, photo }))
       setPickerOpen(false)
+      const { error } = await updateProfile({ photo })
+      setSaved(!error)
     }
     reader.readAsDataURL(file)
   }
 
-  function handlePhotoRemove() {
-    const next = { ...formValues, photo: '' }
-    setFormValues(next)
-    updateUser(next)
-    setSaved(true)
+  async function handlePhotoRemove() {
+    setFormValues((prev) => ({ ...prev, photo: '' }))
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
+    const { error } = await updateProfile({ photo: '' })
+    setSaved(!error)
   }
 
-  function handleSave(e) {
+  async function handleSave(e) {
     e.preventDefault()
-    updateUser(formValues)
+    setSaveError('')
+    const { error } = await updateProfile({
+      name: formValues.name,
+      email: formValues.email,
+      password: formValues.password || undefined,
+    })
+    if (error) {
+      setSaveError(error.message || 'Could not save changes.')
+      return
+    }
+    setFormValues((prev) => ({ ...prev, password: '' }))
     setSaved(true)
   }
 
@@ -184,8 +195,23 @@ function Profile() {
     setEditingTitle('')
   }
 
-  function handleSaveRename(id) {
-    updateRecommendation(id, { title: editingTitle.trim() })
+  async function handleSaveRename(id) {
+    const title = editingTitle.trim()
+    try {
+      const response = await fetch(`${API}/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ title }),
+      })
+      if (!response.ok) throw new Error('Rename failed.')
+      const updated = await response.json()
+      setRecommendations((prev) => prev.map((rec) => (rec.id === id ? updated : rec)))
+    } catch {
+      // Leave the list as-is; the title in the input is discarded and the user can retry.
+    }
     handleCancelRename()
   }
 
@@ -195,33 +221,29 @@ function Profile() {
     setPendingDeleteId(id)
   }
 
-  function handleConfirmDelete(id) {
-    removeRecommendation(id)
-    setPendingDeleteId(null)
+  async function handleConfirmDelete(id) {
+    try {
+      const response = await fetch(`${API}/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (!response.ok) throw new Error('Delete failed.')
+      setRecommendations((prev) => prev.filter((rec) => rec.id !== id))
+    } catch {
+      // Leave the list as-is; the user can retry the delete.
+    } finally {
+      setPendingDeleteId(null)
+    }
   }
 
   const avatarOption =
     AVATAR_OPTIONS.find((option) => option.id === formValues.avatar) || AVATAR_OPTIONS[0]
   const avatarInitials = getInitials(formValues.name || user?.name)
-  const pendingDeletePlan = recommendations?.find((rec) => rec.id === pendingDeleteId)
-  const pendingDeleteIndex = recommendations?.findIndex((rec) => rec.id === pendingDeleteId) ?? -1
+  const pendingDeletePlan = recommendations.find((rec) => rec.id === pendingDeleteId)
+  const pendingDeleteIndex = recommendations.findIndex((rec) => rec.id === pendingDeleteId)
 
   return (
     <main className="profile-page">
-      <nav className="profile-nav">
-        <span className="profile-logo">
-          Sprout<span>Fund</span>
-        </span>
-
-        <div className="profile-nav-actions">
-          <ThemeToggle />
-          <button className="profile-nav-btn" onClick={() => navigate('/dashboard')}>
-            Back to dashboard
-          </button>
-          <UserMenu />
-        </div>
-      </nav>
-
       <div className="profile-shell">
         <section className="profile-panel profile-account-panel">
           <div className="profile-panel-heading">
@@ -331,11 +353,13 @@ function Profile() {
             </div>
 
             <div className="profile-field">
-              <label>PASSWORD</label>
+              <label>NEW PASSWORD</label>
               <input
                 type="password"
+                placeholder="Leave blank to keep your current password"
                 value={formValues.password}
                 onChange={(e) => handleChange('password', e.target.value)}
+                autoComplete="new-password"
               />
             </div>
 
@@ -344,7 +368,8 @@ function Profile() {
                 Save changes
               </button>
               {hasUnsavedChanges && <span className="profile-unsaved">Unsaved changes...</span>}
-              {saved && !hasUnsavedChanges && <span className="profile-saved">Saved locally</span>}
+              {saved && !hasUnsavedChanges && <span className="profile-saved">Saved</span>}
+              {saveError && <span className="profile-error">{saveError}</span>}
             </div>
           </form>
         </section>
@@ -377,97 +402,104 @@ function Profile() {
             </div>
           </div>
 
-          {recommendations?.length ? (
-            <div className="recommendations-list">
-              {recommendations.map((rec, index) => {
-                const topStrategy = rec.strategies?.[0]
-                const isEditing = editingPlanId === rec.id
+          {recStatus === 'loading' && <p className="recommendations-empty">Loading...</p>}
+          {recStatus === 'error' && (
+            <p className="recommendations-empty">Couldn't load your saved plans. Please try again.</p>
+          )}
 
-                return (
-                  <article key={rec.id} className="recommendation-item">
-                    <div className="rec-header">
-                      {isEditing ? (
-                        <input
-                          className="rec-title-input"
-                          value={editingTitle}
-                          onChange={(e) => setEditingTitle(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') handleSaveRename(rec.id)
-                            if (e.key === 'Escape') handleCancelRename()
-                          }}
-                          autoFocus
-                        />
-                      ) : (
-                        <h3>{getPlanTitle(rec, index)}</h3>
-                      )}
-                      <span>{formatDate(rec.createdAt)}</span>
-                    </div>
+          {recStatus === 'ready' && (
+            recommendations.length ? (
+              <div className="recommendations-list">
+                {recommendations.map((rec, index) => {
+                  const topStrategy = rec.strategies?.[0]
+                  const isEditing = editingPlanId === rec.id
 
-                    <div className="rec-metrics">
-                      <span>{formatCurrency(rec.budget)}</span>
-                      <span>{rec.timeline || 'No timeline'}</span>
-                      <span>{rec.riskLevel || 'No risk'}</span>
-                    </div>
-
-                    {topStrategy && (
-                      <div className="rec-strategy-summary">
-                        <span>Top allocation</span>
-                        <strong>
-                          {topStrategy.name} / {topStrategy.allocation}%
-                        </strong>
+                  return (
+                    <article key={rec.id} className="recommendation-item">
+                      <div className="rec-header">
+                        {isEditing ? (
+                          <input
+                            className="rec-title-input"
+                            value={editingTitle}
+                            onChange={(e) => setEditingTitle(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') handleSaveRename(rec.id)
+                              if (e.key === 'Escape') handleCancelRename()
+                            }}
+                            autoFocus
+                          />
+                        ) : (
+                          <h3>{getPlanTitle(rec, index)}</h3>
+                        )}
+                        <span>{formatDate(rec.createdAt)}</span>
                       </div>
-                    )}
 
-                    <div className="rec-actions">
-                      {isEditing ? (
-                        <>
-                          <button
-                            type="button"
-                            className="rec-action-btn"
-                            onClick={() => handleSaveRename(rec.id)}
-                          >
-                            Save name
-                          </button>
-                          <button
-                            type="button"
-                            className="rec-action-btn"
-                            onClick={handleCancelRename}
-                          >
-                            Cancel
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <button
-                            type="button"
-                            className="rec-action-btn"
-                            onClick={() => handleViewRecommendation(rec)}
-                          >
-                            View
-                          </button>
-                          <button
-                            type="button"
-                            className="rec-action-btn"
-                            onClick={() => handleStartRename(rec, index)}
-                          >
-                            Rename
-                          </button>
-                          <button
-                            type="button"
-                            className="rec-action-btn danger"
-                            onClick={() => handleRequestDelete(rec.id)}
-                          >
-                            Delete
-                          </button>
-                        </>
+                      <div className="rec-metrics">
+                        <span>{formatCurrency(rec.budget)}</span>
+                        <span>{rec.timeline || 'No timeline'}</span>
+                        <span>{rec.riskTolerance || 'No risk'}</span>
+                      </div>
+
+                      {topStrategy && (
+                        <div className="rec-strategy-summary">
+                          <span>Top allocation</span>
+                          <strong>
+                            {topStrategy.name} / {topStrategy.allocation}%
+                          </strong>
+                        </div>
                       )}
-                    </div>
-                  </article>
-                )
-              })}
-            </div>
-          ) : (
-            <p className="recommendations-empty">No saved plans yet.</p>
+
+                      <div className="rec-actions">
+                        {isEditing ? (
+                          <>
+                            <button
+                              type="button"
+                              className="rec-action-btn"
+                              onClick={() => handleSaveRename(rec.id)}
+                            >
+                              Save name
+                            </button>
+                            <button
+                              type="button"
+                              className="rec-action-btn"
+                              onClick={handleCancelRename}
+                            >
+                              Cancel
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              type="button"
+                              className="rec-action-btn"
+                              onClick={() => handleViewRecommendation(rec)}
+                            >
+                              View
+                            </button>
+                            <button
+                              type="button"
+                              className="rec-action-btn"
+                              onClick={() => handleStartRename(rec, index)}
+                            >
+                              Rename
+                            </button>
+                            <button
+                              type="button"
+                              className="rec-action-btn danger"
+                              onClick={() => handleRequestDelete(rec.id)}
+                            >
+                              Delete
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </article>
+                  )
+                })}
+              </div>
+            ) : (
+              <p className="recommendations-empty">No saved plans yet.</p>
+            )
           )}
         </section>
       </div>
