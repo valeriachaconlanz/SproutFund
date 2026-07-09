@@ -110,9 +110,19 @@ SproutFund/
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...              # Claude AI key
 export SUPABASE_PROJECT_REF=xxxx                 # Project reference ID
-export SUPABASE_DB_URL=jdbc:postgresql://db.xxxx.supabase.co:5432/postgres
+export SUPABASE_DB_URL=jdbc:postgresql://aws-1-us-east-2.pooler.supabase.com:5432/postgres
+export SUPABASE_DB_USER=postgres.xxxx            # "postgres." + your project ref
 export SUPABASE_DB_PASSWORD=...                   # Database password
 ```
+
+> **Use the Session pooler host above, not `db.<ref>.supabase.co`.** Supabase's
+> direct connection host resolves to an IPv6 address *only* — it has no IPv4
+> address at all. It therefore works exclusively on networks that provide
+> working IPv6, which many campus, guest, office, and wired networks do not.
+> The pooler host has an IPv4 address and reaches the same database, so it
+> works everywhere. Note the `aws-1` prefix and the `SUPABASE_DB_USER` line —
+> the pooler requires the username to be `postgres.<project-ref>`, not plain
+> `postgres`.
 
 #### Creating the file in VS Code (Windows)
 
@@ -148,7 +158,8 @@ mvn spring-boot:run
 cd backend
 $env:ANTHROPIC_API_KEY="sk-ant-..."
 $env:SUPABASE_PROJECT_REF="xxxx"
-$env:SUPABASE_DB_URL="jdbc:postgresql://db.xxxx.supabase.co:5432/postgres"
+$env:SUPABASE_DB_URL="jdbc:postgresql://aws-1-us-east-2.pooler.supabase.com:5432/postgres"
+$env:SUPABASE_DB_USER="postgres.xxxx"
 $env:SUPABASE_DB_PASSWORD="..."
 mvn spring-boot:run
 ```
@@ -202,7 +213,18 @@ The frontend runs at `http://localhost:5173`.
 - A `401`/JWKS error on startup usually means `SUPABASE_PROJECT_REF` is wrong in your `.env`
 - A datasource connection error usually means `SUPABASE_DB_URL` / `SUPABASE_DB_PASSWORD` is wrong, or `supabase/schema.sql` hasn't been run yet
 - **`FATAL: password authentication failed for user "postgres"`** — your `.env` has an outdated or placeholder password. Get the current shared password from the group chat. Don't reset the password in the dashboard: it's shared, so a reset breaks everyone's `.env` until the new one is re-shared.
-- A connection **timeout** (not a password error) can happen on IPv4-only networks that can't reach `db.<ref>.supabase.co:5432`. Switch `SUPABASE_DB_URL` to the **Session pooler** connection string (Database → Connection string → Session pooler) and add `SUPABASE_DB_USER=postgres.<ref>` — same database, reachable host.
+- **`java.net.NoRouteToHostException: No route to host`** (or a connection **timeout**) while connecting to `db.<ref>.supabase.co:5432` — **this is not a password problem, so do not reset the password.** That host has an IPv6 address and no IPv4 address, so it is unreachable from any network without working IPv6. Switch `SUPABASE_DB_URL` to the Session pooler host and add `SUPABASE_DB_USER` — see [step 2](#2-set-up-environment-variables). This is the single most common setup failure.
+
+  Why it's confusing: the direct host works fine on networks that hand out real IPv6 (many home ISPs, phone hotspots), and fails on those that don't (lots of campus, guest, office, and wired networks). So the *same* `.env` can work at home and fail on campus, which makes it look like the credentials went bad. They didn't. To confirm IPv6 is the cause:
+
+  ```bash
+  dig +short db.<ref>.supabase.co A      # empty — the host has no IPv4 address
+  dig +short db.<ref>.supabase.co AAAA   # an address — IPv6 only
+  ping6 -c1 2606:4700:4700::1111         # fails if your network has no IPv6
+  ```
+
+  Use the pooler host permanently and this cannot bite you: it has an IPv4 address and reaches the same database.
+- **`FATAL: (ENOTFOUND) tenant/user postgres.<ref> not found`** — you're on the pooler but with the wrong regional host. The prefix matters: this project uses `aws-1-us-east-2`, *not* `aws-0-us-east-2`. Copy the exact host from the dashboard (Database → Connection string → Session pooler). Also check `SUPABASE_DB_USER` is `postgres.<ref>` and not plain `postgres`.
 - **`Schema-validation: wrong column type` / `missing column`** — the live database doesn't match the code. Re-run the latest [`supabase/schema.sql`](supabase/schema.sql) in the SQL Editor so the tables match the JPA entities (the backend boots with `ddl-auto=validate`).
 
 ### Frontend shows a blank page or routing error
@@ -266,17 +288,25 @@ Then open a **Pull Request** on GitHub from your branch → `main` and request a
 
 ## API Reference
 
-Sign up, login, and session management are handled entirely by Supabase Auth on the frontend (`@supabase/supabase-js`) — there are no `/api/auth/*` endpoints. Every endpoint below requires an `Authorization: Bearer <supabase-access-token>` header, where the token comes from the current Supabase session.
+Sign up, login, and session management are handled entirely by Supabase Auth on the frontend (`@supabase/supabase-js`) — there are no `/api/auth/*` endpoints.
+
+Endpoints that take an `Authorization: Bearer <supabase-access-token>` header read the token from the current Supabase session. `POST /api/investment` is the one **public** endpoint: generating a plan needs no user identity, so logged-out visitors can take the survey. Everything that touches saved data requires a token and is scoped to that token's user.
+
+| Endpoint | Auth | Purpose |
+| --- | --- | --- |
+| `POST /api/investment` | Public | Generate a plan (nothing is saved) |
+| `POST /api/investment/save` | Bearer token | Persist a generated plan |
+| `GET /api/investment/history` | Bearer token | List the user's saved plans |
+| `PATCH /api/investment/{id}` | Bearer token | Rename a saved plan |
+| `DELETE /api/investment/{id}` | Bearer token | Delete a saved plan |
+
+Requests to an authenticated endpoint without a valid token get `401`. The `{id}` routes only match rows owned by the token's user — someone else's `id` returns `404`, not `403`.
 
 ### POST /api/investment
 
 Accepts the user's investment inputs and returns AI-generated strategies from Claude.
 
-**Headers:**
-
-```text
-Authorization: Bearer <token>
-```
+**Public — no `Authorization` header required.** Generating a plan computes strategies from the budget, timeline, and risk tolerance alone; it never reads or writes user data.
 
 **Request body:**
 
@@ -329,6 +359,8 @@ This endpoint only generates a plan — it isn't saved until you call `/api/inve
 
 Persists a generated plan for the current user. Send back the same shape `/api/investment` returned.
 
+**Requires `Authorization: Bearer <token>`.** The plan is stored against the token's user.
+
 **Request body:** same fields as the `/api/investment` response (`budget`, `timeline`, `riskTolerance`, `strategies`, `disclaimer`).
 
 **Response:** the saved `InvestmentRecommendation`, including its `id` and `createdAt`.
@@ -338,6 +370,8 @@ Persists a generated plan for the current user. Send back the same shape `/api/i
 ### GET /api/investment/history
 
 Returns the current user's saved recommendations, newest first.
+
+**Requires `Authorization: Bearer <token>`.**
 
 **Response:**
 
@@ -354,3 +388,29 @@ Returns the current user's saved recommendations, newest first.
   }
 ]
 ```
+
+---
+
+### PATCH /api/investment/{id}
+
+Renames a saved plan.
+
+**Requires `Authorization: Bearer <token>`.**
+
+**Request body:**
+
+```json
+{ "title": "My retirement plan" }
+```
+
+**Response:** the updated `InvestmentRecommendation`. Returns `404` if `{id}` doesn't exist **or** belongs to another user.
+
+---
+
+### DELETE /api/investment/{id}
+
+Deletes a saved plan.
+
+**Requires `Authorization: Bearer <token>`.**
+
+**Response:** `204 No Content`. Returns `404` if `{id}` doesn't exist **or** belongs to another user.
