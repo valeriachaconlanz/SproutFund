@@ -1,0 +1,391 @@
+{
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "survey": "Survey",
+    "results": "Results",
+    "savedPlans": "Saved Plans",
+    "tips": "Tips",
+    "glossary": "Glossary",
+    "settings": "Settings",
+    "signIn": "Sign in",
+    "logout": "Logout"
+  },
+  "theme": {
+    "switchToDark": "Switch to dark mode",
+    "switchToLight": "Switch to light mode"
+  },
+  "language": {
+    "switchToSpanish": "Switch to Spanish",
+    "switchToEnglish": "Switch to English"
+  },
+  "common": {
+    "getStarted": "Get Started",
+    "builtForBeginners": "Built for first-time investors",
+    "timeline": {
+      "short": { "label": "Short Term", "duration": "Under 1 year" },
+      "medium": { "label": "Medium Term", "duration": "1–5 years" },
+      "long": { "label": "Long Term", "duration": "5+ years" }
+    },
+    "tiers": {
+      "starter": { "label": "Starter", "desc": "Great for learning the basics and building the habit." },
+      "growing": { "label": "Growing", "desc": "Enough to diversify across multiple investment types." },
+      "established": { "label": "Established", "desc": "Access to a full portfolio strategy with meaningful diversification." }
+    }
+  },
+  "home": {
+    "heroTitle": "Invest Smarter with SproutFund",
+    "heroSubtitle": "Get personalized investment recommendations based on your budget, goals, and timeline.",
+    "goToSurvey": "Go to Survey",
+    "howItWorksTitle": "How it works",
+    "steps": [
+      { "title": "Enter your budget", "description": "Tell us your budget, timeline, and risk comfort." },
+      { "title": "Get matched with strategies", "description": "See personalized investment strategies that fit your numbers." },
+      { "title": "Start with confidence", "description": "Plain-language explanations, no jargon." }
+    ],
+    "whyTitle": "Why SproutFund",
+    "whyItems": [
+      "Personalized strategies based on your budget",
+      "Clear, jargon-free recommendations",
+      "Built for first-time investors",
+      "Free to use, no credit card required"
+    ]
+  },
+  "auth": {
+    "signInTab": "Sign In",
+    "createAccountTab": "Create Account",
+    "welcomeBack": "Welcome back",
+    "startYourJourney": "Start your journey",
+    "signInSubtitle": "Sign in to access your investment plan.",
+    "registerSubtitle": "Create an account to get your personalized investment strategy.",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Jane Smith",
+    "emailAddress": "Email Address",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "passwordPlaceholderRegister": "At least 8 characters",
+    "pleaseWait": "Please wait...",
+    "signInSubmit": "Sign In →",
+    "createAccountSubmit": "Create Account →",
+    "noAccount": "Don't have an account? ",
+    "hasAccount": "Already have an account? ",
+    "createOne": "Create one",
+    "signInLink": "Sign in",
+    "whySproutFund": "Why SproutFund?",
+    "benefits": [
+      "Personalized strategies based on your budget",
+      "Clear, jargon-free recommendations",
+      "Built for first-time investors",
+      "Free to use, no credit card required"
+    ],
+    "browseMarketTips": "Browse Market Tips",
+    "emailConfirmation": "Account created — check your email to confirm it before signing in.",
+    "errors": {
+      "nameRequired": "Name is required.",
+      "emailRequired": "Email is required.",
+      "emailInvalid": "Enter a valid email address.",
+      "passwordRequired": "Password is required.",
+      "passwordTooShort": "Password must be at least 8 characters.",
+      "invalidCredentials": "Invalid email or password.",
+      "generic": "Something went wrong. Please try again.",
+      "network": "Unable to connect to the server. Please try again."
+    }
+  },
+  "glossary": {
+    "label": "Learning Center",
+    "title": "Investment Glossary",
+    "description": "Browse simple definitions for common investing terms used throughout SproutFund.",
+    "searchPlaceholder": "Search investing terms...",
+    "searchAriaLabel": "Search glossary terms",
+    "alphabetNavAriaLabel": "Glossary alphabet navigation",
+    "allTopics": "All",
+    "empty": "No glossary terms found. Try another search.",
+    "levels": {
+      "Beginner": "Beginner",
+      "Intermediate": "Intermediate",
+      "Advanced": "Advanced"
+    },
+    "topics": {
+      "Stocks": "Stocks",
+      "Risk": "Risk",
+      "Investing Basics": "Investing Basics",
+      "Savings": "Savings",
+      "Bonds": "Bonds",
+      "Advanced Strategies": "Advanced Strategies",
+      "Funds": "Funds"
+    },
+    "terms": {
+      "1": { "term": "ETF", "definition": "An ETF is a group of investments bundled together that you can buy and sell like a normal stock." },
+      "2": { "term": "Diversification", "definition": "Putting your money into different types of investments so you do not lose everything if one performs badly." },
+      "3": { "term": "Compound Interest", "definition": "You earn money not only from your original investment, but also from the money your investment already earned." },
+      "4": { "term": "Volatility", "definition": "How much the price of an investment can change over time." },
+      "5": { "term": "Index Fund", "definition": "A type of investment fund that tracks a market index like the S&P 500." },
+      "6": { "term": "CDs", "definition": "A savings account where you leave your money untouched for a set amount of time in exchange for guaranteed interest." },
+      "7": { "term": "Bonds", "definition": "An investment where you lend money to a government or company in exchange for regular interest payments." },
+      "8": { "term": "Treasury Bills", "definition": "A very low-risk investment where you lend money to the U.S. government for a short period of time and earn a small profit back." },
+      "9": { "term": "Dividend Stocks", "definition": "Stocks that regularly pay a portion of company profits to shareholders as dividends." },
+      "10": { "term": "Capital Gains", "definition": "The profit you make when you sell an investment for more money than you originally paid." },
+      "11": { "term": "Market Capitalization", "definition": "The total value of a company based on all of its shares combined." },
+      "12": { "term": "Shares", "definition": "Small ownership pieces of a company that investors can buy or sell." },
+      "13": { "term": "Portfolio", "definition": "All the investments that a person owns." },
+      "14": { "term": "Bull Market", "definition": "A period when stock prices are generally rising and investors feel confident." },
+      "15": { "term": "Bear Market", "definition": "A period when stock prices are generally falling and investors are worried." },
+      "16": { "term": "Inflation", "definition": "When prices for goods and services increase over time, making money worth less." },
+      "17": { "term": "Market Crash", "definition": "A sudden and large drop in stock market prices." },
+      "18": { "term": "Recession", "definition": "A period when the economy slows down and businesses and consumers spend less money." },
+      "19": { "term": "Passive Income", "definition": "Money earned regularly with little daily effort after the initial setup or investment." },
+      "20": { "term": "High-Yield Savings Account", "definition": "A savings account that pays higher interest than a normal savings account." },
+      "21": { "term": "Government Bonds", "definition": "Investments where you lend money to a government and receive interest in return." },
+      "22": { "term": "Interest Rates", "definition": "The percentage paid for borrowing money or earned from saving and investing money." },
+      "23": { "term": "Yield", "definition": "The amount of money an investment earns compared to its price." },
+      "24": { "term": "Corporate Bonds", "definition": "Bonds issued by companies to raise money from investors." },
+      "25": { "term": "Dollar-Cost Averaging", "definition": "Investing the same amount of money regularly over time instead of all at once." },
+      "26": { "term": "Roth IRA", "definition": "A retirement account where investments can grow tax-free over time." },
+      "27": { "term": "S&P 500", "definition": "A group of 500 large U.S. companies often used to measure the overall stock market." },
+      "28": { "term": "Expense Ratio", "definition": "A yearly fee charged by investment funds to manage your money." },
+      "29": { "term": "Index Investing", "definition": "An investing strategy focused on matching the performance of a market index." },
+      "30": { "term": "Short Selling", "definition": "A strategy where investors try to profit when a stock’s price goes down." },
+      "31": { "term": "Options", "definition": "Financial contracts that give investors the right to buy or sell an asset at a specific price." },
+      "32": { "term": "REITs", "definition": "Companies that own or manage real estate and allow investors to invest in property without buying buildings directly." }
+    }
+  },
+  "tips": {
+    "kicker": "Market Tips",
+    "title": "Browse investing tips anytime",
+    "subtitle": "Simple, pre-written guidance for visitors who want to learn before creating an account.",
+    "headerImageAlt": "Two people reviewing financial charts and cash at a desk",
+    "filterAriaLabel": "Filter market tips by topic",
+    "toolsAriaLabel": "Search and sort market tips",
+    "searchLabel": "Search tips",
+    "searchPlaceholder": "Search risk, fees, goals...",
+    "sortLabel": "Sort by",
+    "sortOptions": {
+      "recommended": "Recommended",
+      "beginner": "Beginner first",
+      "quick": "Quick reads first",
+      "topic": "Topic"
+    },
+    "topicLabels": {
+      "all": "All",
+      "getting started": "Getting Started",
+      "risk": "Risk",
+      "timing": "Timing",
+      "goals": "Goals",
+      "fees": "Fees",
+      "emotions": "Emotions"
+    },
+    "labels": {
+      "beginner": "Beginner",
+      "important": "Important",
+      "long-term": "Long-Term",
+      "quick-read": "Quick Read"
+    },
+    "readMore": "Read more",
+    "showLess": "Show less",
+    "empty": "No tips match that search yet. Try a broader word or another topic.",
+    "disclaimer": "These tips are for educational purposes only and are not personalized financial advice.",
+    "items": {
+      "budget-fit": {
+        "title": "Start with what you can afford",
+        "description": "Investing works best when it fits your budget. Begin with an amount you can maintain consistently over time.",
+        "details": [
+          "Choose an amount that does not interfere with rent, bills, food, or emergency savings.",
+          "Starting small can make investing feel more manageable while you learn how markets move.",
+          "A consistent habit is often easier to maintain than making one large contribution under pressure."
+        ]
+      },
+      "emergency-cushion": {
+        "title": "Build an emergency cushion first",
+        "description": "Before investing extra cash, set aside money for near-term needs so you are less likely to sell investments during a rough week.",
+        "details": [
+          "Keep money for urgent expenses somewhere easy to access before putting extra money into the market.",
+          "This can help you avoid selling investments at a bad time just to cover a surprise cost.",
+          "Review your cushion whenever your income, rent, or monthly bills change."
+        ]
+      },
+      "match-goal": {
+        "title": "Match each investment to a goal",
+        "description": "Knowing what the money is for can make it easier to choose how much risk and patience each investment needs.",
+        "details": [
+          "Separate short-term goals from long-term goals before deciding where money should go.",
+          "Money for near-term plans usually needs more stability than money meant for years from now.",
+          "Writing down the goal can make it easier to stay consistent when the market feels noisy."
+        ]
+      },
+      "goal-timeline": {
+        "title": "Give each goal a rough timeline",
+        "description": "A timeline helps you decide whether your money needs stability soon or has time to handle market ups and downs.",
+        "details": [
+          "List whether each goal is short-term, medium-term, or long-term.",
+          "Shorter timelines usually need more caution because there is less time to recover from losses.",
+          "Longer timelines may allow more patience, but they still need regular check-ins."
+        ]
+      },
+      "understand-risk": {
+        "title": "Understand risk before chasing returns",
+        "description": "Higher potential returns usually come with higher risk. Choose investments that match your comfort level and timeline.",
+        "details": [
+          "Ask how much value you could handle losing temporarily before an investment starts feeling stressful.",
+          "Money needed soon usually belongs in lower-risk places than money meant for long-term goals.",
+          "Compare possible returns with possible losses instead of focusing only on the upside."
+        ]
+      },
+      "diversify": {
+        "title": "Diversify across more than one idea",
+        "description": "Spreading money across different investments can reduce the impact of one holding performing poorly.",
+        "details": [
+          "Avoid putting all your money into one company, trend, or sector.",
+          "Funds that hold many investments can be one simple way to spread risk.",
+          "Check your mix occasionally so one investment does not quietly become too large a share."
+        ]
+      },
+      "watch-fees": {
+        "title": "Pay attention to fees",
+        "description": "Small fees can add up over time, so it helps to understand what you are paying before choosing an investment.",
+        "details": [
+          "Compare expense ratios, trading fees, and account fees before committing money.",
+          "Lower fees do not guarantee better results, but they can leave more of your return working for you.",
+          "Review fees when switching platforms or choosing between similar investment options."
+        ]
+      },
+      "hidden-costs": {
+        "title": "Watch for costs you do not notice right away",
+        "description": "Some costs are easy to miss, but they can still affect how much your investment keeps over time.",
+        "details": [
+          "Look for maintenance fees, transfer fees, advisory fees, and fund expenses.",
+          "Read fee pages before opening a new account or changing investment platforms.",
+          "If two options seem similar, lower ongoing costs can be one useful comparison point."
+        ]
+      },
+      "avoid-timing": {
+        "title": "Avoid trying to perfectly time the market",
+        "description": "Markets move up and down. A steady long-term plan is often more reliable than guessing the perfect moment to buy.",
+        "details": [
+          "Waiting for the perfect entry point can keep you from starting at all.",
+          "Consider building a habit of investing on a regular schedule when your budget allows.",
+          "Focus on whether the investment fits your goals instead of reacting to every market headline."
+        ]
+      },
+      "think-years": {
+        "title": "Think in years, not days",
+        "description": "Short-term swings can feel loud, but long-term goals usually benefit from patience and regular review.",
+        "details": [
+          "Decide what the money is for before judging daily price changes.",
+          "Short-term drops are common, so frequent checking can make normal movement feel more alarming.",
+          "Set a review rhythm, such as monthly or quarterly, instead of reacting every day."
+        ]
+      },
+      "headlines": {
+        "title": "Do not let headlines make every decision",
+        "description": "Market news can be useful, but reacting to every headline can pull you away from your long-term plan.",
+        "details": [
+          "Pause before changing your plan because of a single news story or market swing.",
+          "Ask whether the news actually changes your goal, timeline, or comfort with risk.",
+          "A calm review process can help you avoid emotional buying or selling."
+        ]
+      },
+      "plan-ahead": {
+        "title": "Make a plan before emotions spike",
+        "description": "Deciding how you will respond before the market gets stressful can make it easier to stay calm later.",
+        "details": [
+          "Write down what would make you review your plan before a stressful market day happens.",
+          "Avoid making big changes immediately after fear, excitement, or pressure takes over.",
+          "A planned waiting period can help separate a thoughtful decision from an emotional reaction."
+        ]
+      }
+    }
+  },
+  "budgetInput": {
+    "heroTitleLine1": "Start Your",
+    "heroTitleLine2": "Investment Journey",
+    "heroSub": "Tell us your budget and timeline — we'll match you with strategies designed for exactly where you are right now.",
+    "statMinimum": "Minimum to start",
+    "statTime": "To get your plan",
+    "statTimeValue": "2 min",
+    "statPersonalized": "Personalized",
+    "whyTitle": "Why start investing now?",
+    "why1Title": "Beat Inflation",
+    "why1Desc": "Savings accounts earn 0.5–1% APY while <1>inflation</1> averages 3–4% per year. Investing is how your money keeps its value over time.",
+    "why2Title": "Time Is Your Edge",
+    "why2Desc": "$5,000 invested at age 25 grows to ~$70,000 by 65 (7% avg return). The same amount at 45 only reaches ~$22,000. Starting early matters.",
+    "why3Title": "Start Small, Think Big",
+    "why3Desc": "Many strategies work with as little as $100. The habit of investing consistently matters more than the initial amount.",
+    "step1Title": "How much do you want to invest?",
+    "step1Desc": "Enter the amount you're comfortable committing. You can always adjust later.",
+    "errors": {
+      "budgetRequired": "Please enter an investment amount.",
+      "budgetInvalid": "Please enter a valid positive dollar amount.",
+      "timelineRequired": "Please select a timeline before submitting.",
+      "riskRequired": "Please select a risk tolerance before submitting.",
+      "submitFailed": "There was an error generating your plan. Please try again later."
+    },
+    "guideHeading": "Budget ranges at a glance",
+    "guideNotes": {
+      "starter": "<1>High-yield savings</1>, <2>CDs</2>, money market",
+      "growing": "<1>Index funds</1>, <2>ETFs</2>, mutual funds",
+      "established": "Diversified <1>portfolio</1>, <2>bonds</2>, growth stocks"
+    },
+    "step2Title": "When do you want to see returns?",
+    "step2Desc": "Your timeline determines which strategies are realistic and appropriate for you.",
+    "bestForPrefix": "Best for:",
+    "timelineOptions": {
+      "short": {
+        "bestFor": "Emergency funds, planned purchases, or testing the waters",
+        "strategies": ["High-yield savings accounts", "Money market funds", "Short-term CDs", "Treasury bills"],
+        "tradeoff": "Lower risk, lower return. Stability is the priority."
+      },
+      "medium": {
+        "bestFor": "Building wealth steadily while keeping some flexibility",
+        "strategies": ["Index funds", "Balanced ETFs", "Mutual funds", "Dividend stocks"],
+        "tradeoff": "Moderate risk, moderate return. A balanced approach."
+      },
+      "long": {
+        "bestFor": "Retirement, wealth building, or major life goals",
+        "strategies": ["Growth stocks", "International funds", "Real estate (REITs)", "S&P 500 index funds"],
+        "tradeoff": "Higher risk, higher potential return. Time smooths out volatility."
+      }
+    },
+    "step3Title": "How much risk are you comfortable with?",
+    "step3Desc": "Choose the level of risk that feels right for your money and goals.",
+    "riskOptions": {
+      "low": { "label": "Low Risk", "description": "Safer investments with lower potential returns. Best for protecting your money." },
+      "medium": { "label": "Medium Risk", "description": "Balanced approach with moderate growth and moderate ups and downs." },
+      "high": { "label": "High Risk", "description": "Higher potential returns, but also higher chance of losses and volatility." }
+    },
+    "outcomesTitle": "What you'll receive",
+    "outcomes": [
+      { "title": "A strategy matched to your budget", "desc": "We surface options that actually make sense at your investment level — no generic advice." },
+      { "title": "Timeline-appropriate recommendations", "desc": "Short-term and long-term goals require completely different strategies. We'll align them correctly." },
+      { "title": "Plain-language explanations", "desc": "No jargon. Every recommendation comes with a clear explanation of what it is and why it fits you." }
+    ],
+    "analyzing": "Analyzing...",
+    "submit": "Get My Investment Plan →",
+    "footnote": "No account required · Free to use · Results in seconds",
+    "toastTitle": "Needs attention"
+  },
+  "results": {
+    "riskLevel": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "title": "Your Investment Plan",
+    "subtitle": "Personalized strategies based on your inputs.",
+    "budget": "Budget",
+    "timeline": "Timeline",
+    "riskLevelLabel": "Risk Level",
+    "allocation": "Portfolio allocation",
+    "whereToInvest": "Where to invest",
+    "platform": "Platform",
+    "noPlanTitle": "No plan found.",
+    "noPlanSubtitle": "Please fill out the investment form first.",
+    "goToForm": "Go to Form",
+    "adjustPlan": "Adjust My Plan",
+    "saveCreateAccount": "Create an account to save",
+    "saving": "Saving...",
+    "saved": "Saved ✓",
+    "savePlan": "Save This Plan",
+    "downloadPdf": "Download PDF",
+    "saveError": "Couldn't save your plan. Please try again."
+  }
+}

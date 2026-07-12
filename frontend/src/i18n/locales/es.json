@@ -1,0 +1,391 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "dashboard": "Panel",
+    "survey": "Encuesta",
+    "results": "Resultados",
+    "savedPlans": "Planes guardados",
+    "tips": "Consejos",
+    "glossary": "Glosario",
+    "settings": "Configuración",
+    "signIn": "Iniciar sesión",
+    "logout": "Cerrar sesión"
+  },
+  "theme": {
+    "switchToDark": "Cambiar a modo oscuro",
+    "switchToLight": "Cambiar a modo claro"
+  },
+  "language": {
+    "switchToSpanish": "Cambiar a español",
+    "switchToEnglish": "Cambiar a inglés"
+  },
+  "common": {
+    "getStarted": "Comenzar",
+    "builtForBeginners": "Hecho para inversionistas primerizos",
+    "timeline": {
+      "short": { "label": "Corto plazo", "duration": "Menos de 1 año" },
+      "medium": { "label": "Mediano plazo", "duration": "1–5 años" },
+      "long": { "label": "Largo plazo", "duration": "5+ años" }
+    },
+    "tiers": {
+      "starter": { "label": "Inicial", "desc": "Ideal para aprender lo básico y crear el hábito." },
+      "growing": { "label": "En crecimiento", "desc": "Suficiente para diversificar entre varios tipos de inversión." },
+      "established": { "label": "Consolidado", "desc": "Acceso a una estrategia de portafolio completa con diversificación real." }
+    }
+  },
+  "home": {
+    "heroTitle": "Invierte de forma más inteligente con SproutFund",
+    "heroSubtitle": "Obtén recomendaciones de inversión personalizadas según tu presupuesto, tus metas y tu plazo.",
+    "goToSurvey": "Ir a la encuesta",
+    "howItWorksTitle": "Cómo funciona",
+    "steps": [
+      { "title": "Ingresa tu presupuesto", "description": "Cuéntanos tu presupuesto, tu plazo y tu tolerancia al riesgo." },
+      { "title": "Recibe estrategias a tu medida", "description": "Ve estrategias de inversión personalizadas que se ajustan a tus números." },
+      { "title": "Comienza con confianza", "description": "Explicaciones en lenguaje sencillo, sin tecnicismos." }
+    ],
+    "whyTitle": "Por qué SproutFund",
+    "whyItems": [
+      "Estrategias personalizadas según tu presupuesto",
+      "Recomendaciones claras, sin tecnicismos",
+      "Hecho para inversionistas primerizos",
+      "Gratis, sin necesidad de tarjeta de crédito"
+    ]
+  },
+  "auth": {
+    "signInTab": "Iniciar sesión",
+    "createAccountTab": "Crear cuenta",
+    "welcomeBack": "Bienvenido de nuevo",
+    "startYourJourney": "Comienza tu camino",
+    "signInSubtitle": "Inicia sesión para acceder a tu plan de inversión.",
+    "registerSubtitle": "Crea una cuenta para obtener tu estrategia de inversión personalizada.",
+    "fullName": "Nombre completo",
+    "fullNamePlaceholder": "Jane Smith",
+    "emailAddress": "Correo electrónico",
+    "emailPlaceholder": "tucorreo@ejemplo.com",
+    "password": "Contraseña",
+    "passwordPlaceholderRegister": "Al menos 8 caracteres",
+    "pleaseWait": "Un momento...",
+    "signInSubmit": "Iniciar sesión →",
+    "createAccountSubmit": "Crear cuenta →",
+    "noAccount": "¿No tienes una cuenta? ",
+    "hasAccount": "¿Ya tienes una cuenta? ",
+    "createOne": "Crear una",
+    "signInLink": "Iniciar sesión",
+    "whySproutFund": "¿Por qué SproutFund?",
+    "benefits": [
+      "Estrategias personalizadas según tu presupuesto",
+      "Recomendaciones claras, sin tecnicismos",
+      "Hecho para inversionistas primerizos",
+      "Gratis, sin necesidad de tarjeta de crédito"
+    ],
+    "browseMarketTips": "Ver consejos del mercado",
+    "emailConfirmation": "Cuenta creada: revisa tu correo para confirmarla antes de iniciar sesión.",
+    "errors": {
+      "nameRequired": "El nombre es obligatorio.",
+      "emailRequired": "El correo electrónico es obligatorio.",
+      "emailInvalid": "Ingresa un correo electrónico válido.",
+      "passwordRequired": "La contraseña es obligatoria.",
+      "passwordTooShort": "La contraseña debe tener al menos 8 caracteres.",
+      "invalidCredentials": "Correo o contraseña incorrectos.",
+      "generic": "Algo salió mal. Inténtalo de nuevo.",
+      "network": "No se pudo conectar con el servidor. Inténtalo de nuevo."
+    }
+  },
+  "glossary": {
+    "label": "Centro de aprendizaje",
+    "title": "Glosario de inversión",
+    "description": "Explora definiciones sencillas de los términos de inversión más comunes usados en SproutFund.",
+    "searchPlaceholder": "Buscar términos de inversión...",
+    "searchAriaLabel": "Buscar términos del glosario",
+    "alphabetNavAriaLabel": "Navegación alfabética del glosario",
+    "allTopics": "Todos",
+    "empty": "No se encontraron términos. Prueba con otra búsqueda.",
+    "levels": {
+      "Beginner": "Principiante",
+      "Intermediate": "Intermedio",
+      "Advanced": "Avanzado"
+    },
+    "topics": {
+      "Stocks": "Acciones",
+      "Risk": "Riesgo",
+      "Investing Basics": "Fundamentos de inversión",
+      "Savings": "Ahorros",
+      "Bonds": "Bonos",
+      "Advanced Strategies": "Estrategias avanzadas",
+      "Funds": "Fondos"
+    },
+    "terms": {
+      "1": { "term": "ETF", "definition": "Un ETF es un grupo de inversiones combinadas que puedes comprar y vender como si fuera una acción normal." },
+      "2": { "term": "Diversificación", "definition": "Distribuir tu dinero entre distintos tipos de inversiones para no perderlo todo si una de ellas tiene un mal desempeño." },
+      "3": { "term": "Interés compuesto", "definition": "Ganas dinero no solo por tu inversión original, sino también por el dinero que esa inversión ya generó." },
+      "4": { "term": "Volatilidad", "definition": "Cuánto puede cambiar el precio de una inversión con el tiempo." },
+      "5": { "term": "Fondo indexado", "definition": "Un tipo de fondo de inversión que sigue el desempeño de un índice del mercado, como el S&P 500." },
+      "6": { "term": "CDs", "definition": "Una cuenta de ahorro en la que dejas tu dinero intacto durante un tiempo determinado a cambio de un interés garantizado." },
+      "7": { "term": "Bonos", "definition": "Una inversión en la que le prestas dinero a un gobierno o empresa a cambio de pagos de interés regulares." },
+      "8": { "term": "Letras del Tesoro", "definition": "Una inversión de muy bajo riesgo en la que le prestas dinero al gobierno de EE. UU. por un período corto y obtienes una pequeña ganancia." },
+      "9": { "term": "Acciones con dividendos", "definition": "Acciones que pagan regularmente una parte de las ganancias de la empresa a los accionistas en forma de dividendos." },
+      "10": { "term": "Ganancias de capital", "definition": "La ganancia que obtienes al vender una inversión por más dinero del que pagaste originalmente." },
+      "11": { "term": "Capitalización de mercado", "definition": "El valor total de una empresa según la suma de todas sus acciones." },
+      "12": { "term": "Acciones", "definition": "Pequeñas partes de propiedad de una empresa que los inversionistas pueden comprar o vender." },
+      "13": { "term": "Portafolio", "definition": "Todas las inversiones que posee una persona." },
+      "14": { "term": "Mercado alcista", "definition": "Un período en el que los precios de las acciones suben en general y los inversionistas se sienten optimistas." },
+      "15": { "term": "Mercado bajista", "definition": "Un período en el que los precios de las acciones bajan en general y los inversionistas están preocupados." },
+      "16": { "term": "Inflación", "definition": "Cuando los precios de bienes y servicios aumentan con el tiempo, haciendo que el dinero valga menos." },
+      "17": { "term": "Caída del mercado", "definition": "Una caída repentina y pronunciada en los precios del mercado de valores." },
+      "18": { "term": "Recesión", "definition": "Un período en el que la economía se desacelera y las empresas y los consumidores gastan menos dinero." },
+      "19": { "term": "Ingreso pasivo", "definition": "Dinero que se gana de forma regular con poco esfuerzo diario después de la configuración o inversión inicial." },
+      "20": { "term": "Cuenta de ahorro de alto rendimiento", "definition": "Una cuenta de ahorro que paga un interés más alto que una cuenta de ahorro normal." },
+      "21": { "term": "Bonos gubernamentales", "definition": "Inversiones en las que le prestas dinero a un gobierno y recibes intereses a cambio." },
+      "22": { "term": "Tasas de interés", "definition": "El porcentaje que se paga por pedir dinero prestado o que se gana por ahorrar e invertir dinero." },
+      "23": { "term": "Rendimiento", "definition": "La cantidad de dinero que gana una inversión en comparación con su precio." },
+      "24": { "term": "Bonos corporativos", "definition": "Bonos emitidos por empresas para recaudar dinero de los inversionistas." },
+      "25": { "term": "Promediación del costo en dólares", "definition": "Invertir la misma cantidad de dinero regularmente con el tiempo en lugar de hacerlo todo de una vez." },
+      "26": { "term": "Roth IRA", "definition": "Una cuenta de retiro en la que las inversiones pueden crecer libres de impuestos con el tiempo." },
+      "27": { "term": "S&P 500", "definition": "Un grupo de 500 grandes empresas de EE. UU. que se usa a menudo para medir el mercado de valores en general." },
+      "28": { "term": "Ratio de gastos", "definition": "Una tarifa anual que cobran los fondos de inversión por administrar tu dinero." },
+      "29": { "term": "Inversión indexada", "definition": "Una estrategia de inversión enfocada en igualar el desempeño de un índice del mercado." },
+      "30": { "term": "Venta en corto", "definition": "Una estrategia en la que los inversionistas buscan obtener ganancias cuando el precio de una acción baja." },
+      "31": { "term": "Opciones", "definition": "Contratos financieros que dan a los inversionistas el derecho de comprar o vender un activo a un precio específico." },
+      "32": { "term": "REITs", "definition": "Empresas que poseen o administran bienes raíces y permiten a los inversionistas invertir en propiedades sin comprar edificios directamente." }
+    }
+  },
+  "tips": {
+    "kicker": "Consejos del mercado",
+    "title": "Explora consejos de inversión cuando quieras",
+    "subtitle": "Guías breves y ya preparadas para quienes quieren aprender antes de crear una cuenta.",
+    "headerImageAlt": "Dos personas revisando gráficos financieros y efectivo en un escritorio",
+    "filterAriaLabel": "Filtrar consejos del mercado por tema",
+    "toolsAriaLabel": "Buscar y ordenar consejos del mercado",
+    "searchLabel": "Buscar consejos",
+    "searchPlaceholder": "Busca riesgo, comisiones, metas...",
+    "sortLabel": "Ordenar por",
+    "sortOptions": {
+      "recommended": "Recomendados",
+      "beginner": "Principiantes primero",
+      "quick": "Lecturas rápidas primero",
+      "topic": "Tema"
+    },
+    "topicLabels": {
+      "all": "Todos",
+      "getting started": "Primeros pasos",
+      "risk": "Riesgo",
+      "timing": "Momento del mercado",
+      "goals": "Metas",
+      "fees": "Comisiones",
+      "emotions": "Emociones"
+    },
+    "labels": {
+      "beginner": "Principiante",
+      "important": "Importante",
+      "long-term": "Largo plazo",
+      "quick-read": "Lectura rápida"
+    },
+    "readMore": "Leer más",
+    "showLess": "Mostrar menos",
+    "empty": "Ningún consejo coincide con esa búsqueda todavía. Prueba con una palabra más general u otro tema.",
+    "disclaimer": "Estos consejos son solo para fines educativos y no constituyen asesoría financiera personalizada.",
+    "items": {
+      "budget-fit": {
+        "title": "Comienza con lo que puedas costear",
+        "description": "Invertir funciona mejor cuando se ajusta a tu presupuesto. Empieza con una cantidad que puedas mantener de forma constante con el tiempo.",
+        "details": [
+          "Elige una cantidad que no afecte el alquiler, las cuentas, la comida ni tus ahorros de emergencia.",
+          "Empezar con poco puede hacer que invertir se sienta más manejable mientras aprendes cómo se mueven los mercados.",
+          "Un hábito constante suele ser más fácil de mantener que hacer una sola contribución grande bajo presión."
+        ]
+      },
+      "emergency-cushion": {
+        "title": "Primero crea un colchón de emergencia",
+        "description": "Antes de invertir dinero extra, reserva fondos para necesidades a corto plazo, así es menos probable que tengas que vender tus inversiones en una semana difícil.",
+        "details": [
+          "Mantén el dinero para gastos urgentes en un lugar de fácil acceso antes de destinar dinero extra al mercado.",
+          "Esto puede ayudarte a evitar vender inversiones en un mal momento solo para cubrir un gasto inesperado.",
+          "Revisa tu colchón cada vez que cambien tus ingresos, tu alquiler o tus cuentas mensuales."
+        ]
+      },
+      "match-goal": {
+        "title": "Vincula cada inversión a una meta",
+        "description": "Saber para qué es el dinero puede facilitarte elegir cuánto riesgo y cuánta paciencia necesita cada inversión.",
+        "details": [
+          "Separa las metas a corto plazo de las metas a largo plazo antes de decidir a dónde debe ir el dinero.",
+          "El dinero para planes a corto plazo suele necesitar más estabilidad que el dinero pensado para dentro de varios años.",
+          "Anotar la meta puede ayudarte a mantenerte constante cuando el mercado se sienta agitado."
+        ]
+      },
+      "goal-timeline": {
+        "title": "Dale a cada meta un plazo aproximado",
+        "description": "Un plazo te ayuda a decidir si tu dinero necesita estabilidad pronto o si tiene tiempo para soportar los altibajos del mercado.",
+        "details": [
+          "Indica si cada meta es a corto, mediano o largo plazo.",
+          "Los plazos más cortos suelen necesitar más precaución porque hay menos tiempo para recuperarse de pérdidas.",
+          "Los plazos más largos pueden permitir más paciencia, pero igual necesitan revisiones periódicas."
+        ]
+      },
+      "understand-risk": {
+        "title": "Entiende el riesgo antes de perseguir rendimientos",
+        "description": "Los rendimientos potenciales más altos suelen venir con mayor riesgo. Elige inversiones que se ajusten a tu nivel de comodidad y a tu plazo.",
+        "details": [
+          "Pregúntate cuánto valor podrías tolerar perder temporalmente antes de que una inversión empiece a generarte estrés.",
+          "El dinero que necesitas pronto suele pertenecer a opciones de menor riesgo que el dinero pensado para metas a largo plazo.",
+          "Compara los posibles rendimientos con las posibles pérdidas en lugar de enfocarte solo en las ganancias."
+        ]
+      },
+      "diversify": {
+        "title": "Diversifica en más de una idea",
+        "description": "Repartir el dinero entre distintas inversiones puede reducir el impacto de que una de ellas tenga un mal desempeño.",
+        "details": [
+          "Evita poner todo tu dinero en una sola empresa, tendencia o sector.",
+          "Los fondos que reúnen muchas inversiones pueden ser una forma sencilla de repartir el riesgo.",
+          "Revisa tu combinación de vez en cuando para que ninguna inversión termine representando una parte demasiado grande sin que lo notes."
+        ]
+      },
+      "watch-fees": {
+        "title": "Presta atención a las comisiones",
+        "description": "Las comisiones pequeñas pueden acumularse con el tiempo, así que ayuda entender qué estás pagando antes de elegir una inversión.",
+        "details": [
+          "Compara los ratios de gastos, las comisiones por operar y las tarifas de cuenta antes de comprometer tu dinero.",
+          "Comisiones más bajas no garantizan mejores resultados, pero pueden dejar más de tu rendimiento trabajando para ti.",
+          "Revisa las comisiones al cambiar de plataforma o al elegir entre opciones de inversión similares."
+        ]
+      },
+      "hidden-costs": {
+        "title": "Ten cuidado con los costos que no notas de inmediato",
+        "description": "Algunos costos son fáciles de pasar por alto, pero igual pueden afectar cuánto conserva tu inversión con el tiempo.",
+        "details": [
+          "Busca tarifas de mantenimiento, tarifas de transferencia, tarifas de asesoría y gastos del fondo.",
+          "Lee las páginas de tarifas antes de abrir una nueva cuenta o cambiar de plataforma de inversión.",
+          "Si dos opciones parecen similares, los costos continuos más bajos pueden ser un punto de comparación útil."
+        ]
+      },
+      "avoid-timing": {
+        "title": "Evita tratar de acertar el momento perfecto del mercado",
+        "description": "Los mercados suben y bajan. Un plan constante a largo plazo suele ser más confiable que adivinar el momento perfecto para comprar.",
+        "details": [
+          "Esperar el punto de entrada perfecto puede impedir que empieces del todo.",
+          "Considera crear el hábito de invertir en un horario regular cuando tu presupuesto lo permita.",
+          "Enfócate en si la inversión se ajusta a tus metas en lugar de reaccionar a cada titular del mercado."
+        ]
+      },
+      "think-years": {
+        "title": "Piensa en años, no en días",
+        "description": "Los movimientos de corto plazo pueden sentirse intensos, pero las metas a largo plazo suelen beneficiarse de la paciencia y la revisión periódica.",
+        "details": [
+          "Decide para qué es el dinero antes de juzgar los cambios de precio diarios.",
+          "Las caídas de corto plazo son comunes, así que revisar con frecuencia puede hacer que un movimiento normal se sienta más alarmante.",
+          "Establece un ritmo de revisión, como mensual o trimestral, en lugar de reaccionar todos los días."
+        ]
+      },
+      "headlines": {
+        "title": "No dejes que los titulares tomen todas las decisiones",
+        "description": "Las noticias del mercado pueden ser útiles, pero reaccionar a cada titular puede alejarte de tu plan a largo plazo.",
+        "details": [
+          "Detente antes de cambiar tu plan por una sola noticia o movimiento del mercado.",
+          "Pregúntate si la noticia realmente cambia tu meta, tu plazo o tu tolerancia al riesgo.",
+          "Un proceso de revisión tranquilo puede ayudarte a evitar compras o ventas impulsadas por la emoción."
+        ]
+      },
+      "plan-ahead": {
+        "title": "Haz un plan antes de que las emociones se disparen",
+        "description": "Decidir cómo vas a responder antes de que el mercado se ponga estresante puede facilitarte mantener la calma después.",
+        "details": [
+          "Anota qué te haría revisar tu plan antes de que ocurra un día de mercado estresante.",
+          "Evita hacer cambios grandes justo después de que el miedo, la emoción o la presión tomen el control.",
+          "Un período de espera planificado puede ayudarte a separar una decisión reflexiva de una reacción emocional."
+        ]
+      }
+    }
+  },
+  "budgetInput": {
+    "heroTitleLine1": "Comienza tu",
+    "heroTitleLine2": "camino de inversión",
+    "heroSub": "Cuéntanos tu presupuesto y tu plazo — te conectaremos con estrategias diseñadas exactamente para el momento en el que estás.",
+    "statMinimum": "Mínimo para empezar",
+    "statTime": "Para obtener tu plan",
+    "statTimeValue": "2 min",
+    "statPersonalized": "Personalizado",
+    "whyTitle": "¿Por qué empezar a invertir ahora?",
+    "why1Title": "Vencer a la inflación",
+    "why1Desc": "Las cuentas de ahorro rinden entre 0.5% y 1% anual, mientras que la <1>inflación</1> promedia entre 3% y 4% al año. Invertir es la forma en que tu dinero mantiene su valor con el tiempo.",
+    "why2Title": "El tiempo es tu ventaja",
+    "why2Desc": "$5,000 invertidos a los 25 años crecen hasta ~$70,000 a los 65 (con un rendimiento promedio del 7%). La misma cantidad a los 45 años solo llega a ~$22,000. Empezar temprano importa.",
+    "why3Title": "Empieza pequeño, piensa en grande",
+    "why3Desc": "Muchas estrategias funcionan con tan solo $100. El hábito de invertir de forma constante importa más que el monto inicial.",
+    "step1Title": "¿Cuánto quieres invertir?",
+    "step1Desc": "Ingresa la cantidad con la que te sientas cómodo comprometiéndote. Siempre puedes ajustarla después.",
+    "errors": {
+      "budgetRequired": "Ingresa un monto de inversión.",
+      "budgetInvalid": "Ingresa un monto en dólares válido y positivo.",
+      "timelineRequired": "Selecciona un plazo antes de continuar.",
+      "riskRequired": "Selecciona una tolerancia al riesgo antes de continuar.",
+      "submitFailed": "Hubo un error al generar tu plan. Inténtalo de nuevo más tarde."
+    },
+    "guideHeading": "Rangos de presupuesto de un vistazo",
+    "guideNotes": {
+      "starter": "<1>Cuentas de alto rendimiento</1>, <2>CDs</2>, fondos del mercado monetario",
+      "growing": "<1>Fondos indexados</1>, <2>ETFs</2>, fondos mutuos",
+      "established": "<1>Portafolio</1> diversificado, <2>bonos</2>, acciones de crecimiento"
+    },
+    "step2Title": "¿Cuándo quieres ver resultados?",
+    "step2Desc": "Tu plazo determina qué estrategias son realistas y adecuadas para ti.",
+    "bestForPrefix": "Ideal para:",
+    "timelineOptions": {
+      "short": {
+        "bestFor": "Fondos de emergencia, compras planificadas o para probar el terreno",
+        "strategies": ["Cuentas de ahorro de alto rendimiento", "Fondos del mercado monetario", "CDs a corto plazo", "Letras del Tesoro"],
+        "tradeoff": "Menor riesgo, menor rendimiento. La prioridad es la estabilidad."
+      },
+      "medium": {
+        "bestFor": "Construir riqueza de forma constante manteniendo algo de flexibilidad",
+        "strategies": ["Fondos indexados", "ETFs balanceados", "Fondos mutuos", "Acciones con dividendos"],
+        "tradeoff": "Riesgo moderado, rendimiento moderado. Un enfoque equilibrado."
+      },
+      "long": {
+        "bestFor": "Jubilación, construcción de riqueza o metas importantes de vida",
+        "strategies": ["Acciones de crecimiento", "Fondos internacionales", "Bienes raíces (REITs)", "Fondos indexados al S&P 500"],
+        "tradeoff": "Mayor riesgo, mayor rendimiento potencial. El tiempo suaviza la volatilidad."
+      }
+    },
+    "step3Title": "¿Con cuánto riesgo te sientes cómodo?",
+    "step3Desc": "Elige el nivel de riesgo que se sienta adecuado para tu dinero y tus metas.",
+    "riskOptions": {
+      "low": { "label": "Riesgo bajo", "description": "Inversiones más seguras con menor rendimiento potencial. Ideal para proteger tu dinero." },
+      "medium": { "label": "Riesgo medio", "description": "Enfoque equilibrado con crecimiento moderado y altibajos moderados." },
+      "high": { "label": "Riesgo alto", "description": "Mayor rendimiento potencial, pero también mayor probabilidad de pérdidas y volatilidad." }
+    },
+    "outcomesTitle": "Qué vas a recibir",
+    "outcomes": [
+      { "title": "Una estrategia acorde a tu presupuesto", "desc": "Te mostramos opciones que realmente tienen sentido para tu nivel de inversión — sin consejos genéricos." },
+      { "title": "Recomendaciones adecuadas a tu plazo", "desc": "Las metas a corto y largo plazo requieren estrategias completamente distintas. Nosotros las alineamos correctamente." },
+      { "title": "Explicaciones en lenguaje sencillo", "desc": "Sin tecnicismos. Cada recomendación incluye una explicación clara de qué es y por qué se ajusta a ti." }
+    ],
+    "analyzing": "Analizando...",
+    "submit": "Obtener mi plan de inversión →",
+    "footnote": "No se requiere cuenta · Gratis · Resultados en segundos",
+    "toastTitle": "Necesita atención"
+  },
+  "results": {
+    "riskLevel": {
+      "low": "Bajo",
+      "medium": "Medio",
+      "high": "Alto"
+    },
+    "title": "Tu plan de inversión",
+    "subtitle": "Estrategias personalizadas según tus datos.",
+    "budget": "Presupuesto",
+    "timeline": "Plazo",
+    "riskLevelLabel": "Nivel de riesgo",
+    "allocation": "Distribución del portafolio",
+    "whereToInvest": "Dónde invertir",
+    "platform": "Plataforma",
+    "noPlanTitle": "No se encontró ningún plan.",
+    "noPlanSubtitle": "Primero completa el formulario de inversión.",
+    "goToForm": "Ir al formulario",
+    "adjustPlan": "Ajustar mi plan",
+    "saveCreateAccount": "Crea una cuenta para guardar",
+    "saving": "Guardando...",
+    "saved": "Guardado ✓",
+    "savePlan": "Guardar este plan",
+    "downloadPdf": "Descargar PDF",
+    "saveError": "No se pudo guardar tu plan. Inténtalo de nuevo."
+  }
+}
