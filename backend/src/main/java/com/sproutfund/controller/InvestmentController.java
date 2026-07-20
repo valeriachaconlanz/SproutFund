@@ -38,7 +38,7 @@ public class InvestmentController {
 
     @PostMapping("/save")
     public ResponseEntity<InvestmentRecommendation> save(@Valid @RequestBody SaveInvestmentRequest request,
-                                                           @AuthenticationPrincipal Jwt jwt) {
+                                                         @AuthenticationPrincipal Jwt jwt) {
         InvestmentRecommendation recommendation = new InvestmentRecommendation(
                 UUID.fromString(jwt.getSubject()),
                 request.getBudget(),
@@ -47,6 +47,12 @@ public class InvestmentController {
                 request.getStrategies(),
                 request.getDisclaimer()
         );
+
+        recommendation.setTitle(request.getTitle());
+        recommendation.setIsPinned(
+            request.getIsPinned() != null ? request.getIsPinned() : false
+        );
+        
         return ResponseEntity.ok(recommendationRepository.save(recommendation));
     }
 
@@ -58,12 +64,21 @@ public class InvestmentController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<InvestmentRecommendation> rename(@PathVariable Long id,
-                                                             @RequestBody RenameInvestmentRequest request,
-                                                             @AuthenticationPrincipal Jwt jwt) {
+                                                           @RequestBody RenameInvestmentRequest request,
+                                                           @AuthenticationPrincipal Jwt jwt) {
         UUID userId = UUID.fromString(jwt.getSubject());
         return recommendationRepository.findByIdAndUserId(id, userId)
                 .map(recommendation -> {
-                    recommendation.setTitle(request.getTitle());
+                    // Update the title if a new one was sent
+                    if (request.getTitle() != null) {
+                        recommendation.setTitle(request.getTitle());
+                    }
+                    
+                    // Update the pinned status if it was sent
+                    if (request.getIsPinned() != null) {
+                        recommendation.setIsPinned(request.getIsPinned());
+                    }
+                    
                     return ResponseEntity.ok(recommendationRepository.save(recommendation));
                 })
                 .orElse(ResponseEntity.notFound().build());

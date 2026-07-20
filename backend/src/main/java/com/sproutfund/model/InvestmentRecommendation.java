@@ -42,6 +42,10 @@ public class InvestmentRecommendation {
     // User-assigned label, set later via rename — blank until then.
     private String title;
 
+    // Persistent storage for whether the plan is starred/pinned to the top.
+    @Column(name = "is_pinned", nullable = false)
+    private Boolean isPinned = false;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -67,5 +71,7 @@ public class InvestmentRecommendation {
     public String getDisclaimer() { return disclaimer; }
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
+    public Boolean getIsPinned() { return isPinned; }
+    public void setIsPinned(Boolean isPinned) { this.isPinned = isPinned; }
     public Instant getCreatedAt() { return createdAt; }
 }
