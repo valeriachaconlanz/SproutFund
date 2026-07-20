@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Link, useNavigate } from "react-router-dom";
 import { motion, useReducedMotion } from "motion/react";
 import { useTranslation } from "react-i18next";
@@ -8,7 +9,15 @@ import Stagger from "../components/Stagger";
 import GrowthChart from "../components/GrowthChart";
 import BudgetPreview from "../components/BudgetPreview";
 import Faq from "../components/Faq";
+=======
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import PerformanceInsights from "../components/PerformanceInsights";
+>>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
 import "./Home.css";
+
+const API = "http://localhost:8080/api/investment";
 
 const TICKER_ITEMS = [
   { symbol: "AAPL", change: "+2.4%", up: true },
@@ -20,6 +29,7 @@ const TICKER_ITEMS = [
 
 function Home() {
   const navigate = useNavigate();
+<<<<<<< HEAD
   const { user } = useAuth();
   const { t } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
@@ -36,6 +46,50 @@ function Home() {
      Everything below it uses Reveal/Stagger and waits to be scrolled to. */
   const heroContainer = resolveVariants(staggerContainer(0.09), shouldReduceMotion);
   const heroItem = resolveVariants(fadeUp, shouldReduceMotion);
+=======
+  const { user, token } = useAuth();
+
+  const [recommendations, setRecommendations] = useState([]);
+  const [recStatus, setRecStatus] = useState("loading");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadHistory() {
+      try {
+        const response = await fetch(`${API}/history`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) throw new Error();
+
+        const data = await response.json();
+
+        if (!cancelled) {
+          setRecommendations(data);
+          setRecStatus("ready");
+        }
+      } catch {
+        if (!cancelled) {
+          setRecStatus("error");
+        }
+      }
+    }
+
+    if (token) {
+      loadHistory();
+    } else {
+      // If there's no token, stop showing the loading state for insights
+      setRecStatus("ready");
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token]);
+>>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
 
   return (
     <main className="home-page">
@@ -96,12 +150,32 @@ function Home() {
         </Reveal>
       </section>
 
+<<<<<<< HEAD
       {/* ── How it works ── */}
       <section className="home-section how-it-works">
         <Reveal as="h2" className="section-title">{t("home.howItWorksTitle")}</Reveal>
         <Stagger className="how-it-works-steps" stagger={0.09}>
           {steps.map((step, index) => (
             <Stagger.Item className="how-step" key={index}>
+=======
+      {/* Render insights section inside a structural layout hook if logged in */}
+      {token && (
+        <section className="dashboard-section">
+          <div className="profile-shell">
+            <PerformanceInsights
+              recommendations={recommendations}
+              recStatus={recStatus}
+            />
+          </div>
+        </section>
+      )}
+
+      <section className="how-it-works">
+        <h2 className="section-title">How it works</h2>
+        <div className="how-it-works-steps">
+          {HOW_IT_WORKS_STEPS.map((step) => (
+            <div className="how-step" key={step.number}>
+>>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
               <div className="step-header">
                 <span className="step-number">{String(index + 1).padStart(2, "0")}</span>
                 <div>

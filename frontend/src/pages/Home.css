@@ -39,6 +39,7 @@ html[data-theme="dark"] .home-page {
 }
 
 .hero {
+  margin-top: 50px;
   width: 100%;
   max-width: 760px;
 }
@@ -753,3 +754,350 @@ html[data-theme="dark"] .hero-button:hover {
     grid-template-columns: 1fr;
   }
 }
+<<<<<<< HEAD
+=======
+
+.dashboard-section {
+  width: 100%;
+  max-width: 1120px;
+  margin: 40px auto 0;
+  padding: 0 16px;
+  text-align: left;
+}
+
+.dashboard-section .profile-panel {
+  width: 100%;
+  max-width: none;
+  border-radius: var(--radius-lg);
+}
+
+.profile-recommendations-panel {
+  width: 100%;
+}
+
+.portfolio-row-other {
+    position: relative;
+    cursor: help;
+}
+
+.portfolio-hover-tooltip {
+    position: absolute;
+    top: -160px; 
+    right: 0;
+    z-index: 999;
+
+    width: 260px;
+    padding: 12px 14px;
+
+    /* Sleek Dark Translucent Backdrop */
+    background: var(--surface);
+    color: var(--text-primary);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    
+    /* Restored Custom Accent Border */
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 8px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+
+    /* Smooth State Transition */
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px) scale(0.98);
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hover Trigger State */
+.portfolio-row-other:hover .portfolio-hover-tooltip {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+/* Title text styling inside the tooltip */
+.portfolio-hover-tooltip .tooltip-title {
+    display: block;
+    font-family: var(--font-heading);
+    color: var(--text-primary);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+}
+
+/* Content List Container */
+.tooltip-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Item row alignments */
+.tooltip-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+/* Restored Clean White Text for Names */
+.tooltip-item-name {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* Restored Neon Text for the Percent Values */
+.tooltip-item-percent {
+    font-family: ui-monospace, monospace;
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.profile-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.account-statistics-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(240px, 0.75fr);
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.account-statistics-chart-card,
+.account-statistics-metrics {
+  display: grid;
+  gap: 12px;
+}
+
+.account-statistics-chart-card {
+  padding: 16px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.account-statistics-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: 5px;
+}
+
+.account-statistics-heading h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-size: 18px;
+}
+
+.portfolio-breakdown {
+  display: grid;
+  gap: 14px;
+}
+
+.portfolio-row {
+  display: grid;
+  gap: 6px;
+  position: relative;
+  padding-bottom: 6px;
+}
+
+.portfolio-row-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.portfolio-row-header strong {
+  font-family: var(--font-heading);
+}
+
+.portfolio-progress {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.portfolio-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), #6ee7b7);
+  transition: width 0.3s ease;
+}
+
+.portfolio-row-other .portfolio-row-header span {
+  color: var(--accent-ink);
+}
+
+.portfolio-hover-tooltip strong {
+  color: var(--text-primary);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.portfolio-bar-empty {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 16px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.portfolio-legend-item {
+  display: grid;
+  grid-template-columns: 12px 1fr auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.portfolio-legend-item strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.portfolio-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.portfolio-legend-dot.color-0 {
+  background: #7c3aed;
+}
+
+.portfolio-legend-dot.color-1 {
+  background: #22c55e;
+}
+
+.portfolio-legend-dot.color-2 {
+  background: #3b82f6;
+}
+
+.portfolio-legend-dot.color-3 {
+  background: #f59e0b;
+}
+
+.portfolio-legend-dot.color-4 {
+  background: #ef4444;
+}
+
+.portfolio-legend-item strong {
+  margin-left: auto;
+  color: var(--text-primary);
+}
+
+.portfolio-legend-empty {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.account-statistics-metrics {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.profile-stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 110px;
+  padding: 16px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.profile-stat-top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.profile-stat-icon-wrap {
+  display: grid;
+  place-items: center;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: rgba(124, 58, 237, 0.12);
+  border: 1px solid rgba(124, 58, 237, 0.16);
+}
+
+.profile-stat-content {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.profile-stat-icon {
+  width: 60px;
+  height: 60px;
+  opacity: 0.95;
+}
+.profile-stat span,
+.rec-strategy-summary span {
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.profile-stat strong {
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.profile-stat.compact {
+  min-height: 96px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-stat.compact:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(17, 14, 8, 0.06);
+}
+
+.profile-stat.compact strong {
+  font-size: 16px;
+}
+
+@media (max-width: 980px) {
+  .profile-shell {
+    max-width: 100%;
+  }
+
+  .profile-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .account-statistics-section {
+    grid-template-columns: 1fr;
+  }
+}
+>>>>>>> 8e8bf30 (Rework saved plans and profile statistics)

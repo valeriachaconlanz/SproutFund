@@ -9,6 +9,7 @@ import CommandPalette from './components/CommandPalette'
 import ScrollToTop from './components/ScrollToTop'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
+<<<<<<< HEAD
 
 /* Home stays eagerly imported — it's the landing route, so lazy-loading it
    would only add a round trip before first paint. Everything else splits into
@@ -21,13 +22,28 @@ const Auth = lazy(() => import('./pages/Auth'))
 const Glossary = lazy(() => import('./pages/Glossary'))
 const MarketTips = lazy(() => import('./pages/MarketTips'))
 const Profile = lazy(() => import('./pages/Profile'))
+=======
+import InvestmentForm from './pages/InvestmentForm'
+import Results from './pages/Results'
+import History from './pages/History'
+import Auth from './pages/Auth'
+import Glossary from './pages/Glossary'
+import MarketTips from './pages/MarketTips'
+import Profile from './pages/Profile'
+import './App.css'
+import ScrollService from "./components/ScrollService";
+>>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
 
 function AppRoutes() {
   const location = useLocation()
 
   return (
     <>
+<<<<<<< HEAD
       <ScrollToTop />
+=======
+      <ScrollService />
+>>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
       <Navbar />
       <CommandPalette />
 
@@ -47,9 +63,13 @@ function AppRoutes() {
 
             <Route path="/glossary" element={<PageTransition><Glossary /></PageTransition>} />
 
+<<<<<<< HEAD
             {/* The survey is public — anyone can build a plan; only saving it
                 (on the Results page) requires an account. */}
             <Route path="/dashboard" element={<PageTransition><InvestmentForm /></PageTransition>} />
+=======
+        <Route path="/dashboard" element={<InvestmentForm />} />
+>>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
 
             {/* Deliberately NOT behind ProtectedRoute. Results handles the
                 logged-out case itself: the save button reads "Create an account
@@ -94,7 +114,7 @@ function AppRoutes() {
         </Suspense>
       </AnimatePresence>
     </>
-  )
+  );
 }
 
 function App() {
