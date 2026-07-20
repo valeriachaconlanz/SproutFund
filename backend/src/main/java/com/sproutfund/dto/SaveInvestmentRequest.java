@@ -27,10 +27,6 @@ public class SaveInvestmentRequest {
 
     private String disclaimer;
 
-    private String title;
-
-    private Boolean isPinned;
-
     public double getBudget() { return budget; }
     public void setBudget(double budget) { this.budget = budget; }
 
@@ -45,10 +41,4 @@ public class SaveInvestmentRequest {
 
     public String getDisclaimer() { return disclaimer; }
     public void setDisclaimer(String disclaimer) { this.disclaimer = disclaimer; }
-
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-
-    public Boolean getIsPinned() { return isPinned; }
-    public void setIsPinned(Boolean isPinned) { this.isPinned = isPinned; }
 }
