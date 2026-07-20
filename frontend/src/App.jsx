@@ -12,10 +12,12 @@ import Glossary from './pages/Glossary'
 import MarketTips from './pages/MarketTips'
 import Profile from './pages/Profile'
 import './App.css'
+import ScrollService from "./components/ScrollService";
 
 function AppRoutes() {
   return (
     <>
+      <ScrollService />
       <Navbar />
 
       <Routes>
@@ -27,8 +29,6 @@ function AppRoutes() {
 
         <Route path="/glossary" element={<Glossary />} />
 
-        {/* The survey is public — anyone can build a plan; only saving it
-            (on the Results page) requires an account. */}
         <Route path="/dashboard" element={<InvestmentForm />} />
 
         <Route
@@ -61,7 +61,7 @@ function AppRoutes() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
-  )
+  );
 }
 
 function App() {

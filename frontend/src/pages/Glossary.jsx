@@ -1,10 +1,15 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import glossaryTerms from "../assets/glossaryTerm";
 import "./Glossary.css";
+// imports for highlighting the search term in the glossary definitions
+import { useLocation } from "react-router-dom";
+
 
 function Glossary() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("All");
+  // Get the current location object from React Router
+  const location = useLocation();
 
 
   const topics = useMemo(
@@ -38,6 +43,30 @@ function Glossary() {
   }, {});
 
   const alphabetLetters = Object.keys(groupedTerms).sort();
+
+  useEffect(() => {
+  if (!location.hash) return;
+
+  const id = location.hash.substring(1);
+
+  // Wait until the glossary has rendered
+  requestAnimationFrame(() => {
+    const element = document.getElementById(id);
+
+    if (!element) return;
+
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+
+    element.classList.add("highlighted");
+
+    setTimeout(() => {
+      element.classList.remove("highlighted");
+    }, 2000);
+  });
+}, [location]);
 
   return (
     <main className="glossary-page">

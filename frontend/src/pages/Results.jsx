@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { TIMELINE_LABELS, RISK_LABELS } from '../lib/labels'
@@ -6,8 +6,6 @@ import './Results.css'
 
 const COLORS = ['#ccff00', '#7eb8f7', '#f7a07e']
 
-// A logged-out visitor who hits "Save" gets bounced to /auth; we stash their
-// built plan here so they land back on it (and can save) after signing up.
 const PENDING_PLAN_KEY = 'sproutfund_pending_plan'
 
 function readPendingPlan() {
@@ -156,10 +154,25 @@ function Results() {
   const { state } = useLocation()
   const navigate = useNavigate()
   const { token } = useAuth()
-  const [saveState, setSaveState] = useState('idle') // idle | saving | saved | error
-  // Prefer a freshly-navigated plan (router state); otherwise fall back to a
-  // plan stashed before an auth detour so it survives the round trip.
-  const [plan] = useState(() => state || readPendingPlan())
+  
+  // Check if we came from the history page or if the plan object itself already has an ID field
+  const isHistoricallySaved = state?.isSavedPlan || !!state?.id
+
+  const [saveState, setSaveState] = useState(isHistoricallySaved ? 'saved' : 'idle') 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [customTitle, setCustomTitle] = useState('')
+
+  const [plan, setPlan] = useState(() => state || readPendingPlan())
+
+  useEffect(() => {
+    if (state) {
+      setPlan(state)
+      if (state.isSavedPlan || state.id) {
+        setSaveState('saved')
+      }
+      sessionStorage.removeItem(PENDING_PLAN_KEY)
+    }
+  }, [state])
 
   if (!plan || !plan.budget) {
     return (
@@ -197,16 +210,29 @@ function Results() {
     printWindow.print()
   }
 
-  async function handleSave() {
-    // Saving requires an account. Stash the plan and send them to sign up;
-    // they'll return here (via readPendingPlan) able to save it.
+  function handleSaveClick() {
+    if (isHistoricallySaved) return // Extra guard safety
     if (!token) {
       sessionStorage.setItem(PENDING_PLAN_KEY, JSON.stringify(plan))
       navigate('/auth', { state: { from: { pathname: '/results' } } })
       return
     }
+    setCustomTitle('')
+    setIsModalOpen(true)
+  }
 
+  async function handleFinalSaveConfirm() {
+    setIsModalOpen(false)
     setSaveState('saving')
+    
+    const now = new Date();
+    const finalTitle =
+      customTitle.trim() ||
+      `Plan - ${now.toLocaleDateString('en-US')}, ${now.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+      })}`;
+
     try {
       const response = await fetch('http://localhost:8080/api/investment/save', {
         method: 'POST',
@@ -214,9 +240,18 @@ function Results() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ budget, timeline, riskTolerance: selectedRisk, strategies, disclaimer }),
+        body: JSON.stringify({ 
+          title: finalTitle,
+          isPinned: false,
+          budget: plan.budget, 
+          timeline: plan.timeline, 
+          riskTolerance: plan.riskTolerance || plan.riskLevel, 
+          strategies: plan.strategies || [], 
+          disclaimer: plan.disclaimer 
+        }),
       })
       if (!response.ok) throw new Error('Save failed.')
+      
       sessionStorage.removeItem(PENDING_PLAN_KEY)
       setSaveState('saved')
     } catch {
@@ -228,8 +263,10 @@ function Results() {
     <div className="results-page">
       <div className="results-content">
         <div className="results-header">
-          <h1 className="results-title">Your Investment Plan</h1>
-          <p className="results-subtitle">Personalized strategies based on your inputs.</p>
+          <h1 className="results-title">{plan.title || 'Your Investment Plan'}</h1>
+          <p className="results-subtitle">
+            {isHistoricallySaved ? 'Reviewing your saved strategy.' : 'Personalized strategies based on your inputs.'}
+          </p>
         </div>
 
         <div className="summary-grid">
@@ -271,8 +308,8 @@ function Results() {
           <button
             type="button"
             className="results-action-btn primary"
-            onClick={handleSave}
-            disabled={saveState === 'saving' || saveState === 'saved'}
+            onClick={handleSaveClick}
+            disabled={isHistoricallySaved || saveState === 'saving' || saveState === 'saved'}
           >
             {!token
               ? 'Create an account to save'
@@ -294,9 +331,42 @@ function Results() {
           <p className="save-error">Couldn't save your plan. Please try again.</p>
         )}
         <button className="back-btn" onClick={() => navigate('/dashboard')}>
-          Adjust My Plan
+          {isHistoricallySaved ? 'Back to Dashboard' : 'Adjust My Plan'}
         </button>
       </div>
+
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-container">
+            <h3>Name Your Investment Plan</h3>
+            <p>Give your plan a title to distinguish it easily on your profile.</p>
+            <input
+              type="text"
+              placeholder="e.g., House Fund, Retirement Fund"
+              value={customTitle}
+              onChange={(e) => setCustomTitle(e.target.value)}
+              maxLength={50}
+              autoFocus
+            />
+            <div className="modal-buttons">
+              <button 
+                type="button" 
+                className="modal-btn-cancel" 
+                onClick={() => setIsModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                className="modal-btn-confirm" 
+                onClick={handleFinalSaveConfirm}
+              >
+                Confirm Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

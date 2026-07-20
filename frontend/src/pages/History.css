@@ -1,16 +1,13 @@
 .history-page {
   min-height: 100vh;
   background: var(--background);
-  padding: 24px 16px 64px;
-  padding-top: 110px;
+  padding: 110px 16px 64px;
 }
 
 .history-content {
-  max-width: 640px;
+  max-width: 700px;
+  width: 100%;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
 }
 
 .history-header { margin-bottom: 4px; }
@@ -71,6 +68,8 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 100%;
+  box-sizing:border-box;
 }
 
 .history-card-top {
@@ -129,3 +128,292 @@
   border-radius: var(--radius-sm);
   padding: 4px 10px;
 }
+
+.risk-badge {
+  font-weight: 700;
+}
+
+.risk-low {
+  color: #27ae60 !important;
+}
+
+.risk-medium {
+  color: #e67e22 !important;
+}
+
+.risk-high {
+  color: #c0392b !important;
+}
+
+.history-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.history-action-btn {
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--text-primary);
+  border-radius: var(--radius-pill);
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color .15s ease;
+}
+
+.history-action-btn:hover {
+  border-color: var(--accent);
+}
+
+.history-action-btn.danger {
+  color: #ef4444;
+}
+
+.history-action-btn.danger:hover {
+  border-color: #ef4444;
+}
+
+.recommendations-list {
+  display: grid;
+  gap: 12px;
+}
+
+.recommendation-item {
+  display: grid;
+  gap: 14px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.rec-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.rec-header h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-size: 17px;
+  line-height: 1.25;
+}
+
+.rec-header > span {
+  color: var(--text-muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.rec-title-input {
+  max-width: 320px;
+  padding: 9px 11px;
+  font-size: 14px;
+}
+
+.rec-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rec-metrics span {
+  font-size: 12px;
+  padding: 5px 9px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  color: var(--text-primary);
+}
+
+.rec-strategy-summary {
+  display: grid;
+  gap: 5px;
+  padding-top: 2px;
+}
+
+.rec-strategy-summary strong {
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.rec-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rec-action-btn {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+  border-radius: var(--radius-pill);
+  padding: 8px 12px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.rec-action-btn:hover {
+  border-color: var(--accent);
+}
+
+.rec-action-btn.danger {
+  color: #ef4444;
+}
+
+.rec-action-btn.danger:hover {
+  border-color: #ef4444;
+}
+
+.rec-action-btn.danger.solid {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: #ffffff;
+}
+
+.delete-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(17, 14, 8, 0.58);
+}
+
+.delete-modal {
+  width: min(430px, 100%);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.32);
+  padding: 28px;
+  text-align: center;
+}
+
+.delete-modal-icon {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.32);
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+.delete-modal h2 {
+  margin: 0 0 10px;
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-size: 24px;
+}
+
+.delete-modal-copy {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.delete-modal-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.delete-modal-btn {
+  min-height: 44px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.delete-modal-btn.secondary {
+  background: var(--background);
+  color: var(--text-primary);
+}
+
+.delete-modal-btn.danger {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: #ffffff;
+}
+
+.recommendations-empty {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-style: italic;
+  padding: 18px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/* ==========================================================================
+   PINNING / TRACKING SYSTEM EXTENSIONS
+   ========================================================================== */
+
+/* Layout grouping for the star and title heading */
+.rec-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Star Pin Button Layout & Base State */
+.pin-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  color: var(--text-muted);
+  opacity: 0.3;
+  line-height: 1;
+  transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.15s ease, color 0.15s ease;
+}
+
+/* Hover Accent Feedback */
+.pin-btn:hover {
+  opacity: 0.8;
+  transform: scale(1.2);
+}
+
+/* Active Highlight Pinned State */
+.pin-btn.pinned {
+  color: #ccff00; /* Distinct neon accent color matching layout brand */
+  opacity: 1;
+  animation: star-pop 0.30s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Highlight pinned recommendation box card boundary subtly */
+.recommendation-item.is-pinned {
+  border-color: rgba(204, 255, 0, 0.25);
+}
+
+/* Elastic Pop Animation Engine */
+@keyframes star-pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+

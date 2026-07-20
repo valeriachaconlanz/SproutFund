@@ -34,6 +34,7 @@
 .results-header { margin-bottom: 4px; }
 
 .results-title {
+  margin-top: 30px;
   font-family: var(--font-heading);
   font-size: 30px;
   font-weight: 700;
@@ -407,4 +408,112 @@
     max-width: none;
     animation: none;
   }
+}
+
+/* ── Rename Popup Modal ── */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 200ms ease-out both;
+}
+
+.modal-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: slideUp 250ms cubic-bezier(.65,.05,.36,1) both;
+}
+
+.modal-container h3 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.modal-container p {
+  margin: -8px 0 0 0;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.modal-container input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  box-sizing: border-box;
+  transition: border-color 150ms ease-out;
+}
+
+.modal-container input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-buttons button {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: var(--radius);
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 150ms ease-out;
+}
+
+.modal-buttons button:hover {
+  opacity: 0.88;
+}
+
+.modal-btn-cancel {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.modal-btn-cancel:hover {
+  background: var(--background);
+  color: var(--text-primary);
+}
+
+.modal-btn-confirm {
+  background: var(--accent);
+  color: #110e08;
+  border: none;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }

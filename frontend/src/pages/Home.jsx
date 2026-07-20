@@ -1,6 +1,10 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import PerformanceInsights from "../components/PerformanceInsights";
 import "./Home.css";
+
+const API = "http://localhost:8080/api/investment";
 
 const TICKER_ITEMS = [
   { symbol: "AAPL", change: "+2.4%", up: true },
@@ -37,7 +41,48 @@ const WHY_SPROUTFUND_ITEMS = [
 
 function Home() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
+
+  const [recommendations, setRecommendations] = useState([]);
+  const [recStatus, setRecStatus] = useState("loading");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadHistory() {
+      try {
+        const response = await fetch(`${API}/history`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) throw new Error();
+
+        const data = await response.json();
+
+        if (!cancelled) {
+          setRecommendations(data);
+          setRecStatus("ready");
+        }
+      } catch {
+        if (!cancelled) {
+          setRecStatus("error");
+        }
+      }
+    }
+
+    if (token) {
+      loadHistory();
+    } else {
+      // If there's no token, stop showing the loading state for insights
+      setRecStatus("ready");
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token]);
 
   return (
     <main className="home-page">
@@ -76,6 +121,18 @@ function Home() {
           </svg>
         </div>
       </section>
+
+      {/* Render insights section inside a structural layout hook if logged in */}
+      {token && (
+        <section className="dashboard-section">
+          <div className="profile-shell">
+            <PerformanceInsights
+              recommendations={recommendations}
+              recStatus={recStatus}
+            />
+          </div>
+        </section>
+      )}
 
       <section className="how-it-works">
         <h2 className="section-title">How it works</h2>
