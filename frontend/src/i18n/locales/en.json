@@ -185,6 +185,17 @@
   "glossaryTerm": {
     "openInGlossary": "Open in glossary"
   },
+  "history": {
+    "title": "Saved Plans",
+    "subtitle": "Investment plans you've saved for later.",
+    "loading": "Loading saved plans",
+    "error": "Couldn't load your saved plans. Please try again.",
+    "empty": "You haven't saved any plans yet.",
+    "createPlan": "Create a Plan",
+    "riskLabel": "{{level}} Risk",
+    "viewPlan": "View plan →",
+    "openPlanAria": "Open plan from {{date}} for {{amount}}"
+  },
   "auth": {
     "signInTab": "Sign In",
     "createAccountTab": "Create Account",

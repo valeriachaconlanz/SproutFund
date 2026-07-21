@@ -185,6 +185,17 @@
   "glossaryTerm": {
     "openInGlossary": "Abrir en el glosario"
   },
+  "history": {
+    "title": "Planes guardados",
+    "subtitle": "Planes de inversión que guardaste para más tarde.",
+    "loading": "Cargando planes guardados",
+    "error": "No pudimos cargar tus planes guardados. Inténtalo de nuevo.",
+    "empty": "Aún no has guardado ningún plan.",
+    "createPlan": "Crear un plan",
+    "riskLabel": "Riesgo {{level}}",
+    "viewPlan": "Ver plan →",
+    "openPlanAria": "Abrir el plan del {{date}} por {{amount}}"
+  },
   "auth": {
     "signInTab": "Iniciar sesión",
     "createAccountTab": "Crear cuenta",
