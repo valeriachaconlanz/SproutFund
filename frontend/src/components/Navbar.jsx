@@ -1,27 +1,30 @@
 import { NavLink, Link } from "react-router-dom";
 import { motion, useReducedMotion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import { bounceSpring, resolveTransition } from "../lib/motion";
 import ThemeToggle from "./ThemeToggle";
+import LanguageToggle from "./LanguageToggle";
 import UserMenu from "./UserMenu";
 import "./Navbar.css";
 
 const AUTHED_LINKS = [
-  { to: "/dashboard", label: "Survey" },
-  { to: "/results", label: "Results" },
-  { to: "/history", label: "Saved Plans" },
-  { to: "/tips", label: "Tips" },
-  { to: "/glossary", label: "Glossary" },
+  { to: "/dashboard", labelKey: "nav.survey" },
+  { to: "/results", labelKey: "nav.results" },
+  { to: "/history", labelKey: "nav.savedPlans" },
+  { to: "/tips", labelKey: "nav.tips" },
+  { to: "/glossary", labelKey: "nav.glossary" },
 ];
 
 const GUEST_LINKS = [
-  { to: "/", label: "Home", end: true },
-  { to: "/tips", label: "Tips" },
-  { to: "/glossary", label: "Glossary" },
+  { to: "/", labelKey: "nav.home", end: true },
+  { to: "/tips", labelKey: "nav.tips" },
+  { to: "/glossary", labelKey: "nav.glossary" },
 ];
 
 function Navbar() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
   const links = user ? AUTHED_LINKS : GUEST_LINKS;
 
@@ -51,7 +54,7 @@ function Navbar() {
                     />
                   )}
                   <span className={`nav-link-label${isActive ? " active" : ""}`}>
-                    {link.label}
+                    {t(link.labelKey)}
                   </span>
                 </>
               )}
@@ -61,15 +64,16 @@ function Navbar() {
 
         <div className="navbar-actions">
           <ThemeToggle />
+          <LanguageToggle />
           {user ? (
             <UserMenu />
           ) : (
             <>
               <Link to="/auth" className="nav-signin">
-                Sign in
+                {t("nav.signIn")}
               </Link>
               <Link to="/dashboard" className="nav-cta">
-                Get Started
+                {t("common.getStarted")}
               </Link>
             </>
           )}

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import './Auth.css'
 
@@ -7,6 +8,7 @@ function Auth() {
   const navigate = useNavigate()
   const location = useLocation()
   const { signIn, signUp } = useAuth()
+  const { t } = useTranslation()
 
   const [mode, setMode] = useState('login')
   const [fields, setFields] = useState({ name: '', email: '', password: '' })
@@ -24,11 +26,11 @@ function Auth() {
 
   function validate() {
     const e = {}
-    if (mode === 'register' && !fields.name.trim()) e.name = 'Name is required.'
-    if (!fields.email.trim()) e.email = 'Email is required.'
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) e.email = 'Enter a valid email address.'
-    if (!fields.password) e.password = 'Password is required.'
-    else if (mode === 'register' && fields.password.length < 8) e.password = 'Password must be at least 8 characters.'
+    if (mode === 'register' && !fields.name.trim()) e.name = t('auth.errors.nameRequired')
+    if (!fields.email.trim()) e.email = t('auth.errors.emailRequired')
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) e.email = t('auth.errors.emailInvalid')
+    if (!fields.password) e.password = t('auth.errors.passwordRequired')
+    else if (mode === 'register' && fields.password.length < 8) e.password = t('auth.errors.passwordTooShort')
     return e
   }
 
@@ -47,25 +49,25 @@ function Auth() {
       if (mode === 'login') {
         const { error } = await signIn(fields.email, fields.password)
         if (error) {
-          setServerError(error.message || 'Invalid email or password.')
+          setServerError(error.message || t('auth.errors.invalidCredentials'))
           return
         }
         navigate(from, { replace: true })
       } else {
         const { error, needsEmailConfirmation } = await signUp(fields.name, fields.email, fields.password)
         if (error) {
-          setServerError(error.message || 'Something went wrong. Please try again.')
+          setServerError(error.message || t('auth.errors.generic'))
           return
         }
         if (needsEmailConfirmation) {
           setMode('login')
-          setServerError('Account created — check your email to confirm it before signing in.')
+          setServerError(t('auth.emailConfirmation'))
           return
         }
         navigate(from, { replace: true })
       }
     } catch {
-      setServerError('Unable to connect to the server. Please try again.')
+      setServerError(t('auth.errors.network'))
     } finally {
       setLoading(false)
     }
@@ -89,25 +91,25 @@ function Auth() {
               onClick={() => switchMode('login')}
               type="button"
             >
-              Sign In
+              {t('auth.signInTab')}
             </button>
             <button
               className={`auth-tab ${mode === 'register' ? 'active' : ''}`}
               onClick={() => switchMode('register')}
               type="button"
             >
-              Create Account
+              {t('auth.createAccountTab')}
             </button>
           </div>
 
           <div className="auth-header">
             <h1 className="auth-title">
-              {mode === 'login' ? 'Welcome back' : 'Start your journey'}
+              {mode === 'login' ? t('auth.welcomeBack') : t('auth.startYourJourney')}
             </h1>
             <p className="auth-sub">
               {mode === 'login'
-                ? 'Sign in to access your investment plan.'
-                : 'Create an account to get your personalized investment strategy.'}
+                ? t('auth.signInSubtitle')
+                : t('auth.registerSubtitle')}
             </p>
           </div>
 
@@ -119,12 +121,12 @@ function Auth() {
 
             {mode === 'register' && (
               <div className="auth-field">
-                <label className="auth-label" htmlFor="name">Full Name</label>
+                <label className="auth-label" htmlFor="name">{t('auth.fullName')}</label>
                 <input
                   id="name"
                   type="text"
                   className={`auth-input ${errors.name ? 'input-error' : ''}`}
-                  placeholder="Jane Smith"
+                  placeholder={t('auth.fullNamePlaceholder')}
                   value={fields.name}
                   onChange={e => set('name', e.target.value)}
                   autoComplete="name"
@@ -134,12 +136,12 @@ function Auth() {
             )}
 
             <div className="auth-field">
-              <label className="auth-label" htmlFor="email">Email Address</label>
+              <label className="auth-label" htmlFor="email">{t('auth.emailAddress')}</label>
               <input
                 id="email"
                 type="email"
                 className={`auth-input ${errors.email ? 'input-error' : ''}`}
-                placeholder="you@example.com"
+                placeholder={t('auth.emailPlaceholder')}
                 value={fields.email}
                 onChange={e => set('email', e.target.value)}
                 autoComplete="email"
@@ -148,12 +150,12 @@ function Auth() {
             </div>
 
             <div className="auth-field">
-              <label className="auth-label" htmlFor="password">Password</label>
+              <label className="auth-label" htmlFor="password">{t('auth.password')}</label>
               <input
                 id="password"
                 type="password"
                 className={`auth-input ${errors.password ? 'input-error' : ''}`}
-                placeholder={mode === 'register' ? 'At least 8 characters' : '••••••••'}
+                placeholder={mode === 'register' ? t('auth.passwordPlaceholderRegister') : '••••••••'}
                 value={fields.password}
                 onChange={e => set('password', e.target.value)}
                 autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
@@ -163,31 +165,30 @@ function Auth() {
 
             <button type="submit" className="auth-submit" disabled={loading}>
               {loading
-                ? 'Please wait...'
-                : mode === 'login' ? 'Sign In →' : 'Create Account →'}
+                ? t('auth.pleaseWait')
+                : mode === 'login' ? t('auth.signInSubmit') : t('auth.createAccountSubmit')}
             </button>
           </form>
 
           <p className="auth-switch">
-            {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
+            {mode === 'login' ? t('auth.noAccount') : t('auth.hasAccount')}
             <button
               type="button"
               className="auth-switch-btn"
               onClick={() => switchMode(mode === 'login' ? 'register' : 'login')}
             >
-              {mode === 'login' ? 'Create one' : 'Sign in'}
+              {mode === 'login' ? t('auth.createOne') : t('auth.signInLink')}
             </button>
           </p>
         </div>
 
         <div className="auth-side">
           <div className="auth-side-content">
-            <p className="auth-side-label">Why SproutFund?</p>
+            <p className="auth-side-label">{t('auth.whySproutFund')}</p>
             <ul className="auth-side-list">
-              <li>Personalized strategies based on your budget</li>
-              <li>Clear, jargon-free recommendations</li>
-              <li>Built for first-time investors</li>
-              <li>Free to use, no credit card required</li>
+              {t('auth.benefits', { returnObjects: true }).map((benefit) => (
+                <li key={benefit}>{benefit}</li>
+              ))}
             </ul>
           </div>
           <div className="auth-tips-section">
@@ -196,7 +197,7 @@ function Auth() {
               className="auth-tips-btn"
               onClick={() => navigate('/tips')}
             >
-              Browse Market Tips
+              {t('auth.browseMarketTips')}
             </button>
           </div>
         </div>

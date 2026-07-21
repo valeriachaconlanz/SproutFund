@@ -1,9 +1,11 @@
 import { motion, useReducedMotion } from 'motion/react'
+import { useTranslation } from 'react-i18next'
 import { useTheme } from '../context/ThemeContext'
 import { resolveTransition } from '../lib/motion'
 import './ThemeToggle.css'
 
 function ThemeToggle() {
+  const { t } = useTranslation()
   const { theme, toggleTheme } = useTheme()
   const shouldReduceMotion = useReducedMotion()
   const isDark = theme === 'dark'
@@ -15,7 +17,7 @@ function ThemeToggle() {
       onClick={toggleTheme}
       role="switch"
       aria-checked={isDark}
-      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label={isDark ? t('theme.switchToLight') : t('theme.switchToDark')}
     >
       <span className="theme-switch-icon sun" aria-hidden="true">☀</span>
       <span className="theme-switch-icon moon" aria-hidden="true">☾</span>
