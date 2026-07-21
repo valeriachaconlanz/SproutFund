@@ -49,7 +49,141 @@
       "Recomendaciones claras, sin tecnicismos",
       "Hecho para inversionistas primerizos",
       "Gratis, sin necesidad de tarjeta de crédito"
+    ],
+    "browseTipsFirst": "Explorar consejos primero",
+    "growthChart": {
+      "note": "Solo ilustrativo: ${{principal}} con interés compuesto a un rendimiento anual estimado del {{rate}}% durante {{years}} años. Los rendimientos reales varían y nunca están garantizados."
+    },
+    "previewTitle": "Pruébalo antes de comprometerte",
+    "previewLede": "Mueve el control. Es la misma lógica de niveles que usa la encuesta real.",
+    "budgetPreview": {
+      "ifYouStarted": "Si comenzaras con",
+      "youdBeIn": "Estarías en",
+      "note": "Distribución ilustrativa. Tu plan real también toma en cuenta tu plazo y tu tolerancia al riesgo.",
+      "cta": "Crear mi plan real →",
+      "scaleMin": "$100",
+      "scaleMax": "$50,000",
+      "sliderLabel": "Presupuesto inicial",
+      "splits": {
+        "starter": [
+          { "name": "Ahorros en efectivo", "pct": 70 },
+          { "name": "CDs a corto plazo", "pct": 20 },
+          { "name": "Fondos indexados", "pct": 10 }
+        ],
+        "growing": [
+          { "name": "Fondos indexados", "pct": 50 },
+          { "name": "Bonos", "pct": 30 },
+          { "name": "Reserva de efectivo", "pct": 20 }
+        ],
+        "established": [
+          { "name": "Fondos indexados", "pct": 45 },
+          { "name": "Acciones de crecimiento", "pct": 30 },
+          { "name": "Bonos", "pct": 25 }
+        ]
+      }
+    },
+    "featuresTitle": "Qué incluye",
+    "features": [
+      {
+        "stat": "3",
+        "statLabel": "niveles de presupuesto",
+        "title": "Consejos que se ajustan a tu monto",
+        "description": "Inicial, En crecimiento y Consolidado reciben recomendaciones distintas, porque lo adecuado con $200 no es lo adecuado con $20,000.",
+        "linkLabel": "Hacer la encuesta"
+      },
+      {
+        "stat": "32",
+        "statLabel": "términos definidos",
+        "title": "Un glosario que no da nada por sentado",
+        "description": "Cada término que verás en una recomendación, explicado en lenguaje sencillo en 7 temas — desde fondos indexados hasta interés compuesto.",
+        "linkLabel": "Explorar el glosario"
+      },
+      {
+        "stat": "12",
+        "statLabel": "consejos del mercado",
+        "title": "Aprende antes de comprometerte",
+        "description": "Guía práctica en 6 temas — cómo empezar, riesgo, comisiones, tiempos, metas y el lado emocional de invertir.",
+        "linkLabel": "Leer los consejos"
+      },
+      {
+        "stat": "$1",
+        "statLabel": "mínimo",
+        "title": "Sin barreras",
+        "description": "Gratis, sin tarjeta de crédito y sin cuenta para crear un plan. Solo te registras si quieres guardarlo.",
+        "linkLabel": "Comenzar"
+      }
+    ],
+    "faqTitle": "Preguntas",
+    "closingTitle": "Empieza desde donde estás.",
+    "closingText": "Dos minutos, tres preguntas, sin necesidad de cuenta.",
+    "closingCta": "Crear mi plan",
+    "footerNote": "SproutFund es una herramienta educativa, no asesoría financiera. Invertir conlleva riesgos, incluida la posible pérdida del capital."
+  },
+  "faq": {
+    "items": [
+      {
+        "q": "¿Necesito una cuenta para obtener un plan?",
+        "a": "No. La encuesta está abierta para todos y puedes crear un plan completo sin registrarte. Solo necesitas una cuenta si quieres guardar un plan y volver a él más tarde."
+      },
+      {
+        "q": "¿Esto es asesoría financiera?",
+        "a": "No. SproutFund es una herramienta educativa. Explica estrategias comunes en lenguaje sencillo según lo que nos cuentas, pero no conoce tu situación financiera completa y no sustituye a un asesor financiero certificado."
+      },
+      {
+        "q": "¿Cuánto necesito para empezar?",
+        "a": "Un dólar. Los planes se organizan en tres niveles de presupuesto que empiezan en $1, porque el primer paso adecuado con $200 es muy distinto al primer paso adecuado con $20,000."
+      },
+      {
+        "q": "¿Qué me pregunta exactamente?",
+        "a": "Tres cosas: cuánto quieres invertir, cuándo quieres ver rendimientos y cuánto riesgo te resulta cómodo. Toma unos dos minutos."
+      },
+      {
+        "q": "¿Y si no entiendo la terminología?",
+        "a": "Cada recomendación está escrita en lenguaje sencillo, y el glosario cubre 32 términos comunes de inversión en 7 temas. Los términos que aparecen en la encuesta enlazan directamente a sus definiciones."
+      },
+      {
+        "q": "¿Tiene algún costo?",
+        "a": "No. SproutFund es gratis y no pide tarjeta de crédito."
+      }
     ]
+  },
+  "commandPalette": {
+    "placeholder": "Busca términos y páginas...",
+    "searchAriaLabel": "Buscar",
+    "dialogLabel": "Buscar en SproutFund",
+    "empty": "No hay resultados para «{{query}}».",
+    "navigate": "navegar",
+    "open": "abrir",
+    "kindPage": "Página",
+    "kindTerm": "Término",
+    "pages": {
+      "home": { "title": "Inicio", "subtitle": "Página principal" },
+      "survey": { "title": "Encuesta", "subtitle": "Crea un plan de inversión" },
+      "tips": { "title": "Consejos del mercado", "subtitle": "12 consejos en 6 temas" },
+      "glossary": { "title": "Glosario", "subtitle": "32 términos en 7 temas" },
+      "history": { "title": "Planes guardados", "subtitle": "Planes que guardaste" },
+      "profile": { "title": "Perfil", "subtitle": "Tu cuenta" }
+    }
+  },
+  "planOverlay": {
+    "title": "Creando tu plan",
+    "note": "Esto suele tardar unos 10 segundos.",
+    "stages": [
+      "Leyendo tus respuestas",
+      "Ajustando estrategias a tu presupuesto",
+      "Revisando tu plazo y tu tolerancia al riesgo",
+      "Redactándolo en lenguaje sencillo"
+    ]
+  },
+  "surveyProgress": {
+    "budget": "Presupuesto",
+    "timeline": "Plazo",
+    "risk": "Riesgo",
+    "count": "{{done}} de {{total}}",
+    "ariaLabel": "Progreso de la encuesta"
+  },
+  "glossaryTerm": {
+    "openInGlossary": "Abrir en el glosario"
   },
   "auth": {
     "signInTab": "Iniciar sesión",
