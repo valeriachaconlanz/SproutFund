@@ -1,7 +1,6 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useContext } from 'react'
 import { AuthContext } from './authContextObject'
 import { supabase } from '../lib/supabaseClient'
-
 
 function toUser(session) {
   if (!session?.user) return null
@@ -85,3 +84,6 @@ export function AuthProvider({ children }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
+export function useAuth() {
+  return useContext(AuthContext)
+}

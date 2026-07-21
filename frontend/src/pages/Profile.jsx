@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-import { useMemo, useState, useRef, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/useAuth'
-=======
 import { useState, useRef, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
->>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
 import { AVATAR_OPTIONS, getInitials } from '../lib/avatar'
 import './Profile.css'
 
@@ -38,7 +32,7 @@ function Profile() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const hasUnsavedChanges = 
+  const hasUnsavedChanges =
     formValues.name !== (user?.name || '') ||
     formValues.email !== (user?.email || '') ||
     formValues.password.length > 0
@@ -230,181 +224,7 @@ function Profile() {
             </div>
           </form>
         </section>
-<<<<<<< HEAD
-
-        <section className="profile-panel profile-recommendations-panel">
-          <div className="profile-panel-heading">
-            <p className="profile-label">Recommendations</p>
-            <h2>Saved Plans</h2>
-            <p className="recommendations-total">
-              {profileStats.totalSaved} saved recommendation{profileStats.totalSaved === 1 ? '' : 's'}
-            </p>
-          </div>
-
-          <div className="profile-stats-grid">
-            <div className="profile-stat">
-              <span>TOTAL BUDGET</span>
-              <strong>{formatCurrency(profileStats.totalBudget)}</strong>
-            </div>
-            <div className="profile-stat">
-              <span>AVERAGE PLAN</span>
-              <strong>{formatCurrency(profileStats.averageBudget)}</strong>
-            </div>
-            <div className="profile-stat">
-              <span>COMMON RISK</span>
-              <strong>{profileStats.mostCommonRisk}</strong>
-            </div>
-            <div className="profile-stat">
-              <span>LATEST SAVED</span>
-              <strong>{formatDate(profileStats.latestSaved)}</strong>
-            </div>
-          </div>
-
-          {recStatus === 'loading' && <p className="recommendations-empty">Loading...</p>}
-          {recStatus === 'error' && (
-            <p className="recommendations-empty">Couldn&apos;t load your saved plans. Please try again.</p>
-          )}
-
-          {recStatus === 'ready' && (
-            recommendations.length ? (
-              <div className="recommendations-list">
-                {recommendations.map((rec, index) => {
-                  const topStrategy = rec.strategies?.[0]
-                  const isEditing = editingPlanId === rec.id
-
-                  return (
-                    <article key={rec.id} className="recommendation-item">
-                      <div className="rec-header">
-                        {isEditing ? (
-                          <input
-                            className="rec-title-input"
-                            value={editingTitle}
-                            onChange={(e) => setEditingTitle(e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') handleSaveRename(rec.id)
-                              if (e.key === 'Escape') handleCancelRename()
-                            }}
-                            autoFocus
-                          />
-                        ) : (
-                          <h3>{getPlanTitle(rec, index)}</h3>
-                        )}
-                        <span>{formatDate(rec.createdAt)}</span>
-                      </div>
-
-                      <div className="rec-metrics">
-                        <span>{formatCurrency(rec.budget)}</span>
-                        <span>{rec.timeline || 'No timeline'}</span>
-                        <span>{rec.riskTolerance || 'No risk'}</span>
-                      </div>
-
-                      {topStrategy && (
-                        <div className="rec-strategy-summary">
-                          <span>Top allocation</span>
-                          <strong>
-                            {topStrategy.name} / {topStrategy.allocation}%
-                          </strong>
-                        </div>
-                      )}
-
-                      <div className="rec-actions">
-                        {isEditing ? (
-                          <>
-                            <button
-                              type="button"
-                              className="rec-action-btn"
-                              onClick={() => handleSaveRename(rec.id)}
-                            >
-                              Save name
-                            </button>
-                            <button
-                              type="button"
-                              className="rec-action-btn"
-                              onClick={handleCancelRename}
-                            >
-                              Cancel
-                            </button>
-                          </>
-                        ) : (
-                          <>
-                            <button
-                              type="button"
-                              className="rec-action-btn"
-                              onClick={() => handleViewRecommendation(rec)}
-                            >
-                              View
-                            </button>
-                            <button
-                              type="button"
-                              className="rec-action-btn"
-                              onClick={() => handleStartRename(rec, index)}
-                            >
-                              Rename
-                            </button>
-                            <button
-                              type="button"
-                              className="rec-action-btn danger"
-                              onClick={() => handleRequestDelete(rec.id)}
-                            >
-                              Delete
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </article>
-                  )
-                })}
-              </div>
-            ) : (
-              <p className="recommendations-empty">No saved plans yet.</p>
-            )
-          )}
-        </section>
       </div>
-
-      {pendingDeletePlan && (
-        <div
-          className="delete-modal-backdrop"
-          role="presentation"
-          onClick={() => setPendingDeleteId(null)}
-        >
-          <div
-            className="delete-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="delete-modal-title"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="delete-modal-icon">!</div>
-            <p className="profile-label">Delete saved plan</p>
-            <h2 id="delete-modal-title">Are you sure?</h2>
-            <p className="delete-modal-copy">
-              This will permanently delete &quot;{getPlanTitle(pendingDeletePlan, pendingDeleteIndex)}&quot;.
-              You will not be able to recover it later.
-            </p>
-
-            <div className="delete-modal-actions">
-              <button
-                type="button"
-                className="delete-modal-btn secondary"
-                onClick={() => setPendingDeleteId(null)}
-              >
-                Keep plan
-              </button>
-              <button
-                type="button"
-                className="delete-modal-btn danger"
-                onClick={() => handleConfirmDelete(pendingDeletePlan.id)}
-              >
-                Delete plan
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-=======
-      </div>
->>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
     </main>
   )
 }

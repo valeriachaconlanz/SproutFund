@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, useReducedMotion } from "motion/react";
 import { useTranslation } from "react-i18next";
@@ -8,13 +8,8 @@ import Reveal from "../components/Reveal";
 import Stagger from "../components/Stagger";
 import GrowthChart from "../components/GrowthChart";
 import BudgetPreview from "../components/BudgetPreview";
-import Faq from "../components/Faq";
-=======
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import PerformanceInsights from "../components/PerformanceInsights";
->>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
+import Faq from "../components/Faq";
 import "./Home.css";
 
 const API = "http://localhost:8080/api/investment";
@@ -29,10 +24,12 @@ const TICKER_ITEMS = [
 
 function Home() {
   const navigate = useNavigate();
-<<<<<<< HEAD
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const { t } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
+
+  const [recommendations, setRecommendations] = useState([]);
+  const [recStatus, setRecStatus] = useState("loading");
 
   const steps = t("home.steps", { returnObjects: true });
   const whyItems = t("home.whyItems", { returnObjects: true });
@@ -46,11 +43,6 @@ function Home() {
      Everything below it uses Reveal/Stagger and waits to be scrolled to. */
   const heroContainer = resolveVariants(staggerContainer(0.09), shouldReduceMotion);
   const heroItem = resolveVariants(fadeUp, shouldReduceMotion);
-=======
-  const { user, token } = useAuth();
-
-  const [recommendations, setRecommendations] = useState([]);
-  const [recStatus, setRecStatus] = useState("loading");
 
   useEffect(() => {
     let cancelled = false;
@@ -89,7 +81,6 @@ function Home() {
       cancelled = true;
     };
   }, [token]);
->>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
 
   return (
     <main className="home-page">
@@ -150,15 +141,7 @@ function Home() {
         </Reveal>
       </section>
 
-<<<<<<< HEAD
-      {/* ── How it works ── */}
-      <section className="home-section how-it-works">
-        <Reveal as="h2" className="section-title">{t("home.howItWorksTitle")}</Reveal>
-        <Stagger className="how-it-works-steps" stagger={0.09}>
-          {steps.map((step, index) => (
-            <Stagger.Item className="how-step" key={index}>
-=======
-      {/* Render insights section inside a structural layout hook if logged in */}
+      {/* ── Performance Insights (Logged In) ── */}
       {token && (
         <section className="dashboard-section">
           <div className="profile-shell">
@@ -170,12 +153,12 @@ function Home() {
         </section>
       )}
 
-      <section className="how-it-works">
-        <h2 className="section-title">How it works</h2>
-        <div className="how-it-works-steps">
-          {HOW_IT_WORKS_STEPS.map((step) => (
-            <div className="how-step" key={step.number}>
->>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
+      {/* ── How it works ── */}
+      <section className="home-section how-it-works">
+        <Reveal as="h2" className="section-title">{t("home.howItWorksTitle")}</Reveal>
+        <Stagger className="how-it-works-steps" stagger={0.09}>
+          {Array.isArray(steps) && steps.map((step, index) => (
+            <Stagger.Item className="how-step" key={index}>
               <div className="step-header">
                 <span className="step-number">{String(index + 1).padStart(2, "0")}</span>
                 <div>
@@ -192,7 +175,7 @@ function Home() {
       <section className="home-section features-section">
         <Reveal as="h2" className="section-title">{t("home.featuresTitle")}</Reveal>
         <Stagger className="feature-grid" stagger={0.08}>
-          {features.map((feature, index) => (
+          {Array.isArray(features) && features.map((feature, index) => (
             <Stagger.Item className="feature-card" key={index}>
               <div className="feature-stat">
                 <span className="feature-stat-value">{feature.stat}</span>
@@ -212,7 +195,7 @@ function Home() {
       <section className="home-section why-sproutfund">
         <Reveal as="h2" className="section-title">{t("home.whyTitle")}</Reveal>
         <Stagger as="ul" className="why-list" stagger={0.06}>
-          {whyItems.map((item) => (
+          {Array.isArray(whyItems) && whyItems.map((item) => (
             <Stagger.Item as="li" key={item} className="why-item">{item}</Stagger.Item>
           ))}
         </Stagger>

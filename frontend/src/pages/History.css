@@ -64,6 +64,7 @@
    font/text resets that a div didn't need. */
 .history-card {
   width: 100%;
+  box-sizing: border-box;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -71,7 +72,6 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-<<<<<<< HEAD
   cursor: pointer;
   font: inherit;
   color: inherit;
@@ -158,10 +158,6 @@
     animation: none;
     background: var(--border);
   }
-=======
-  width: 100%;
-  box-sizing:border-box;
->>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
 }
 
 .history-card-top {
@@ -508,4 +504,3 @@
   50%  { transform: scale(1.4); }
   100% { transform: scale(1); }
 }
-

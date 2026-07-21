@@ -92,8 +92,6 @@ function AllocationBar({ strategies }) {
   return (
     <Reveal className="allocation-wrap">
       <p className="allocation-heading">{t('results.allocation')}</p>
-      {/* Segments grow out from zero in sequence, so the bar reads as the plan
-          being composed rather than a static graphic that was always there. */}
       <div className="allocation-bar">
         {strategies.map((s, i) => (
           <motion.div
@@ -182,19 +180,12 @@ function Results() {
   const { state } = useLocation()
   const navigate = useNavigate()
   const { token } = useAuth()
-<<<<<<< HEAD
   const { t, i18n } = useTranslation()
   const shouldReduceMotion = useReducedMotion()
-  const [saveState, setSaveState] = useState('idle') // idle | saving | saved | error
-  // Prefer a freshly-navigated plan (router state); otherwise fall back to a
-  // plan stashed before an auth detour so it survives the round trip.
-  const [plan] = useState(() => state || readPendingPlan())
-=======
-  
-  // Check if we came from the history page or if the plan object itself already has an ID field
+
   const isHistoricallySaved = state?.isSavedPlan || !!state?.id
 
-  const [saveState, setSaveState] = useState(isHistoricallySaved ? 'saved' : 'idle') 
+  const [saveState, setSaveState] = useState(isHistoricallySaved ? 'saved' : 'idle')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [customTitle, setCustomTitle] = useState('')
 
@@ -209,7 +200,6 @@ function Results() {
       sessionStorage.removeItem(PENDING_PLAN_KEY)
     }
   }, [state])
->>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
 
   if (!plan || !plan.budget) {
     return (
@@ -248,7 +238,7 @@ function Results() {
   }
 
   function handleSaveClick() {
-    if (isHistoricallySaved) return // Extra guard safety
+    if (isHistoricallySaved) return
     if (!token) {
       sessionStorage.setItem(PENDING_PLAN_KEY, JSON.stringify(plan))
       navigate('/auth', { state: { from: { pathname: '/results' } } })
@@ -262,13 +252,13 @@ function Results() {
     setIsModalOpen(false)
     setSaveState('saving')
     
-    const now = new Date();
+    const now = new Date()
     const finalTitle =
       customTitle.trim() ||
       `Plan - ${now.toLocaleDateString('en-US')}, ${now.toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: '2-digit',
-      })}`;
+      })}`
 
     try {
       const response = await fetch('http://localhost:8080/api/investment/save', {
@@ -300,23 +290,16 @@ function Results() {
     <div className="results-page">
       <div className="results-content">
         <div className="results-header">
-<<<<<<< HEAD
-          <h1 className="results-title">{t('results.title')}</h1>
-          <p className="results-subtitle">{t('results.subtitle')}</p>
-=======
-          <h1 className="results-title">{plan.title || 'Your Investment Plan'}</h1>
+          <h1 className="results-title">{plan.title || t('results.title')}</h1>
           <p className="results-subtitle">
-            {isHistoricallySaved ? 'Reviewing your saved strategy.' : 'Personalized strategies based on your inputs.'}
+            {isHistoricallySaved ? 'Reviewing your saved strategy.' : t('results.subtitle')}
           </p>
->>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
         </div>
 
         <Stagger className="summary-grid" stagger={0.08}>
           <Stagger.Item className="summary-item">
             <span className="summary-label">{t('results.budget')}</span>
             <span className="summary-value">
-              {/* The headline figure counts up — it's the number the whole
-                  plan is derived from, and it earns the extra beat. */}
               <CountUp
                 value={Number(budget)}
                 format={(n) => `$${n.toLocaleString(i18n.language === 'es' ? 'es-ES' : 'en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
@@ -355,15 +338,10 @@ function Results() {
           <motion.button
             type="button"
             className="results-action-btn primary"
-<<<<<<< HEAD
-            onClick={handleSave}
-            disabled={saveState === 'saving' || saveState === 'saved'}
-            whileHover={shouldReduceMotion ? undefined : liftHover}
-            whileTap={shouldReduceMotion ? undefined : liftTap}
-=======
             onClick={handleSaveClick}
             disabled={isHistoricallySaved || saveState === 'saving' || saveState === 'saved'}
->>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
+            whileHover={shouldReduceMotion ? undefined : liftHover}
+            whileTap={shouldReduceMotion ? undefined : liftTap}
           >
             {!token
               ? t('results.saveCreateAccount')
@@ -387,11 +365,7 @@ function Results() {
           <p className="save-error">{t('results.saveError')}</p>
         )}
         <button className="back-btn" onClick={() => navigate('/dashboard')}>
-<<<<<<< HEAD
-          {t('results.adjustPlan')}
-=======
-          {isHistoricallySaved ? 'Back to Dashboard' : 'Adjust My Plan'}
->>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
+          {isHistoricallySaved ? 'Back to Dashboard' : t('results.adjustPlan')}
         </button>
       </div>
 

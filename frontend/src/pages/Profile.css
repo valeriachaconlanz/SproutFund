@@ -6,14 +6,9 @@
   background:
     radial-gradient(circle at 1px 1px, var(--profile-texture-dot) 1px, transparent 0),
     var(--background);
-<<<<<<< HEAD
-  background-size: 24px 24px, auto;
-  padding: 88px 16px 56px;
-}
-=======
   background-size: 22px 22px, 42px 42px, auto;
-  padding: 120px 16px 56px;}
->>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
+  padding: 120px 16px 56px;
+}
 
 html[data-theme="dark"] .profile-page {
   --profile-texture-dot: rgba(255, 255, 255, 0.04);
