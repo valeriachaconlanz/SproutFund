@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import { TIMELINE_LABELS, RISK_LABELS } from '../lib/labels'
 import './Results.css'
@@ -80,9 +81,10 @@ function buildPrintablePlan({ budget, timeline, risk, strategies, disclaimer }) 
 }
 
 function AllocationBar({ strategies }) {
+  const { t } = useTranslation()
   return (
     <div className="allocation-wrap">
-      <p className="allocation-heading">Portfolio allocation</p>
+      <p className="allocation-heading">{t('results.allocation')}</p>
       <div className="allocation-bar">
         {strategies.map((s, i) => (
           <div
@@ -107,9 +109,10 @@ function AllocationBar({ strategies }) {
 }
 
 function StrategyCard({ strategy, index, budget }) {
+  const { t, i18n } = useTranslation()
   const color = COLORS[index % COLORS.length]
   const dollars = Math.round(budget * strategy.allocation / 100)
-  const formatted = dollars.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
+  const formatted = dollars.toLocaleString(i18n.language === 'es' ? 'es-ES' : 'en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
 
   return (
     <div className="strategy-card">
@@ -131,7 +134,7 @@ function StrategyCard({ strategy, index, budget }) {
 
       {strategy.vehicles && strategy.vehicles.length > 0 && (
         <div className="strategy-vehicles">
-          <p className="vehicles-heading">Where to invest</p>
+          <p className="vehicles-heading">{t('results.whereToInvest')}</p>
           <div className="vehicles-tags">
             {strategy.vehicles.map((v, i) => (
               <span key={i} className="vehicle-tag">{v}</span>
@@ -142,7 +145,7 @@ function StrategyCard({ strategy, index, budget }) {
 
       {strategy.platform && (
         <div className="strategy-platform">
-          <span className="platform-label">Platform</span>
+          <span className="platform-label">{t('results.platform')}</span>
           <span className="platform-value">{strategy.platform}</span>
         </div>
       )}
@@ -154,6 +157,7 @@ function Results() {
   const { state } = useLocation()
   const navigate = useNavigate()
   const { token } = useAuth()
+  const { t, i18n } = useTranslation()
   
   // Check if we came from the history page or if the plan object itself already has an ID field
   const isHistoricallySaved = state?.isSavedPlan || !!state?.id
@@ -178,9 +182,9 @@ function Results() {
     return (
       <div className="results-page">
         <div className="results-empty">
-          <h1 className="results-title">No plan found.</h1>
-          <p className="results-subtitle">Please fill out the investment form first.</p>
-          <button className="back-btn" onClick={() => navigate('/dashboard')}>Go to Form</button>
+          <h1 className="results-title">{t('results.noPlanTitle')}</h1>
+          <p className="results-subtitle">{t('results.noPlanSubtitle')}</p>
+          <button className="back-btn" onClick={() => navigate('/dashboard')}>{t('results.goToForm')}</button>
         </div>
       </div>
     )
@@ -263,26 +267,31 @@ function Results() {
     <div className="results-page">
       <div className="results-content">
         <div className="results-header">
-          <h1 className="results-title">{plan.title || 'Your Investment Plan'}</h1>
+          <h1 className="results-title">
+            {plan.title || t('results.title')}
+          </h1>
+
           <p className="results-subtitle">
-            {isHistoricallySaved ? 'Reviewing your saved strategy.' : 'Personalized strategies based on your inputs.'}
+            {isHistoricallySaved
+              ? "Reviewing your saved strategy."
+              : t('results.subtitle')}
           </p>
         </div>
 
         <div className="summary-grid">
           <div className="summary-item">
-            <span className="summary-label">Budget</span>
+            <span className="summary-label">{t('results.budget')}</span>
             <span className="summary-value">
-              ${Number(budget).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+              ${Number(budget).toLocaleString(i18n.language === 'es' ? 'es-ES' : 'en-US', { minimumFractionDigits: 2 })}
             </span>
           </div>
           <div className="summary-item">
-            <span className="summary-label">Timeline</span>
-            <span className="summary-value">{timelineLabel}</span>
+            <span className="summary-label">{t('results.timeline')}</span>
+            <span className="summary-value">{t(`common.timeline.${timeline}.label`)} ({t(`common.timeline.${timeline}.duration`)})</span>
           </div>
           <div className="summary-item">
-            <span className="summary-label">Risk Level</span>
-            <span className={`summary-value risk-${selectedRisk}`}>{riskLabel}</span>
+            <span className="summary-label">{t('results.riskLevelLabel')}</span>
+            <span className={`summary-value risk-${selectedRisk}`}>{t(`results.riskLevel.${selectedRisk}`)}</span>
           </div>
         </div>
 
@@ -312,27 +321,28 @@ function Results() {
             disabled={isHistoricallySaved || saveState === 'saving' || saveState === 'saved'}
           >
             {!token
-              ? 'Create an account to save'
+              ? t('results.saveCreateAccount')
               : saveState === 'saving'
-                ? 'Saving...'
+                ? t('results.saving')
                 : saveState === 'saved'
-                  ? 'Saved ✓'
-                  : 'Save This Plan'}
+                  ? t('results.saved')
+                  : t('results.savePlan')}
           </button>
           <button
             type="button"
             className="results-action-btn"
             onClick={handleDownloadPdf}
           >
-            Download PDF
+            {t('results.downloadPdf')}
           </button>
         </div>
         {saveState === 'error' && (
-          <p className="save-error">Couldn't save your plan. Please try again.</p>
+          <p className="save-error">{t('results.saveError')}</p>
         )}
         <button className="back-btn" onClick={() => navigate('/dashboard')}>
-          {isHistoricallySaved ? 'Back to Dashboard' : 'Adjust My Plan'}
-        </button>
+{isHistoricallySaved 
+  ? 'Back to Dashboard' 
+  : t('results.adjustPlan')}        </button>
       </div>
 
       {isModalOpen && (

@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import { AVATAR_OPTIONS, getInitials } from '../lib/avatar'
 import './Profile.css'
 
 function Profile() {
+  const { t } = useTranslation()
   const { user, updateProfile } = useAuth()
 
   const [formValues, setFormValues] = useState({
@@ -20,7 +22,6 @@ function Profile() {
   const pickerRef = useRef(null)
   const fileInputRef = useRef(null)
 
-  // Close avatar picker on click outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (pickerRef.current && !pickerRef.current.contains(event.target)) {
@@ -32,7 +33,7 @@ function Profile() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const hasUnsavedChanges = 
+  const hasUnsavedChanges =
     formValues.name !== (user?.name || '') ||
     formValues.email !== (user?.email || '') ||
     formValues.password.length > 0
@@ -45,6 +46,7 @@ function Profile() {
   async function handleAvatarSelect(avatar) {
     setFormValues((prev) => ({ ...prev, avatar }))
     setPickerOpen(false)
+
     const { error } = await updateProfile({ avatar })
     setSaved(!error)
   }
@@ -54,21 +56,26 @@ function Profile() {
     if (!file) return
 
     const reader = new FileReader()
+
     reader.onload = async () => {
       const photo = reader.result
       setFormValues((prev) => ({ ...prev, photo }))
       setPickerOpen(false)
+
       const { error } = await updateProfile({ photo })
       setSaved(!error)
     }
+
     reader.readAsDataURL(file)
   }
 
   async function handlePhotoRemove() {
     setFormValues((prev) => ({ ...prev, photo: '' }))
+
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
+
     const { error } = await updateProfile({ photo: '' })
     setSaved(!error)
   }
@@ -76,21 +83,26 @@ function Profile() {
   async function handleSave(e) {
     e.preventDefault()
     setSaveError('')
+
     const { error } = await updateProfile({
       name: formValues.name,
       email: formValues.email,
       password: formValues.password || undefined,
     })
+
     if (error) {
-      setSaveError(error.message || 'Could not save changes.')
+      setSaveError(error.message || t('profile.saveError'))
       return
     }
+
     setFormValues((prev) => ({ ...prev, password: '' }))
     setSaved(true)
   }
 
   const avatarOption =
-    AVATAR_OPTIONS.find((option) => option.id === formValues.avatar) || AVATAR_OPTIONS[0]
+    AVATAR_OPTIONS.find((option) => option.id === formValues.avatar) ||
+    AVATAR_OPTIONS[0]
+
   const avatarInitials = getInitials(formValues.name || user?.name)
 
   return (
@@ -98,9 +110,15 @@ function Profile() {
       <div className="profile-shell single-column">
         <section className="profile-panel profile-account-panel">
           <div className="profile-panel-heading">
-            <p className="profile-label">Account Settings</p>
-            <h1>{user?.name || 'Sprout Fund User'}</h1>
-            <p className="profile-email">{user?.email || 'No email provided'}</p>
+            <p className="profile-label">
+              {t('profile.accountSettings')}
+            </p>
+
+            <h1>{user?.name || t('profile.defaultUser')}</h1>
+
+            <p className="profile-email">
+              {user?.email || t('profile.noEmail')}
+            </p>
           </div>
 
           <div className="profile-avatar-row">
@@ -110,20 +128,20 @@ function Profile() {
                 className="profile-avatar"
                 style={{ background: avatarOption.background }}
                 onClick={() => setPickerOpen((current) => !current)}
-                aria-label="Change avatar color"
+                aria-label={t('profile.changeAvatar')}
               >
                 {formValues.photo ? (
                   <img
                     className="profile-avatar-photo"
                     src={formValues.photo}
-                    alt={`${user?.name || 'User'} profile`}
+                    alt={`${user?.name || t('profile.user')} profile`}
                   />
                 ) : (
                   <span>{avatarInitials}</span>
                 )}
 
                 <div className="avatar-hover-overlay">
-                  <span>Change avatar</span>
+                  <span>{t('profile.changeAvatar')}</span>
                 </div>
               </button>
 
@@ -137,40 +155,61 @@ function Profile() {
 
               <button
                 type="button"
-                className={`profile-photo-action ${formValues.photo ? 'remove' : ''}`}
+                className={`profile-photo-action ${
+                  formValues.photo ? 'remove' : ''
+                }`}
                 onClick={(e) => {
                   e.stopPropagation()
+
                   if (formValues.photo) {
                     handlePhotoRemove()
                   } else {
                     fileInputRef.current?.click()
                   }
                 }}
-                aria-label={formValues.photo ? 'Remove profile photo' : 'Upload profile photo'}
+                aria-label={
+                  formValues.photo
+                    ? t('profile.removePhoto')
+                    : t('profile.uploadPhoto')
+                }
               >
                 {formValues.photo ? 'x' : '+'}
               </button>
 
               <div
                 ref={pickerRef}
-                className={`avatar-picker ${pickerOpen ? 'open' : ''}`}
+                className={`avatar-picker ${
+                  pickerOpen ? 'open' : ''
+                }`}
               >
                 {pickerOpen && (
                   <>
-                    <p className="avatar-picker-label">AVATAR COLOR</p>
+                    <p className="avatar-picker-label">
+                      {t('profile.avatarColor')}
+                    </p>
+
                     <div className="avatar-options-grid">
                       {AVATAR_OPTIONS.map((option) => (
                         <button
                           key={option.id}
                           type="button"
                           className={`avatar-option ${
-                            formValues.avatar === option.id ? 'selected' : ''
+                            formValues.avatar === option.id
+                              ? 'selected'
+                              : ''
                           }`}
                           style={{ background: option.background }}
-                          onClick={() => handleAvatarSelect(option.id)}
+                          onClick={() =>
+                            handleAvatarSelect(option.id)
+                          }
                         >
-                          <span className="avatar-option-initials">{avatarInitials}</span>
-                          <span className="avatar-option-label">{option.label}</span>
+                          <span className="avatar-option-initials">
+                            {avatarInitials}
+                          </span>
+
+                          <span className="avatar-option-label">
+                            {option.label}
+                          </span>
                         </button>
                       ))}
                     </div>
@@ -180,47 +219,77 @@ function Profile() {
             </div>
 
             <div className="profile-avatar-copy">
-              <strong>Profile picture</strong>
-              <span>Upload a photo or keep a color avatar.</span>
+              <strong>{t('profile.profilePicture')}</strong>
+
+              <span>
+                {t('profile.profilePictureDesc')}
+              </span>
             </div>
           </div>
 
           <form className="profile-form" onSubmit={handleSave}>
             <div className="profile-field">
-              <label>FULL NAME</label>
+              <label>{t('profile.fullName')}</label>
+
               <input
                 value={formValues.name}
-                onChange={(e) => handleChange('name', e.target.value)}
+                onChange={(e) =>
+                  handleChange('name', e.target.value)
+                }
               />
             </div>
 
             <div className="profile-field">
-              <label>EMAIL</label>
+              <label>{t('profile.email')}</label>
+
               <input
                 type="email"
                 value={formValues.email}
-                onChange={(e) => handleChange('email', e.target.value)}
+                onChange={(e) =>
+                  handleChange('email', e.target.value)
+                }
               />
             </div>
 
             <div className="profile-field">
-              <label>NEW PASSWORD</label>
+              <label>{t('profile.newPassword')}</label>
+
               <input
                 type="password"
-                placeholder="Leave blank to keep your current password"
+                placeholder={t('profile.passwordPlaceholder')}
                 value={formValues.password}
-                onChange={(e) => handleChange('password', e.target.value)}
+                onChange={(e) =>
+                  handleChange('password', e.target.value)
+                }
                 autoComplete="new-password"
               />
             </div>
 
             <div className="profile-actions">
-              <button type="submit" className="profile-save-btn">
-                Save changes
+              <button
+                type="submit"
+                className="profile-save-btn"
+              >
+                {t('profile.saveChanges')}
               </button>
-              {hasUnsavedChanges && <span className="profile-unsaved">Unsaved changes...</span>}
-              {saved && !hasUnsavedChanges && <span className="profile-saved">Saved</span>}
-              {saveError && <span className="profile-error">{saveError}</span>}
+
+              {hasUnsavedChanges && (
+                <span className="profile-unsaved">
+                  {t('profile.unsaved')}
+                </span>
+              )}
+
+              {saved && !hasUnsavedChanges && (
+                <span className="profile-saved">
+                  {t('profile.saved')}
+                </span>
+              )}
+
+              {saveError && (
+                <span className="profile-error">
+                  {saveError}
+                </span>
+              )}
             </div>
           </form>
         </section>

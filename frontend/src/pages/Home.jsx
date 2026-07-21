@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import PerformanceInsights from "../components/PerformanceInsights";
 import "./Home.css";
@@ -14,33 +15,12 @@ const TICKER_ITEMS = [
   { symbol: "NDX", change: "-0.3%", up: false },
 ];
 
-const HOW_IT_WORKS_STEPS = [
-  {
-    number: "01",
-    title: "Enter your budget",
-    description: "Tell us your budget, timeline, and risk comfort.",
-  },
-  {
-    number: "02",
-    title: "Get matched with strategies",
-    description: "See personalized investment strategies that fit your numbers.",
-  },
-  {
-    number: "03",
-    title: "Start with confidence",
-    description: "Plain-language explanations, no jargon.",
-  },
-];
-
-const WHY_SPROUTFUND_ITEMS = [
-  "Personalized strategies based on your budget",
-  "Clear, jargon-free recommendations",
-  "Built for first-time investors",
-  "Free to use, no credit card required",
-];
-
 function Home() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const steps = t("home.steps", { returnObjects: true }) || [];
+  const whyItems = t("home.whyItems", { returnObjects: true }) || [];
   const { user, token } = useAuth();
 
   const [recommendations, setRecommendations] = useState([]);
@@ -84,21 +64,28 @@ function Home() {
     };
   }, [token]);
 
+  // Helper handler for clicking saved plan items inside PerformanceInsights or History cards
+  const handleViewSavedPlan = (plan) => {
+    navigate("/results", {
+      state: {
+        ...plan,
+        isSavedPlan: true, // Flags Results.js so the plan is read-only / locked
+      },
+    });
+  };
+
   return (
     <main className="home-page">
       <section className="hero">
-        <h1>Invest Smarter with SproutFund</h1>
+        <h1>{t("home.heroTitle")}</h1>
 
-        <p>
-          Get personalized investment recommendations based on your budget,
-          goals, and timeline.
-        </p>
+        <p>{t("home.heroSubtitle")}</p>
 
         <button
           className="hero-button"
           onClick={() => navigate("/dashboard")}
         >
-          {user ? "Go to Survey" : "Get Started"}
+          {user ? t("home.goToSurvey") : t("common.getStarted")}
         </button>
 
         <div className="hero-ticker" aria-hidden="true">
@@ -129,34 +116,41 @@ function Home() {
             <PerformanceInsights
               recommendations={recommendations}
               recStatus={recStatus}
+              onSelectPlan={handleViewSavedPlan}
             />
           </div>
         </section>
       )}
 
       <section className="how-it-works">
-        <h2 className="section-title">How it works</h2>
+        <h2 className="section-title">{t("home.howItWorksTitle")}</h2>
         <div className="how-it-works-steps">
-          {HOW_IT_WORKS_STEPS.map((step) => (
-            <div className="how-step" key={step.number}>
-              <div className="step-header">
-                <span className="step-number">{step.number}</span>
-                <div>
-                  <h3 className="step-title">{step.title}</h3>
-                  <p className="step-desc">{step.description}</p>
+          {Array.isArray(steps) &&
+            steps.map((step, index) => (
+              <div className="how-step" key={index}>
+                <div className="step-header">
+                  <span className="step-number">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h3 className="step-title">{step.title}</h3>
+                    <p className="step-desc">{step.description}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </section>
 
       <section className="why-sproutfund">
-        <h2 className="section-title">Why SproutFund</h2>
+        <h2 className="section-title">{t("home.whyTitle")}</h2>
         <ul className="why-list">
-          {WHY_SPROUTFUND_ITEMS.map((item) => (
-            <li key={item} className="why-item">{item}</li>
-          ))}
+          {Array.isArray(whyItems) &&
+            whyItems.map((item, index) => (
+              <li key={index} className="why-item">
+                {item}
+              </li>
+            ))}
         </ul>
       </section>
     </main>

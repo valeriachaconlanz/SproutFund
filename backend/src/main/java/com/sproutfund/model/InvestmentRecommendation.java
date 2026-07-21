@@ -19,8 +19,7 @@ public class InvestmentRecommendation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Supabase auth.users.id (from the verified JWT's "sub" claim) — this
-    // app never reads/writes auth.users or profiles directly.
+    // Supabase auth.users.id (from the verified JWT's "sub" claim)
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 
@@ -39,8 +38,11 @@ public class InvestmentRecommendation {
 
     private String disclaimer;
 
-    // User-assigned label, set later via rename — blank until then.
+    // User-assigned label
     private String title;
+
+    @Column(name = "is_pinned", nullable = false)
+    private Boolean isPinned = false;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -48,24 +50,68 @@ public class InvestmentRecommendation {
 
     public InvestmentRecommendation() {}
 
-    public InvestmentRecommendation(UUID userId, double budget, String timeline, String riskTolerance,
-                                     List<InvestmentStrategy> strategies, String disclaimer) {
+    public InvestmentRecommendation(
+            UUID userId,
+            double budget,
+            String timeline,
+            String riskTolerance,
+            List<InvestmentStrategy> strategies,
+            String disclaimer
+    ) {
         this.userId = userId;
         this.budget = budget;
         this.timeline = timeline;
         this.riskTolerance = riskTolerance;
         this.strategies = strategies;
         this.disclaimer = disclaimer;
+        this.isPinned = false;
     }
 
-    public Long getId() { return id; }
-    public UUID getUserId() { return userId; }
-    public double getBudget() { return budget; }
-    public String getTimeline() { return timeline; }
-    public String getRiskTolerance() { return riskTolerance; }
-    public List<InvestmentStrategy> getStrategies() { return strategies; }
-    public String getDisclaimer() { return disclaimer; }
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-    public Instant getCreatedAt() { return createdAt; }
+    public Long getId() {
+        return id;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public double getBudget() {
+        return budget;
+    }
+
+    public String getTimeline() {
+        return timeline;
+    }
+
+    public String getRiskTolerance() {
+        return riskTolerance;
+    }
+
+    public List<InvestmentStrategy> getStrategies() {
+        return strategies;
+    }
+
+    public String getDisclaimer() {
+        return disclaimer;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Boolean getIsPinned() {
+        return isPinned;
+    }
+
+    public void setIsPinned(Boolean isPinned) {
+        this.isPinned = isPinned;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
 }

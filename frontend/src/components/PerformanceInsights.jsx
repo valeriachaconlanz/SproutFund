@@ -4,6 +4,7 @@ import clipboardList from '../assets/clipboard-list.svg'
 import chartPie from '../assets/chart-pie.svg'
 import gauge from '../assets/gauge.svg'
 import { RISK_LABELS } from '../lib/labels'
+import { useTranslation } from 'react-i18next'
 
 function formatCurrency(value) {
   return Number(value || 0).toLocaleString('en-US', {
@@ -14,6 +15,8 @@ function formatCurrency(value) {
 }
 
 function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
+  const { t } = useTranslation()
+
   const profileStats = useMemo(() => {
     const totalSaved = recommendations.length
 
@@ -22,12 +25,13 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
       0
     )
     const averageBudget = totalSaved ? totalBudget / totalSaved : 0
+
     const riskCounts = recommendations.reduce((counts, rec) => {
       const risk = rec.riskTolerance || 'unknown'
       counts[risk] = (counts[risk] || 0) + 1
       return counts
-    // The user participates in front-end web development.
     }, {})
+
     const mostCommonRisk = Object.entries(riskCounts)
       .sort((a, b) => b[1] - a[1])[0]?.[0] || 'None'
 
@@ -48,9 +52,12 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
       .sort((a, b) => b.value - a.value)
 
     const totalAllocation = allocatedMix.reduce((sum, item) => sum + item.value, 0)
+
     const topSegments = allocatedMix.slice(0, 5).map((item) => ({
       ...item,
-      percent: totalAllocation ? Math.round((item.value / totalAllocation) * 100) : 0,
+      percent: totalAllocation
+        ? Math.round((item.value / totalAllocation) * 100)
+        : 0,
     }))
 
     const hiddenSegments = allocatedMix.slice(5)
@@ -62,18 +69,37 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
         ? [{
             name: 'Other',
             value: otherValue,
-            percent: totalAllocation ? Math.round((otherValue / totalAllocation) * 100) : 0,
+            percent: totalAllocation
+              ? Math.round((otherValue / totalAllocation) * 100)
+              : 0,
             hiddenSegments: hiddenSegments.map((item) => ({
               name: item.name,
-              percent: totalAllocation ? Math.round((item.value / totalAllocation) * 100) : 0,
+              percent: totalAllocation
+                ? Math.round((item.value / totalAllocation) * 100)
+                : 0,
             })),
           }]
         : []),
     ]
 
     const plansCreated = totalSaved
-    const diversityRating = allocatedMix.length >= 3 ? 'High' : allocatedMix.length >= 2 ? 'Medium' : 'Low'
-    const averageRiskTolerance = mostCommonRisk === 'None' ? 'N/A' : RISK_LABELS[mostCommonRisk] || mostCommonRisk
+    const diversityRating =
+      allocatedMix.length >= 3
+        ? t('dashboard.diversity.high')
+        : allocatedMix.length >= 2
+        ? t('dashboard.diversity.medium')
+        : t('dashboard.diversity.low')
+
+
+    console.log('MOST COMMON RISK:', mostCommonRisk)
+    console.log('TRANSLATION TEST:', t(`risk.${mostCommonRisk}`))
+    
+    const averageRiskTolerance =
+      mostCommonRisk === 'None'
+        ? t('dashboard.na')
+        : t(`dashboard.risk.${mostCommonRisk}`,
+        RISK_LABELS[mostCommonRisk] || mostCommonRisk
+      )
 
     return {
       totalSaved,
@@ -84,68 +110,82 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
       diversityRating,
       averageRiskTolerance,
     }
-  }, [recommendations])
+  }, [recommendations, t])
 
   return (
     <section className="profile-panel profile-recommendations-panel">
       <div className="profile-panel-heading">
-        <p className="profile-label">Overview</p>
-        <h2>Performance Insights</h2>
+        <p className="profile-label">{t('dashboard.overview')}</p>
+        <h2>{t('dashboard.performanceInsights')}</h2>
       </div>
 
       <div className="account-statistics-section">
         <div className="account-statistics-chart-card">
           <div className="account-statistics-heading">
-            <p className="profile-label">ACCOUNT STATISTICS</p>
-            <h3>Portfolio mix</h3>
+            <p className="profile-label">{t('dashboard.accountStatistics')}</p>
+            <h3>{t('dashboard.portfolioMix')}</h3>
           </div>
+
           <div className="portfolio-breakdown">
             {recStatus === 'loading' ? (
-              <div className="portfolio-bar-empty">Loading stats...</div>
+              <div className="portfolio-bar-empty">
+                {t('dashboard.loadingStats')}
+              </div>
             ) : recStatus === 'error' ? (
-              <div className="portfolio-bar-empty">Failed to load portfolios</div>
+              <div className="portfolio-bar-empty">
+                {t('dashboard.failedLoad')}
+              </div>
             ) : profileStats.portfolioSegments.length ? (
-              profileStats.portfolioSegments.map((segment) => {
-                const tooltipText = segment.hiddenSegments?.length
-                  ? segment.hiddenSegments.map((item) => `${item.name}: ${item.percent}%`).join(' • ')
-                  : null
-
-                return (
-                  <div
-                    key={segment.name}
-                    className={`portfolio-row${segment.name === 'Other' ? ' portfolio-row-other' : ''}`}
-                    style={{ position: 'relative' }}
-                  >
-                    <div className="portfolio-row-header">
-                      <span>{segment.name}</span>
-                      <strong>{segment.percent}%</strong>
-                    </div>
-
-                    <div className="portfolio-progress">
-                      <div
-                        className="portfolio-progress-fill"
-                        style={{ width: `${segment.percent}%` }}
-                      />
-                    </div>
-
-                    {segment.hiddenSegments?.length > 0 && (
-                      <div className="portfolio-hover-tooltip">
-                        <span className="tooltip-title">Additional allocations</span>
-                        <div className="tooltip-items">
-                          {segment.hiddenSegments.map((item) => (
-                            <div key={item.name} className="tooltip-item">
-                              <span className="tooltip-item-name">{item.name}</span>
-                              <strong className="tooltip-item-percent">{item.percent}%</strong>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+              profileStats.portfolioSegments.map((segment) => (
+                <div
+                  key={segment.name}
+                  className={`portfolio-row${
+                    segment.name === 'Other' ? ' portfolio-row-other' : ''
+                  }`}
+                  style={{ position: 'relative' }}
+                >
+                  <div className="portfolio-row-header">
+                    <span>
+                      {segment.name === 'Other'
+                        ? t('dashboard.other')
+                        : segment.name}
+                    </span>
+                    <strong>{segment.percent}%</strong>
                   </div>
-                )
-              })
+
+                  <div className="portfolio-progress">
+                    <div
+                      className="portfolio-progress-fill"
+                      style={{ width: `${segment.percent}%` }}
+                    />
+                  </div>
+
+                  {segment.hiddenSegments?.length > 0 && (
+                    <div className="portfolio-hover-tooltip">
+                      <span className="tooltip-title">
+                        {t('dashboard.additionalAllocations')}
+                      </span>
+
+                      <div className="tooltip-items">
+                        {segment.hiddenSegments.map((item) => (
+                          <div key={item.name} className="tooltip-item">
+                            <span className="tooltip-item-name">
+                              {item.name}
+                            </span>
+                            <strong className="tooltip-item-percent">
+                              {item.percent}%
+                            </strong>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))
             ) : (
-              <div className="portfolio-bar-empty">No allocation data yet</div>
+              <div className="portfolio-bar-empty">
+                {t('dashboard.noAllocation')}
+              </div>
             )}
           </div>
         </div>
@@ -159,7 +199,7 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
             </div>
 
             <div className="profile-stat-content">
-              <span>TOTAL INVESTED</span>
+              <span>{t('dashboard.totalInvested')}</span>
               <strong>{formatCurrency(profileStats.totalBudget)}</strong>
             </div>
           </div>
@@ -172,7 +212,7 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
             </div>
 
             <div className="profile-stat-content">
-              <span>PLANS SAVED</span>
+              <span>{t('dashboard.plansSaved')}</span>
               <strong>{profileStats.plansCreated}</strong>
             </div>
           </div>
@@ -185,7 +225,7 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
             </div>
 
             <div className="profile-stat-content">
-              <span>DIVERSITY RATING</span>
+              <span>{t('dashboard.diversityRating')}</span>
               <strong>{profileStats.diversityRating}</strong>
             </div>
           </div>
@@ -198,7 +238,7 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
             </div>
 
             <div className="profile-stat-content">
-              <span>AVG. RISK TOLERANCE</span>
+              <span>{t('dashboard.avgRiskTolerance')}</span>
               <strong>{profileStats.averageRiskTolerance}</strong>
             </div>
           </div>
@@ -208,4 +248,4 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
   )
 }
 
-export default PerformanceInsights;
+export default PerformanceInsights

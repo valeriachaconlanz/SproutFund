@@ -1,21 +1,29 @@
 import { useEffect, useMemo, useState } from "react";
-import glossaryTerms from "../assets/glossaryTerm";
+import { useTranslation } from "react-i18next";
+import glossaryMeta from "../assets/glossaryTerm";
 import "./Glossary.css";
 // imports for highlighting the search term in the glossary definitions
 import { useLocation } from "react-router-dom";
 
-
 function Glossary() {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("All");
   // Get the current location object from React Router
   const location = useLocation();
 
+  // Term/definition text is translated; topic/level stay as the English keys from
+  // glossaryTerm.js so filtering logic doesn't depend on the active language.
+  // (t's reference already changes on language switch, so it alone is a sufficient dep.)
+  const glossaryTerms = useMemo(() => {
+    const translated = t("glossary.terms", { returnObjects: true });
+    return glossaryMeta.map((item) => ({ ...item, ...translated[item.id] }));
+  }, [t]);
 
   const topics = useMemo(
     () => [
       "All",
-      ...new Set(glossaryTerms.map((item) => item.topic)),
+      ...new Set(glossaryMeta.map((item) => item.topic)),
     ],
     []
   );
@@ -45,44 +53,43 @@ function Glossary() {
   const alphabetLetters = Object.keys(groupedTerms).sort();
 
   useEffect(() => {
-  if (!location.hash) return;
+    if (!location.hash) return;
 
-  const id = location.hash.substring(1);
+    const id = location.hash.substring(1);
 
-  // Wait until the glossary has rendered
-  requestAnimationFrame(() => {
-    const element = document.getElementById(id);
+    // Wait until the glossary has rendered
+    requestAnimationFrame(() => {
+      const element = document.getElementById(id);
 
-    if (!element) return;
+      if (!element) return;
 
-    element.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+
+      element.classList.add("highlighted");
+
+      setTimeout(() => {
+        element.classList.remove("highlighted");
+      }, 2000);
     });
-
-    element.classList.add("highlighted");
-
-    setTimeout(() => {
-      element.classList.remove("highlighted");
-    }, 2000);
-  });
-}, [location]);
+  }, [location]);
 
   return (
     <main className="glossary-page">
       <section className="glossary-hero">
-        <p className="glossary-label">Learning Center</p>
-        <h1>Investment Glossary</h1>
+        <p className="glossary-label">{t('glossary.label')}</p>
+        <h1>{t('glossary.title')}</h1>
         <p className="glossary-description">
-          Browse simple definitions for common investing terms used throughout SproutFund.
+          {t('glossary.description')}
         </p>
-
 
         <div className="glossary-search-card">
           <input
             type="text"
-            placeholder="Search investing terms..."
-            aria-label="Search glossary terms"
+            placeholder={t('glossary.searchPlaceholder')}
+            aria-label={t('glossary.searchAriaLabel')}
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
           />
@@ -98,14 +105,14 @@ function Glossary() {
               }`}
               onClick={() => setSelectedTopic(topic)}
             >
-              {topic}
+              {topic === "All" ? t('glossary.allTopics') : t(`glossary.topics.${topic}`)}
             </button>
           ))}
         </div>
       </section>
 
       {alphabetLetters.length > 0 && (
-        <nav className="glossary-alphabet" aria-label="Glossary alphabet navigation">
+        <nav className="glossary-alphabet" aria-label={t('glossary.alphabetNavAriaLabel')}>
           {alphabetLetters.map((letter) => (
             <a href={`#letter-${letter}`} key={letter}>
               {letter}
@@ -124,18 +131,15 @@ function Glossary() {
                 {groupedTerms[letter].map((item) => (
                   <article
                     className="glossary-card"
-                    id={`term-${item.term
-                      .toLowerCase()
-                      .replaceAll("&", "-and-")
-                      .replaceAll(" ", "-")}`}
+                    id={`term-${item.slug}`}
                     key={item.id}
                   >
                     <div className="glossary-card-header">
                       <h3>{item.term}</h3>
 
                       <div className="glossary-tags">
-                        <span>{item.level}</span>
-                        <span>{item.topic}</span>
+                        <span>{t(`glossary.levels.${item.level}`)}</span>
+                        <span>{t(`glossary.topics.${item.topic}`)}</span>
                       </div>
                     </div>
 
@@ -146,7 +150,7 @@ function Glossary() {
             </div>
           ))
         ) : (
-          <p className="glossary-empty">No glossary terms found. Try another search.</p>
+          <p className="glossary-empty">{t('glossary.empty')}</p>
         )}
       </section>
     </main>

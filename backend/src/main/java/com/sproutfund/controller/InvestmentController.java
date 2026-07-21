@@ -1,6 +1,6 @@
 package com.sproutfund.controller;
 
-import com.sproutfund.dto.RenameInvestmentRequest;
+import com.sproutfund.dto.InvestmentUpdateRequest;
 import com.sproutfund.dto.SaveInvestmentRequest;
 import com.sproutfund.model.InvestmentRecommendation;
 import com.sproutfund.model.InvestmentRequest;
@@ -24,21 +24,28 @@ public class InvestmentController {
     private final InvestmentService investmentService;
     private final InvestmentRecommendationRepository recommendationRepository;
 
-    public InvestmentController(InvestmentService investmentService,
-                                 InvestmentRecommendationRepository recommendationRepository) {
+    public InvestmentController(
+            InvestmentService investmentService,
+            InvestmentRecommendationRepository recommendationRepository
+    ) {
         this.investmentService = investmentService;
         this.recommendationRepository = recommendationRepository;
     }
 
     @PostMapping
-    public ResponseEntity<InvestmentResponse> submitInvestment(@Valid @RequestBody InvestmentRequest request) {
+    public ResponseEntity<InvestmentResponse> submitInvestment(
+            @Valid @RequestBody InvestmentRequest request
+    ) {
         InvestmentResponse response = investmentService.buildRecommendation(request);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/save")
-    public ResponseEntity<InvestmentRecommendation> save(@Valid @RequestBody SaveInvestmentRequest request,
-                                                           @AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<InvestmentRecommendation> save(
+            @Valid @RequestBody SaveInvestmentRequest request,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+
         InvestmentRecommendation recommendation = new InvestmentRecommendation(
                 UUID.fromString(jwt.getSubject()),
                 request.getBudget(),
@@ -47,31 +54,64 @@ public class InvestmentController {
                 request.getStrategies(),
                 request.getDisclaimer()
         );
-        return ResponseEntity.ok(recommendationRepository.save(recommendation));
+
+        recommendation.setIsPinned(false);
+
+        return ResponseEntity.ok(
+                recommendationRepository.save(recommendation)
+        );
     }
 
     @GetMapping("/history")
-    public ResponseEntity<List<InvestmentRecommendation>> history(@AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<List<InvestmentRecommendation>> history(
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+
         UUID userId = UUID.fromString(jwt.getSubject());
-        return ResponseEntity.ok(recommendationRepository.findByUserIdOrderByCreatedAtDesc(userId));
+
+        return ResponseEntity.ok(
+                recommendationRepository.findByUserIdOrderByCreatedAtDesc(userId)
+        );
     }
 
+
     @PatchMapping("/{id}")
-    public ResponseEntity<InvestmentRecommendation> rename(@PathVariable Long id,
-                                                             @RequestBody RenameInvestmentRequest request,
-                                                             @AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<InvestmentRecommendation> update(
+            @PathVariable Long id,
+            @RequestBody InvestmentUpdateRequest request,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+
         UUID userId = UUID.fromString(jwt.getSubject());
+
         return recommendationRepository.findByIdAndUserId(id, userId)
                 .map(recommendation -> {
-                    recommendation.setTitle(request.getTitle());
-                    return ResponseEntity.ok(recommendationRepository.save(recommendation));
+
+                    if (request.getTitle() != null) {
+                        recommendation.setTitle(request.getTitle());
+                    }
+
+                    if (request.getIsPinned() != null) {
+                        recommendation.setIsPinned(request.getIsPinned());
+                    }
+
+                    return ResponseEntity.ok(
+                            recommendationRepository.save(recommendation)
+                    );
+
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
 
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<Void> delete(
+            @PathVariable Long id,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+
         UUID userId = UUID.fromString(jwt.getSubject());
+
         return recommendationRepository.findByIdAndUserId(id, userId)
                 .map(recommendation -> {
                     recommendationRepository.delete(recommendation);
