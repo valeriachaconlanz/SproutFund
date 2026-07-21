@@ -123,3 +123,9 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Holds page height while a lazily-loaded route chunk arrives, so the footer
+   doesn't jump up and back down during navigation. */
+.route-fallback {
+  min-height: 60vh;
+}

@@ -1,7 +1,7 @@
 import { NavLink, Link } from "react-router-dom";
 import { motion, useReducedMotion } from "motion/react";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 import { bounceSpring, resolveTransition } from "../lib/motion";
 import ThemeToggle from "./ThemeToggle";
 import LanguageToggle from "./LanguageToggle";

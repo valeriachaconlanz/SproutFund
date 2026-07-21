@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { duration, ease } from '../lib/motion'
 import './MarketTips.css'
 
 const topics = ['all', 'getting started', 'risk', 'timing', 'goals', 'fees', 'emotions']
@@ -96,6 +98,7 @@ function MarketTips() {
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('recommended')
   const [openTip, setOpenTip] = useState(null)
+  const shouldReduceMotion = useReducedMotion()
 
   const tips = useMemo(() => {
     const translated = t('tips.items', { returnObjects: true })
@@ -191,46 +194,79 @@ function MarketTips() {
         </label>
       </section>
 
-      <section className="tips-grid" aria-live="polite" key={`${selectedTopic}-${sortBy}-${searchTerm}`}>
-        {visibleTips.map((tip, index) => (
-          <article
-            className="tip-card"
-            key={tip.id}
-            style={{ animationDelay: `${index * 80}ms` }}
-          >
-            <div className="tip-card-content">
-              <div className="tip-card-tags">
-                <span className="tip-tag">{t(`tips.topicLabels.${tip.topic}`)}</span>
-                <span className="tip-label">{t(`tips.labels.${tip.labelKey}`)}</span>
+      <section className="tips-grid" aria-live="polite">
+        <AnimatePresence mode="popLayout" initial={false}>
+          {visibleTips.map((tip, index) => (
+            <motion.article
+              className="tip-card"
+              key={tip.id}
+              layout={!shouldReduceMotion}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{
+                duration: shouldReduceMotion ? 0 : duration.base,
+                ease: ease.standard,
+                /* Only the first handful stagger — past that the delay would
+                   outlast the user's patience for a list they've filtered. */
+                delay: shouldReduceMotion ? 0 : Math.min(index, 5) * 0.05,
+              }}
+            >
+              <div className="tip-card-content">
+                <div className="tip-card-tags">
+                  <span className="tip-tag">{t(`tips.topicLabels.${tip.topic}`)}</span>
+                  <span className="tip-label">{t(`tips.labels.${tip.labelKey}`)}</span>
+                </div>
+                <h2>{tip.title}</h2>
+                <p>{tip.description}</p>
+                <button
+                  className="tip-read-more"
+                  onClick={() => setOpenTip(openTip === tip.id ? null : tip.id)}
+                  type="button"
+                  aria-expanded={openTip === tip.id}
+                  aria-controls={`tip-details-${index}`}
+                >
+                  {openTip === tip.id ? t('tips.showLess') : t('tips.readMore')}
+                </button>
+                {/* Animating to height:auto measures the real content, so a tip
+                    with many details no longer gets clipped by a fixed
+                    max-height the way the old CSS transition did. */}
+                <AnimatePresence initial={false}>
+                  {openTip === tip.id && (
+                    <motion.ul
+                      className="tip-details"
+                      id={`tip-details-${index}`}
+                      key="details"
+                      initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                      animate={{ height: 'auto', opacity: 1, marginTop: 16 }}
+                      exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                      transition={{
+                        duration: shouldReduceMotion ? 0 : duration.base,
+                        ease: ease.standard,
+                      }}
+                    >
+                      {tip.details.map((detail) => (
+                        <li key={detail}>{detail}</li>
+                      ))}
+                    </motion.ul>
+                  )}
+                </AnimatePresence>
               </div>
-              <h2>{tip.title}</h2>
-              <p>{tip.description}</p>
-              <button
-                className="tip-read-more"
-                onClick={() => setOpenTip(openTip === tip.id ? null : tip.id)}
-                type="button"
-                aria-expanded={openTip === tip.id}
-                aria-controls={`tip-details-${index}`}
-              >
-                {openTip === tip.id ? t('tips.showLess') : t('tips.readMore')}
-              </button>
-              <ul
-                className={openTip === tip.id ? 'tip-details open' : 'tip-details'}
-                id={`tip-details-${index}`}
-                aria-hidden={openTip !== tip.id}
-              >
-                {tip.details.map((detail) => (
-                  <li key={detail}>{detail}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="tip-card-icon">
-              <TipIcon type={tip.icon} />
-            </div>
-          </article>
-        ))}
+              <div className="tip-card-icon">
+                <TipIcon type={tip.icon} />
+              </div>
+            </motion.article>
+          ))}
+        </AnimatePresence>
         {visibleTips.length === 0 && (
-          <p className="tips-empty">{t('tips.empty')}</p>
+          <motion.p
+            className="tips-empty"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: shouldReduceMotion ? 0 : duration.base }}
+          >
+            {t('tips.empty')}
+          </motion.p>
         )}
       </section>
 

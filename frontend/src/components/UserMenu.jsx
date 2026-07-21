@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../context/useAuth'
 import { getAvatarBackground, getInitials } from '../lib/avatar'
 import { bounceSpring, quickFade, resolveTransition } from '../lib/motion'
 import './UserMenu.css'

@@ -1,24 +1,32 @@
 import { useMemo, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Trans, useTranslation } from 'react-i18next'
-import { useAuth } from '../context/AuthContext'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { useAuth } from '../context/useAuth'
+import { getBudgetTierKey, BUDGET_TIER_RANGES } from '../lib/budgetTiers'
+import { duration, ease, liftTap, resolveTransition, softSpring } from '../lib/motion'
+import GlossaryTerm from './GlossaryTerm'
+import SurveyProgress from './SurveyProgress'
+import PlanBuildingOverlay from './PlanBuildingOverlay'
 import './BudgetInput.css'
 
 const TIMELINE_VALUES = ['short', 'medium', 'long']
 const RISK_VALUES = ['low', 'medium', 'high']
 
+/* Thresholds live in lib/budgetTiers so the survey and the home-page preview
+   can never disagree about which tier a number falls into; the labels/desc
+   are still translated per-render. */
 function getBudgetTier(value, t) {
-  const n = Number(value)
-  if (!n || n <= 0) return null
-  if (n < 1000) return { key: 'starter', range: '$1 – $999', ...t('common.tiers.starter', { returnObjects: true }) }
-  if (n < 10000) return { key: 'growing', range: '$1,000 – $9,999', ...t('common.tiers.growing', { returnObjects: true }) }
-  return { key: 'established', range: '$10,000+', ...t('common.tiers.established', { returnObjects: true }) }
+  const key = getBudgetTierKey(value)
+  if (!key) return null
+  return { key, range: BUDGET_TIER_RANGES[key], ...t(`common.tiers.${key}`, { returnObjects: true }) }
 }
 
 function BudgetInput() {
   const navigate = useNavigate()
   const { token } = useAuth()
   const { t } = useTranslation()
+  const shouldReduceMotion = useReducedMotion()
   const fieldRefs = useRef({})
   const toastTimeoutRef = useRef(null)
   const [budget, setBudget] = useState('')
@@ -122,6 +130,7 @@ function BudgetInput() {
 
   return (
     <div className="page-content">
+      <PlanBuildingOverlay open={isSubmitting} budget={budget} />
 
       {/* ── Hero ── */}
       <section className="hero-section">
@@ -156,7 +165,7 @@ function BudgetInput() {
             <span className="why-icon">↑</span>
             <h3 className="why-title">{t('budgetInput.why1Title')}</h3>
             <p className="why-desc">
-              <Trans i18nKey="budgetInput.why1Desc" components={{ 1: <Link to="/glossary#term-inflation" className="glossary-inline-link" /> }} />
+              <Trans i18nKey="budgetInput.why1Desc" components={{ 1: <GlossaryTerm slug="inflation" /> }} />
             </p>
           </div>
           <div className="why-card">
@@ -178,6 +187,13 @@ function BudgetInput() {
 
       {/* ── Form ── */}
       <form className="investment-form" onSubmit={handleSubmit} noValidate>
+        <SurveyProgress
+          answered={{
+            budget: Boolean(budget) && Number(budget) > 0,
+            timeline: Boolean(timeline),
+            risk: Boolean(riskTolerance),
+          }}
+        />
 
         {/* Step 1 */}
         <section className="form-step" ref={(node) => { fieldRefs.current.budget = node }}>
@@ -202,17 +218,41 @@ function BudgetInput() {
               onChange={(e) => setBudget(e.target.value)}
             />
           </div>
-          {errors.budget && <p className="error-message">{errors.budget}</p>}
+          <AnimatePresence>
+            {errors.budget && (
+              <motion.p
+                className="error-message"
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: shouldReduceMotion ? 0 : duration.fast, ease: ease.standard }}
+              >
+                {errors.budget}
+              </motion.p>
+            )}
+          </AnimatePresence>
 
-          {tier && (
-            <div className="tier-callout">
-              <div className="tier-header">
-                <span className="tier-badge">{tier.label}</span>
-                <span className="tier-range">{tier.range}</span>
-              </div>
-              <p className="tier-desc">{tier.desc}</p>
-            </div>
-          )}
+          {/* The tier callout is the survey's one moment of live feedback —
+              it appears as soon as a budget is typed. Animating its height
+              stops the guide below from jumping when it arrives. */}
+          <AnimatePresence mode="wait">
+            {tier && (
+              <motion.div
+                className="tier-callout"
+                key={tier.key}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={resolveTransition(softSpring, shouldReduceMotion)}
+              >
+                <div className="tier-header">
+                  <span className="tier-badge">{tier.label}</span>
+                  <span className="tier-range">{tier.range}</span>
+                </div>
+                <p className="tier-desc">{tier.desc}</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="budget-guide">
             <p className="guide-heading">{t('budgetInput.guideHeading')}</p>
@@ -224,8 +264,8 @@ function BudgetInput() {
                   <Trans
                     i18nKey="budgetInput.guideNotes.starter"
                     components={{
-                      1: <Link to="/glossary#term-high-yield-savings-account" className="glossary-inline-link" />,
-                      2: <Link to="/glossary#term-cds" className="glossary-inline-link" />,
+                      1: <GlossaryTerm slug="high-yield-savings-account" />,
+                      2: <GlossaryTerm slug="cds" />,
                     }}
                   />
                 </span>
@@ -237,8 +277,8 @@ function BudgetInput() {
                   <Trans
                     i18nKey="budgetInput.guideNotes.growing"
                     components={{
-                      1: <Link to="/glossary#term-index-fund" className="glossary-inline-link" />,
-                      2: <Link to="/glossary#term-etf" className="glossary-inline-link" />,
+                      1: <GlossaryTerm slug="index-fund" />,
+                      2: <GlossaryTerm slug="etf" />,
                     }}
                   />
                 </span>
@@ -250,8 +290,8 @@ function BudgetInput() {
                   <Trans
                     i18nKey="budgetInput.guideNotes.established"
                     components={{
-                      1: <Link to="/glossary#term-portfolio" className="glossary-inline-link" />,
-                      2: <Link to="/glossary#term-bonds" className="glossary-inline-link" />,
+                      1: <GlossaryTerm slug="portfolio" />,
+                      2: <GlossaryTerm slug="bonds" />,
                     }}
                   />
                 </span>
@@ -274,11 +314,13 @@ function BudgetInput() {
 
           <div className="timeline-cards">
             {timelineOptions.map((opt) => (
-              <button
+              <motion.button
                 key={opt.value}
                 type="button"
                 className={`timeline-card ${timeline === opt.value ? 'selected' : ''}`}
                 onClick={() => setTimeline(opt.value)}
+                whileTap={shouldReduceMotion ? undefined : liftTap}
+                transition={resolveTransition(softSpring, shouldReduceMotion)}
               >
                 <div className="timeline-card-top">
                   <div>
@@ -294,10 +336,22 @@ function BudgetInput() {
                   ))}
                 </ul>
                 <p className="timeline-tradeoff">{opt.tradeoff}</p>
-              </button>
+              </motion.button>
             ))}
           </div>
-          {errors.timeline && <p className="error-message">{errors.timeline}</p>}
+          <AnimatePresence>
+            {errors.timeline && (
+              <motion.p
+                className="error-message"
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: shouldReduceMotion ? 0 : duration.fast, ease: ease.standard }}
+              >
+                {errors.timeline}
+              </motion.p>
+            )}
+          </AnimatePresence>
         </section>
 
         <div className="section-divider" />
@@ -314,11 +368,13 @@ function BudgetInput() {
 
           <div className="timeline-cards">
             {riskOptions.map((opt) => (
-              <button
+              <motion.button
                 key={opt.value}
                 type="button"
                 className={`timeline-card ${riskTolerance === opt.value ? 'selected' : ''}`}
                 onClick={() => setRiskTolerance(opt.value)}
+                whileTap={shouldReduceMotion ? undefined : liftTap}
+                transition={resolveTransition(softSpring, shouldReduceMotion)}
               >
                 <div className="timeline-card-top">
                   <div>
@@ -327,10 +383,22 @@ function BudgetInput() {
                   <span className={`timeline-dot ${riskTolerance === opt.value ? 'dot-active' : ''}`} />
                 </div>
                 <p className="timeline-best-for">{opt.description}</p>
-              </button>
+              </motion.button>
             ))}
           </div>
-          {errors.riskTolerance && <p className="error-message">{errors.riskTolerance}</p>}
+          <AnimatePresence>
+            {errors.riskTolerance && (
+              <motion.p
+                className="error-message"
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: shouldReduceMotion ? 0 : duration.fast, ease: ease.standard }}
+              >
+                {errors.riskTolerance}
+              </motion.p>
+            )}
+          </AnimatePresence>
         </section>
 
         <div className="section-divider" />
@@ -357,12 +425,22 @@ function BudgetInput() {
         <p className="submit-footnote">{t('budgetInput.footnote')}</p>
       </form>
 
-      {toastMessage && (
-        <div className="error-toast" role="alert" aria-live="assertive">
-          <span className="error-toast-title">{t('budgetInput.toastTitle')}</span>
-          <span className="error-toast-message">{toastMessage}</span>
-        </div>
-      )}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            className="error-toast"
+            role="alert"
+            aria-live="assertive"
+            initial={{ opacity: 0, y: 16, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.98 }}
+            transition={resolveTransition(softSpring, shouldReduceMotion)}
+          >
+            <span className="error-toast-title">{t('budgetInput.toastTitle')}</span>
+            <span className="error-toast-message">{toastMessage}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 

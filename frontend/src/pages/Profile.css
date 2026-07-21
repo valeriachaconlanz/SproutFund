@@ -1,19 +1,17 @@
 .profile-page {
-  --profile-texture-dot: rgba(17, 14, 8, 0.06);
-  --profile-texture-line: rgba(17, 14, 8, 0.035);
+  --profile-texture-dot: rgba(15, 28, 21, 0.035);
 
   min-height: 100vh;
+  /* Dot grid only — matches the home and tips pages. */
   background:
     radial-gradient(circle at 1px 1px, var(--profile-texture-dot) 1px, transparent 0),
-    linear-gradient(135deg, transparent 0 48%, var(--profile-texture-line) 49% 51%, transparent 52% 100%),
     var(--background);
-  background-size: 22px 22px, 42px 42px, auto;
+  background-size: 24px 24px, auto;
   padding: 88px 16px 56px;
 }
 
 html[data-theme="dark"] .profile-page {
-  --profile-texture-dot: rgba(0, 0, 0, 0.36);
-  --profile-texture-line: rgba(0, 0, 0, 0.24);
+  --profile-texture-dot: rgba(255, 255, 255, 0.04);
 }
 
 .profile-shell {
