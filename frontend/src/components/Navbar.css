@@ -11,13 +11,18 @@
   pointer-events: none;
 }
 
+/* Sizes to its content (centered by the shell) instead of a fixed 920px bar.
+   A fixed width overflowed once labels got longer — the Spanish authed links
+   (e.g. "Planes guardados") plus nowrap and fixed gaps exceeded 920px, so the
+   pill spilled past its own cap. Shrink-wrapping up to a wider cap keeps it
+   snug in every language. */
 .navbar-pill {
   pointer-events: auto;
   display: flex;
   align-items: center;
-  gap: 28px;
-  width: 100%;
-  max-width: 920px;
+  gap: 20px;
+  width: auto;
+  max-width: min(1120px, 100%);
   padding: 8px 10px 8px 20px;
   border-radius: var(--radius-pill);
   background: var(--nav-bg);
@@ -47,7 +52,7 @@
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
   flex-grow: 1;
   justify-content: center;
 }
@@ -63,7 +68,7 @@
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
-  padding: 7px 13px;
+  padding: 7px 11px;
   transition: color 0.15s;
   z-index: 0;
   white-space: nowrap;

@@ -1,12 +1,16 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import glossaryMeta from "../assets/glossaryTerm";
+import { bounceSpring, duration, ease, resolveTransition, softSpring } from "../lib/motion";
+import Reveal from "../components/Reveal";
 import "./Glossary.css";
 
 function Glossary() {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("All");
+  const shouldReduceMotion = useReducedMotion();
 
   // Term/definition text is translated; topic/level stay as the English keys from
   // glossaryTerm.js so filtering logic doesn't depend on the active language.
@@ -78,7 +82,19 @@ function Glossary() {
               }`}
               onClick={() => setSelectedTopic(topic)}
             >
-              {topic === "All" ? t('glossary.allTopics') : t(`glossary.topics.${topic}`)}
+              {/* The filled pill is one shared element that slides between
+                  topics — same layoutId trick the navbar uses, so filtering
+                  here feels like the same product as navigating there. */}
+              {selectedTopic === topic && (
+                <motion.span
+                  layoutId="glossary-topic-pill-active"
+                  className="glossary-topic-pill-bg"
+                  transition={resolveTransition(bounceSpring, shouldReduceMotion)}
+                />
+              )}
+              <span className="glossary-topic-pill-label">
+                {topic === "All" ? t('glossary.allTopics') : t(`glossary.topics.${topic}`)}
+              </span>
             </button>
           ))}
         </div>
@@ -94,36 +110,60 @@ function Glossary() {
         </nav>
       )}
 
+      {/* Groups and cards carry `layout`, so narrowing the filter reflows the
+          list smoothly instead of the page snapping to a new arrangement.
+          AnimatePresence handles the cards that drop out of the filter. */}
       <section className="glossary-list">
         {alphabetLetters.length > 0 ? (
-          alphabetLetters.map((letter) => (
-            <div className="glossary-group" id={`letter-${letter}`} key={letter}>
-              <h2 className="glossary-letter">{letter}</h2>
+          <AnimatePresence mode="popLayout" initial={false}>
+            {alphabetLetters.map((letter) => (
+              <motion.div
+                className="glossary-group"
+                id={`letter-${letter}`}
+                key={letter}
+                layout={!shouldReduceMotion}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={resolveTransition(softSpring, shouldReduceMotion)}
+              >
+                <h2 className="glossary-letter">{letter}</h2>
 
-              <div className="glossary-group-grid">
-                {groupedTerms[letter].map((item) => (
-                  <article
-                    className="glossary-card"
-                    id={`term-${item.slug}`}
-                    key={item.id}
-                  >
-                    <div className="glossary-card-header">
-                      <h3>{item.term}</h3>
+                <div className="glossary-group-grid">
+                  <AnimatePresence mode="popLayout" initial={false}>
+                    {groupedTerms[letter].map((item) => (
+                      <motion.article
+                        className="glossary-card"
+                        id={`term-${item.slug}`}
+                        key={item.id}
+                        layout={!shouldReduceMotion}
+                        initial={{ opacity: 0, scale: 0.96 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.96 }}
+                        transition={{
+                          duration: shouldReduceMotion ? 0 : duration.fast,
+                          ease: ease.standard,
+                        }}
+                      >
+                        <div className="glossary-card-header">
+                          <h3>{item.term}</h3>
 
-                      <div className="glossary-tags">
-                        <span>{t(`glossary.levels.${item.level}`)}</span>
-                        <span>{t(`glossary.topics.${item.topic}`)}</span>
-                      </div>
-                    </div>
+                          <div className="glossary-tags">
+                            <span>{t(`glossary.levels.${item.level}`)}</span>
+                            <span>{t(`glossary.topics.${item.topic}`)}</span>
+                          </div>
+                        </div>
 
-                    <p>{item.definition}</p>
-                  </article>
-                ))}
-              </div>
-            </div>
-          ))
+                        <p>{item.definition}</p>
+                      </motion.article>
+                    ))}
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         ) : (
-          <p className="glossary-empty">{t('glossary.empty')}</p>
+          <Reveal as="p" className="glossary-empty">{t('glossary.empty')}</Reveal>
         )}
       </section>
     </main>

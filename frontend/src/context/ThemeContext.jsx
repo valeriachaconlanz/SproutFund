@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { ThemeContext } from './themeContextObject'
 
-const ThemeContext = createContext(null)
 
 // Called inside useState so the correct theme is known before the first render,
 // avoiding a flash of the wrong theme on load
@@ -31,8 +31,3 @@ export function ThemeProvider({ children }) {
   )
 }
 
-export function useTheme() {
-  const ctx = useContext(ThemeContext)
-  if (!ctx) throw new Error('useTheme must be used within ThemeProvider')
-  return ctx
-}

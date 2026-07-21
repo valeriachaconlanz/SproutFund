@@ -1,24 +1,22 @@
 .tips-page {
-  --tips-accent-readable: #3f7d00;
-  --tips-background: #f7f8f2;
-  --tips-texture-dot: rgba(17, 14, 8, 0.06);
-  --tips-texture-line: rgba(17, 14, 8, 0.035);
+  --tips-accent-readable: var(--accent-ink);
+  --tips-background: var(--background);
+  --tips-texture-dot: rgba(15, 28, 21, 0.035);
 
   min-height: 100vh;
+  /* Dot grid only — matches the home page. The 135° diagonal stripe that used
+     to overlay this read as a rendering artifact at most viewport widths. */
   background:
     radial-gradient(circle at 1px 1px, var(--tips-texture-dot) 1px, transparent 0),
-    linear-gradient(135deg, transparent 0 48%, var(--tips-texture-line) 49% 51%, transparent 52% 100%),
     var(--tips-background);
-  background-size: 22px 22px, 42px 42px, auto;
+  background-size: 24px 24px, auto;
   color: var(--text-primary);
   padding: 110px 16px 56px;
 }
 
 html[data-theme="dark"] .tips-page {
   --tips-accent-readable: var(--accent);
-  --tips-background: var(--background);
-  --tips-texture-dot: rgba(0, 0, 0, 0.36);
-  --tips-texture-line: rgba(0, 0, 0, 0.24);
+  --tips-texture-dot: rgba(255, 255, 255, 0.04);
 }
 
 .tips-header {
@@ -128,22 +126,24 @@ html[data-theme="dark"] .tips-page {
   color: var(--text-muted);
 }
 
+/* The fixed min-height that used to sit here reserved space for a full,
+   unfiltered list — which left a tall blank gap under any narrow filter.
+   Layout animations now handle the reflow, so the grid can size to content. */
 .tips-grid {
   display: grid;
   grid-template-columns: 1fr;
   align-content: start;
   gap: 16px;
   max-width: 1023px;
-  min-height: 1630px;
   margin: 0 auto;
 }
 
+/* Entrance is owned by motion in MarketTips.jsx — no CSS animation here. */
 .tip-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  animation: tip-rise-in 520ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -209,32 +209,19 @@ html[data-theme="dark"] .tips-page {
   color: var(--tips-accent-readable);
 }
 
+/* Expansion is driven by motion (height: auto), so the old max-height clamp
+   and its transitions are gone — long detail lists no longer get cut off.
+   `overflow: hidden` stays: it's what makes the height animation clip cleanly. */
 .tip-details {
   display: grid;
   gap: 10px;
-  max-height: 0;
   margin: 0;
-  opacity: 0;
   overflow: hidden;
   padding: 0;
-  transform: translateY(-10px) scale(0.98);
-  transform-origin: top left;
-  transition:
-    max-height 360ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    margin-top 260ms ease,
-    opacity 220ms ease,
-    transform 360ms cubic-bezier(0.34, 1.56, 0.64, 1);
   list-style: none;
   color: var(--text-secondary);
   font-size: 14px;
   line-height: 1.55;
-}
-
-.tip-details.open {
-  max-height: 260px;
-  margin-top: 16px;
-  opacity: 1;
-  transform: translateY(0) scale(1);
 }
 
 .tip-details li {
@@ -302,10 +289,6 @@ html[data-theme="dark"] .tip-card-icon {
     grid-template-columns: 1fr;
   }
 
-  .tips-grid {
-    min-height: 1840px;
-  }
-
   .tip-card {
     align-items: flex-start;
     gap: 16px;
@@ -320,23 +303,6 @@ html[data-theme="dark"] .tip-card-icon {
   .tip-card-icon svg {
     width: 50px;
     height: 50px;
-  }
-}
-
-@keyframes tip-rise-in {
-  0% {
-    opacity: 0;
-    transform: translateY(-18px) scale(0.98);
-  }
-
-  65% {
-    opacity: 1;
-    transform: translateY(4px) scale(1.01);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
   }
 }
 

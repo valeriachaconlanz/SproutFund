@@ -1,8 +1,13 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useAuth } from '../context/AuthContext'
+import { motion, useReducedMotion } from 'motion/react'
+import { useAuth } from '../context/useAuth'
 import { TIMELINE_LABELS, RISK_LABELS } from '../lib/labels'
+import { duration, ease, liftHover, liftTap, viewportOnce } from '../lib/motion'
+import CountUp from '../components/CountUp'
+import Reveal from '../components/Reveal'
+import Stagger from '../components/Stagger'
 import './Results.css'
 
 const COLORS = ['#ccff00', '#7eb8f7', '#f7a07e']
@@ -84,40 +89,53 @@ function buildPrintablePlan({ budget, timeline, risk, strategies, disclaimer }) 
 
 function AllocationBar({ strategies }) {
   const { t } = useTranslation()
+  const shouldReduceMotion = useReducedMotion()
+
   return (
-    <div className="allocation-wrap">
+    <Reveal className="allocation-wrap">
       <p className="allocation-heading">{t('results.allocation')}</p>
+      {/* Segments grow out from zero in sequence, so the bar reads as the plan
+          being composed rather than a static graphic that was always there. */}
       <div className="allocation-bar">
         {strategies.map((s, i) => (
-          <div
+          <motion.div
             key={i}
             className="allocation-segment"
-            style={{ width: `${s.allocation}%`, background: COLORS[i % COLORS.length] }}
+            style={{ background: COLORS[i % COLORS.length] }}
+            initial={shouldReduceMotion ? false : { width: 0 }}
+            whileInView={{ width: `${s.allocation}%` }}
+            viewport={viewportOnce}
+            transition={{
+              duration: shouldReduceMotion ? 0 : duration.slow,
+              ease: ease.standard,
+              delay: shouldReduceMotion ? 0 : i * 0.1,
+            }}
             title={`${s.name}: ${s.allocation}%`}
           />
         ))}
       </div>
-      <div className="allocation-legend">
+      <Stagger className="allocation-legend" stagger={0.06} delayChildren={0.2}>
         {strategies.map((s, i) => (
-          <div key={i} className="legend-item">
+          <Stagger.Item key={i} className="legend-item">
             <span className="legend-dot" style={{ background: COLORS[i % COLORS.length] }} />
             <span className="legend-name">{s.name}</span>
             <span className="legend-pct">{s.allocation}%</span>
-          </div>
+          </Stagger.Item>
         ))}
-      </div>
-    </div>
+      </Stagger>
+    </Reveal>
   )
 }
 
 function StrategyCard({ strategy, index, budget }) {
   const { t, i18n } = useTranslation()
+  const shouldReduceMotion = useReducedMotion()
   const color = COLORS[index % COLORS.length]
   const dollars = Math.round(budget * strategy.allocation / 100)
   const formatted = dollars.toLocaleString(i18n.language === 'es' ? 'es-ES' : 'en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
 
   return (
-    <div className="strategy-card">
+    <Stagger.Item className="strategy-card">
       <div className="strategy-top">
         <div className="strategy-left">
           <span className="strategy-num" style={{ color }}>{String(index + 1).padStart(2, '0')}</span>
@@ -129,7 +147,14 @@ function StrategyCard({ strategy, index, budget }) {
       </div>
 
       <div className="strategy-track">
-        <div className="strategy-fill" style={{ width: `${strategy.allocation}%`, background: color }} />
+        <motion.div
+          className="strategy-fill"
+          style={{ background: color }}
+          initial={shouldReduceMotion ? false : { width: 0 }}
+          whileInView={{ width: `${strategy.allocation}%` }}
+          viewport={viewportOnce}
+          transition={{ duration: shouldReduceMotion ? 0 : duration.slow, ease: ease.standard }}
+        />
       </div>
 
       <p className="strategy-desc">{strategy.description}</p>
@@ -151,7 +176,7 @@ function StrategyCard({ strategy, index, budget }) {
           <span className="platform-value">{strategy.platform}</span>
         </div>
       )}
-    </div>
+    </Stagger.Item>
   )
 }
 
@@ -160,6 +185,7 @@ function Results() {
   const navigate = useNavigate()
   const { token } = useAuth()
   const { t, i18n } = useTranslation()
+  const shouldReduceMotion = useReducedMotion()
   const [saveState, setSaveState] = useState('idle') // idle | saving | saved | error
   // Prefer a freshly-navigated plan (router state); otherwise fall back to a
   // plan stashed before an auth detour so it survives the round trip.
@@ -236,47 +262,54 @@ function Results() {
           <p className="results-subtitle">{t('results.subtitle')}</p>
         </div>
 
-        <div className="summary-grid">
-          <div className="summary-item">
+        <Stagger className="summary-grid" stagger={0.08}>
+          <Stagger.Item className="summary-item">
             <span className="summary-label">{t('results.budget')}</span>
             <span className="summary-value">
-              ${Number(budget).toLocaleString(i18n.language === 'es' ? 'es-ES' : 'en-US', { minimumFractionDigits: 2 })}
+              {/* The headline figure counts up — it's the number the whole
+                  plan is derived from, and it earns the extra beat. */}
+              <CountUp
+                value={Number(budget)}
+                format={(n) => `$${n.toLocaleString(i18n.language === 'es' ? 'es-ES' : 'en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+              />
             </span>
-          </div>
-          <div className="summary-item">
+          </Stagger.Item>
+          <Stagger.Item className="summary-item">
             <span className="summary-label">{t('results.timeline')}</span>
             <span className="summary-value">{t(`common.timeline.${timeline}.label`)} ({t(`common.timeline.${timeline}.duration`)})</span>
-          </div>
-          <div className="summary-item">
+          </Stagger.Item>
+          <Stagger.Item className="summary-item">
             <span className="summary-label">{t('results.riskLevelLabel')}</span>
             <span className={`summary-value risk-${selectedRisk}`}>{t(`results.riskLevel.${selectedRisk}`)}</span>
-          </div>
-        </div>
+          </Stagger.Item>
+        </Stagger>
 
         {strategies && strategies.length > 0 && (
           <>
             <AllocationBar strategies={strategies} />
-            <div className="strategies-list">
+            <Stagger className="strategies-list" stagger={0.1}>
               {strategies.map((s, i) => (
                 <StrategyCard key={i} strategy={s} index={i} budget={budget} />
               ))}
-            </div>
+            </Stagger>
           </>
         )}
 
         {disclaimer && (
-          <div className="disclaimer-box">
+          <Reveal className="disclaimer-box">
             <span className="disclaimer-icon">!</span>
             <p className="disclaimer-text">{disclaimer}</p>
-          </div>
+          </Reveal>
         )}
 
         <div className="results-actions">
-          <button
+          <motion.button
             type="button"
             className="results-action-btn primary"
             onClick={handleSave}
             disabled={saveState === 'saving' || saveState === 'saved'}
+            whileHover={shouldReduceMotion ? undefined : liftHover}
+            whileTap={shouldReduceMotion ? undefined : liftTap}
           >
             {!token
               ? t('results.saveCreateAccount')
@@ -285,14 +318,16 @@ function Results() {
                 : saveState === 'saved'
                   ? t('results.saved')
                   : t('results.savePlan')}
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             type="button"
             className="results-action-btn"
             onClick={handleDownloadPdf}
+            whileHover={shouldReduceMotion ? undefined : liftHover}
+            whileTap={shouldReduceMotion ? undefined : liftTap}
           >
             {t('results.downloadPdf')}
-          </button>
+          </motion.button>
         </div>
         {saveState === 'error' && (
           <p className="save-error">{t('results.saveError')}</p>

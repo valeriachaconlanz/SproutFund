@@ -70,7 +70,11 @@ html {
   margin-top: 1.2rem;
 }
 
+/* The pill is a positioning context for the shared active background, which is
+   a separate absolutely-positioned element so it can slide between topics.
+   The button itself stays transparent — the moving element supplies the fill. */
 .glossary-topic-pill {
+  position: relative;
   padding: 0.45rem 0.85rem;
   border: 1px solid var(--border);
   border-radius: 999px;
@@ -79,16 +83,28 @@ html {
   font-size: 0.82rem;
   font-family: inherit;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
 .glossary-topic-pill:hover {
   background: var(--background);
-  transform: translateY(-1px);
+}
+
+.glossary-topic-pill-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--text-primary);
+}
+
+/* Label rides above the sliding background. */
+.glossary-topic-pill-label {
+  position: relative;
+  z-index: 1;
 }
 
 .glossary-topic-pill.active {
-  background: var(--text-primary);
+  background: transparent;
   border-color: var(--text-primary);
   color: var(--background);
 }

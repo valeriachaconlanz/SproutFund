@@ -1,0 +1,99 @@
+.plan-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+
+  background: rgba(10, 18, 13, 0.6);
+}
+
+.plan-overlay-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+
+  width: 100%;
+  max-width: 360px;
+  padding: 36px 28px 28px;
+
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 16px 56px rgba(0, 0, 0, 0.28);
+
+  text-align: center;
+}
+
+.plan-overlay-mark {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 8px;
+}
+
+.plan-overlay-stem {
+  fill: none;
+  stroke: var(--accent-ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.plan-overlay-leaf {
+  fill: var(--accent-ink);
+}
+
+.plan-overlay-title {
+  font-family: var(--font-heading);
+  font-size: 19px;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.plan-overlay-budget {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--accent-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Fixed height so swapping stage text doesn't shift everything below it. */
+.plan-overlay-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  margin-top: 10px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.plan-overlay-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.plan-overlay-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.plan-overlay-dot.done {
+  background: var(--accent-ink);
+  transform: scale(1.2);
+}
+
+.plan-overlay-note {
+  margin-top: 16px;
+  color: var(--text-muted);
+  font-size: 11px;
+}

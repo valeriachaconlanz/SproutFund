@@ -1,6 +1,6 @@
 import { useMemo, useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../context/useAuth'
 import { AVATAR_OPTIONS, getInitials } from '../lib/avatar'
 import './Profile.css'
 
@@ -404,7 +404,7 @@ function Profile() {
 
           {recStatus === 'loading' && <p className="recommendations-empty">Loading...</p>}
           {recStatus === 'error' && (
-            <p className="recommendations-empty">Couldn't load your saved plans. Please try again.</p>
+            <p className="recommendations-empty">Couldn&apos;t load your saved plans. Please try again.</p>
           )}
 
           {recStatus === 'ready' && (
@@ -521,7 +521,7 @@ function Profile() {
             <p className="profile-label">Delete saved plan</p>
             <h2 id="delete-modal-title">Are you sure?</h2>
             <p className="delete-modal-copy">
-              This will permanently delete "{getPlanTitle(pendingDeletePlan, pendingDeleteIndex)}".
+              This will permanently delete &quot;{getPlanTitle(pendingDeletePlan, pendingDeleteIndex)}&quot;.
               You will not be able to recover it later.
             </p>
 

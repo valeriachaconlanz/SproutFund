@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'motion/react'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from '../context/ThemeContext'
+import { useTheme } from '../context/useTheme'
 import { resolveTransition } from '../lib/motion'
 import './ThemeToggle.css'
 

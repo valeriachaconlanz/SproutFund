@@ -1,0 +1,79 @@
+/* Sits just below the floating navbar, which is ~72px tall plus its offset. */
+.survey-progress {
+  position: sticky;
+  top: 88px;
+  z-index: 30;
+
+  margin-bottom: 8px;
+  padding: 10px 16px 0;
+
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-floating);
+  overflow: hidden;
+}
+
+.survey-progress-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.survey-progress-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.survey-progress-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 12px;
+  transition: color 0.2s ease;
+}
+
+.survey-progress-step.done {
+  color: var(--text-primary);
+}
+
+.survey-progress-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.survey-progress-step.done .survey-progress-dot {
+  background: var(--accent-ink);
+  transform: scale(1.15);
+}
+
+.survey-progress-count {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.survey-progress-track {
+  height: 3px;
+  margin: 0 -16px;
+  background: var(--border);
+}
+
+.survey-progress-fill {
+  height: 100%;
+  background: var(--accent-ink);
+}
+
+@media (max-width: 560px) {
+  .survey-progress-steps {
+    gap: 10px;
+  }
+}

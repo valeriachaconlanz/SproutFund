@@ -49,7 +49,152 @@
       "Clear, jargon-free recommendations",
       "Built for first-time investors",
       "Free to use, no credit card required"
+    ],
+    "browseTipsFirst": "Browse tips first",
+    "growthChart": {
+      "note": "Illustrative only: ${{principal}} compounding at an assumed {{rate}}% annual return over {{years}} years. Real returns vary and are never guaranteed."
+    },
+    "previewTitle": "See it before you commit",
+    "previewLede": "Move the slider. This is the same tier logic the real survey uses.",
+    "budgetPreview": {
+      "ifYouStarted": "If you started with",
+      "youdBeIn": "You'd be in",
+      "note": "Illustrative split. Your real plan also factors in your timeline and risk comfort.",
+      "cta": "Build my real plan →",
+      "scaleMin": "$100",
+      "scaleMax": "$50,000",
+      "sliderLabel": "Starting budget",
+      "splits": {
+        "starter": [
+          { "name": "Cash savings", "pct": 70 },
+          { "name": "Short-term CDs", "pct": 20 },
+          { "name": "Index funds", "pct": 10 }
+        ],
+        "growing": [
+          { "name": "Index funds", "pct": 50 },
+          { "name": "Bonds", "pct": 30 },
+          { "name": "Cash reserve", "pct": 20 }
+        ],
+        "established": [
+          { "name": "Index funds", "pct": 45 },
+          { "name": "Growth stocks", "pct": 30 },
+          { "name": "Bonds", "pct": 25 }
+        ]
+      }
+    },
+    "featuresTitle": "What's inside",
+    "features": [
+      {
+        "stat": "3",
+        "statLabel": "budget tiers",
+        "title": "Advice that fits your number",
+        "description": "Starter, Growing, and Established each get different recommendations, because the right move at $200 isn't the right move at $20,000.",
+        "linkLabel": "Take the survey"
+      },
+      {
+        "stat": "32",
+        "statLabel": "terms defined",
+        "title": "A glossary that assumes nothing",
+        "description": "Every term you'll meet in a recommendation, explained in plain language across 7 topics — from index funds to compound interest.",
+        "linkLabel": "Browse the glossary"
+      },
+      {
+        "stat": "12",
+        "statLabel": "market tips",
+        "title": "Learn before you commit",
+        "description": "Practical guidance across 6 topics — getting started, risk, fees, timing, goals, and the emotional side of investing.",
+        "linkLabel": "Read the tips"
+      },
+      {
+        "stat": "$1",
+        "statLabel": "minimum",
+        "title": "No gatekeeping",
+        "description": "Free to use, no credit card, and no account required to build a plan. You only sign up if you want to save one.",
+        "linkLabel": "Get started"
+      }
+    ],
+    "faqTitle": "Questions",
+    "closingTitle": "Start where you are.",
+    "closingText": "Two minutes, three questions, no account needed.",
+    "closingCta": "Build my plan",
+    "footerNote": "SproutFund is an educational tool, not financial advice. Investing carries risk, including the possible loss of principal."
+  },
+  "faq": {
+    "items": [
+      {
+        "q": "Do I need an account to get a plan?",
+        "a": "No. The survey is open to everyone and you can build a full plan without signing up. An account is only needed if you want to save a plan and come back to it later."
+      },
+      {
+        "q": "Is this financial advice?",
+        "a": "No. SproutFund is an educational tool. It explains common strategies in plain language based on what you tell us, but it does not know your full financial picture and is not a substitute for a licensed financial advisor."
+      },
+      {
+        "q": "How much do I need to start?",
+        "a": "One dollar. The plans are organised into three budget tiers starting at $1, because the right first move at $200 is genuinely different from the right first move at $20,000."
+      },
+      {
+        "q": "What does it actually ask me?",
+        "a": "Three things: how much you want to invest, when you want to see returns, and how much risk you are comfortable with. It takes about two minutes."
+      },
+      {
+        "q": "What if I do not understand the terminology?",
+        "a": "Every recommendation is written in plain language, and the glossary covers 32 common investing terms across 7 topics. Terms used in the survey link straight to their definitions."
+      },
+      {
+        "q": "Does it cost anything?",
+        "a": "No. SproutFund is free to use and does not ask for a credit card."
+      }
     ]
+  },
+  "commandPalette": {
+    "placeholder": "Search terms and pages...",
+    "searchAriaLabel": "Search",
+    "dialogLabel": "Search SproutFund",
+    "empty": "No matches for “{{query}}”.",
+    "navigate": "navigate",
+    "open": "open",
+    "kindPage": "Page",
+    "kindTerm": "Term",
+    "pages": {
+      "home": { "title": "Home", "subtitle": "Landing page" },
+      "survey": { "title": "Survey", "subtitle": "Build an investment plan" },
+      "tips": { "title": "Market Tips", "subtitle": "12 tips across 6 topics" },
+      "glossary": { "title": "Glossary", "subtitle": "32 terms across 7 topics" },
+      "history": { "title": "Saved Plans", "subtitle": "Plans you saved" },
+      "profile": { "title": "Profile", "subtitle": "Your account" }
+    }
+  },
+  "planOverlay": {
+    "title": "Building your plan",
+    "note": "This usually takes about 10 seconds.",
+    "stages": [
+      "Reading your answers",
+      "Matching strategies to your budget",
+      "Checking your timeline and risk comfort",
+      "Writing it up in plain language"
+    ]
+  },
+  "surveyProgress": {
+    "budget": "Budget",
+    "timeline": "Timeline",
+    "risk": "Risk",
+    "count": "{{done}} of {{total}}",
+    "ariaLabel": "Survey progress"
+  },
+  "glossaryTerm": {
+    "openInGlossary": "Open in glossary"
+  },
+  "history": {
+    "title": "Saved Plans",
+    "subtitle": "Investment plans you've saved for later.",
+    "loading": "Loading saved plans",
+    "error": "Couldn't load your saved plans. Please try again.",
+    "empty": "You haven't saved any plans yet.",
+    "createPlan": "Create a Plan",
+    "riskLabel": "{{level}} Risk",
+    "viewPlan": "View plan →",
+    "openPlanAria": "Open plan from {{date}} for {{amount}}"
   },
   "auth": {
     "signInTab": "Sign In",
