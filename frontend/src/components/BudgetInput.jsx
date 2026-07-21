@@ -25,7 +25,7 @@ function getBudgetTier(value, t) {
 function BudgetInput() {
   const navigate = useNavigate()
   const { token } = useAuth()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const shouldReduceMotion = useReducedMotion()
   const fieldRefs = useRef({})
   const toastTimeoutRef = useRef(null)
@@ -114,7 +114,9 @@ function BudgetInput() {
       const response = await fetch('http://localhost:8080/api/investment', {
         method: 'POST',
         headers,
-        body: JSON.stringify(payload),
+        // Send the active language so the AI-generated strategy text comes back
+        // localized. The stored payload (for saving) stays language-agnostic.
+        body: JSON.stringify({ ...payload, language: i18n.language }),
       })
       if (!response.ok) {
         throw new Error('Investment recommendation request failed.')

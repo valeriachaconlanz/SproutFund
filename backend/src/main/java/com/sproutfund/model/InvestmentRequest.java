@@ -14,6 +14,10 @@ public class InvestmentRequest {
     @NotBlank(message = "Risk tolerance must be selected.")
     private String riskTolerance;
 
+    // Optional UI language (e.g. "en", "es"). Not required — defaults to English
+    // in the service when absent, so older clients keep working unchanged.
+    private String language;
+
     public double getBudget() { return budget; }
     public void setBudget(double budget) { this.budget = budget; }
 
@@ -22,5 +26,8 @@ public class InvestmentRequest {
 
     public String getRiskTolerance() { return riskTolerance; }
     public void setRiskTolerance(String riskTolerance) { this.riskTolerance = riskTolerance; }
+
+    public String getLanguage() { return language; }
+    public void setLanguage(String language) { this.language = language; }
 
 }

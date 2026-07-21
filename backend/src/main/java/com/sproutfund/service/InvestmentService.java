@@ -50,16 +50,18 @@ public class InvestmentService {
     }
 
     public InvestmentResponse buildRecommendation(InvestmentRequest request) {
-        return callClaude(request.getBudget(), request.getTimeline(), request.getRiskTolerance());
+        return callClaude(request.getBudget(), request.getTimeline(),
+            request.getRiskTolerance(), request.getLanguage());
     }
 
-    private InvestmentResponse callClaude(double budget, String timeline, String riskTolerance) {
+    private InvestmentResponse callClaude(double budget, String timeline, String riskTolerance, String language) {
         String userPrompt = String.format(
-            "Budget: $%.0f | Timeline: %s (%s) | Risk tolerance: %s. Provide 2-3 personalized investment strategies.",
+            "Budget: $%.0f | Timeline: %s (%s) | Risk tolerance: %s. Provide 2-3 personalized investment strategies.%s",
             budget,
             timeline,
             timelineDescription(timeline),
-            riskTolerance
+            riskTolerance,
+            languageDirective(language)
         );
 
         MessageCreateParams params = MessageCreateParams.builder()
@@ -82,7 +84,7 @@ public class InvestmentService {
                 .map(tb -> tb.text())
                 .orElse(null);
 
-            if (json == null) return fallbackResponse(budget, timeline, riskTolerance);
+            if (json == null) return fallbackResponse(budget, timeline, riskTolerance, language);
 
             JsonNode root = objectMapper.readTree(json);
             List<InvestmentStrategy> strategies = new ArrayList<>();
@@ -104,22 +106,24 @@ public class InvestmentService {
 
         } catch (AnthropicServiceException e) {
             log.error("Claude API error (HTTP {}): {}", e.statusCode(), e.getMessage());
-            return fallbackResponse(budget, timeline, riskTolerance);
+            return fallbackResponse(budget, timeline, riskTolerance, language);
         } catch (AnthropicException e) {
             log.error("Claude client error: {}", e.getMessage());
-            return fallbackResponse(budget, timeline, riskTolerance);
+            return fallbackResponse(budget, timeline, riskTolerance, language);
         } catch (Exception e) {
             log.error("Failed to parse Claude response: {}", e.getMessage());
-            return fallbackResponse(budget, timeline, riskTolerance);
+            return fallbackResponse(budget, timeline, riskTolerance, language);
         }
     }
 
-    private InvestmentResponse fallbackResponse(double budget, String timeline, String riskTolerance) {
+    private InvestmentResponse fallbackResponse(double budget, String timeline, String riskTolerance, String language) {
+        boolean es = isSpanish(language);
         return new InvestmentResponse(budget, timeline, riskTolerance,
             List.of(new InvestmentStrategy(
-                "Service Unavailable",
+                es ? "Servicio no disponible" : "Service Unavailable",
                 100,
-                "Our advisor is temporarily unavailable. Please try again shortly.",
+                es ? "Nuestro asesor no está disponible por el momento. Inténtalo de nuevo en unos minutos."
+                   : "Our advisor is temporarily unavailable. Please try again shortly.",
                 List.of(),
                 ""
             )),
@@ -134,5 +138,19 @@ public class InvestmentService {
             case "long"   -> "5+ years";
             default       -> timeline;
         };
+    }
+
+    private boolean isSpanish(String language) {
+        return language != null && language.toLowerCase().startsWith("es");
+    }
+
+    // Appended to the user prompt (not the cached system prompt, so the cache
+    // still hits across languages). Keeps the JSON keys English so parsing is
+    // unaffected — only the human-readable values are localized.
+    private String languageDirective(String language) {
+        if (!isSpanish(language)) return "";
+        return " Write every human-readable value (name, description, vehicles, platform, disclaimer)"
+             + " in natural Spanish. Keep the JSON keys exactly as specified in English, and keep fund"
+             + " tickers and proper fund/account names as-is.";
     }
 }
