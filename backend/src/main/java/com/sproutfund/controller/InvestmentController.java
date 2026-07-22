@@ -37,18 +37,21 @@ public class InvestmentController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<InvestmentRecommendation> save(@Valid @RequestBody SaveInvestmentRequest request,
-                                                           @AuthenticationPrincipal Jwt jwt) {
-        InvestmentRecommendation recommendation = new InvestmentRecommendation(
-                UUID.fromString(jwt.getSubject()),
-                request.getBudget(),
-                request.getTimeline(),
-                request.getRiskTolerance(),
-                request.getStrategies(),
-                request.getDisclaimer()
-        );
-        return ResponseEntity.ok(recommendationRepository.save(recommendation));
-    }
+        public ResponseEntity<InvestmentRecommendation> save(@Valid @RequestBody SaveInvestmentRequest request,
+                                                       @AuthenticationPrincipal Jwt jwt) {
+            InvestmentRecommendation recommendation = new InvestmentRecommendation(
+                 UUID.fromString(jwt.getSubject()),
+                    request.getBudget(),
+                    request.getTimeline(),
+                    request.getRiskTolerance(),
+                    request.getStrategies(),
+                    request.getDisclaimer()
+            );      
+
+            recommendation.setTitle(request.getTitle());
+
+            return ResponseEntity.ok(recommendationRepository.save(recommendation));
+        }
 
     @GetMapping("/history")
     public ResponseEntity<List<InvestmentRecommendation>> history(@AuthenticationPrincipal Jwt jwt) {

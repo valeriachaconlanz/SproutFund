@@ -195,7 +195,7 @@
     "riskLabel": "{{level}} Risk",
     "viewPlan": "View plan →",
     "openPlanAria": "Open plan from {{date}} for {{amount}}",
-    "defaultPlanTitle": "Investment Plan #{{number}}",
+    "defaultPlanTitle": "Investment Plan {{number}}",
     "pinPlan": "Pin plan",
     "unpinPlan": "Unpin plan",
     "save": "Save",
@@ -564,6 +564,11 @@
     "saved": "Saved ✓",
     "savePlan": "Save This Plan",
     "downloadPdf": "Download PDF",
-    "saveError": "Couldn't save your plan. Please try again."
+    "saveError": "Couldn't save your plan. Please try again.",
+    "namePlanTitle": "Name Your Investment Plan",
+    "namePlanDescription": "Give your plan a title to distinguish it easily on your profile.",
+    "namePlanPlaceholder": "e.g., House Fund, Retirement Fund",
+    "cancel": "Cancel",
+    "confirmSave": "Confirm Save"
   }
 }

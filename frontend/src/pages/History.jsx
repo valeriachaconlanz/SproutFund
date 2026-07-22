@@ -58,9 +58,9 @@ function History() {
     }
   }
 
-  function handleStartRename(rec, originalIndex) {
+  function handleStartRename(rec) {
     setEditingPlanId(rec.id)
-    setEditingTitle(rec.title || getPlanTitle(rec, originalIndex))
+    setEditingTitle(rec.title || '')
   }
 
   function handleCancelRename() {
@@ -154,6 +154,9 @@ function History() {
         })
         if (!response.ok) throw new Error('Failed to load history.')
         const data = await response.json()
+
+        console.log("HISTORY DATA:", data)
+
         if (!cancelled) {
           setRecommendations(data)
           setStatus('ready')

@@ -27,18 +27,54 @@ public class SaveInvestmentRequest {
 
     private String disclaimer;
 
-    public double getBudget() { return budget; }
-    public void setBudget(double budget) { this.budget = budget; }
+    // User-defined or generated plan name
+    private String title;
 
-    public String getTimeline() { return timeline; }
-    public void setTimeline(String timeline) { this.timeline = timeline; }
+    public double getBudget() { 
+        return budget; 
+    }
 
-    public String getRiskTolerance() { return riskTolerance; }
-    public void setRiskTolerance(String riskTolerance) { this.riskTolerance = riskTolerance; }
+    public void setBudget(double budget) { 
+        this.budget = budget; 
+    }
 
-    public List<InvestmentStrategy> getStrategies() { return strategies; }
-    public void setStrategies(List<InvestmentStrategy> strategies) { this.strategies = strategies; }
+    public String getTimeline() { 
+        return timeline; 
+    }
 
-    public String getDisclaimer() { return disclaimer; }
-    public void setDisclaimer(String disclaimer) { this.disclaimer = disclaimer; }
+    public void setTimeline(String timeline) { 
+        this.timeline = timeline; 
+    }
+
+    public String getRiskTolerance() { 
+        return riskTolerance; 
+    }
+
+    public void setRiskTolerance(String riskTolerance) { 
+        this.riskTolerance = riskTolerance; 
+    }
+
+    public List<InvestmentStrategy> getStrategies() { 
+        return strategies; 
+    }
+
+    public void setStrategies(List<InvestmentStrategy> strategies) { 
+        this.strategies = strategies; 
+    }
+
+    public String getDisclaimer() { 
+        return disclaimer; 
+    }
+
+    public void setDisclaimer(String disclaimer) { 
+        this.disclaimer = disclaimer; 
+    }
+
+    public String getTitle() { 
+        return title; 
+    }
+
+    public void setTitle(String title) { 
+        this.title = title; 
+    }
 }

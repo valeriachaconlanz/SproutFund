@@ -195,7 +195,7 @@
     "riskLabel": "Riesgo {{level}}",
     "viewPlan": "Ver plan →",
     "openPlanAria": "Abrir el plan del {{date}} por {{amount}}",
-    "defaultPlanTitle": "Plan de inversión n.º {{number}}",
+    "defaultPlanTitle": "Plan de inversión {{number}}",
     "pinPlan": "Fijar plan",
     "unpinPlan": "Dejar de fijar el plan",
     "save": "Guardar",
@@ -564,6 +564,11 @@
     "saved": "Guardado ✓",
     "savePlan": "Guardar este plan",
     "downloadPdf": "Descargar PDF",
-    "saveError": "No se pudo guardar tu plan. Inténtalo de nuevo."
+    "saveError": "No se pudo guardar tu plan. Inténtalo de nuevo.",
+    "namePlanTitle": "Nombra tu plan de inversión",
+    "namePlanDescription": "Dale un título a tu plan para distinguirlo fácilmente en tu perfil.",
+    "namePlanPlaceholder": "Ej., Casa, Fondo de retiro",
+    "cancel": "Cancelar",
+    "confirmSave": "Confirmar guardado"
   }
 }
