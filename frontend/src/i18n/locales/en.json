@@ -225,6 +225,8 @@
     "plansSaved": "PLANS SAVED",
     "diversityRating": "DIVERSITY RATING",
     "avgRisk": "AVG. RISK TOLERANCE",
+    "other": "Other",
+    "notAvailable": "N/A",
     "ratings": { "High": "High", "Medium": "Medium", "Low": "Low" }
   },
   "auth": {

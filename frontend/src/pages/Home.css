@@ -1062,6 +1062,16 @@ html[data-theme="dark"] .hero-button:hover {
   font-size: 16px;
 }
 
+/* These stat labels are the widest text in a narrow card, and the Spanish
+   ones ("NIVEL DE DIVERSIFICACIÓN", "TOLERANCIA AL RIESGO PROM.") are longer
+   than the English. Tighter tracking and balanced wrapping keep them to fewer,
+   even lines so they sit comfortably inside the card instead of crowding it. */
+.profile-stat.compact .profile-stat-content span {
+  letter-spacing: 0.04em;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
 /* ─────────────────────────────────────────────
    Media Queries
    ───────────────────────────────────────────── */

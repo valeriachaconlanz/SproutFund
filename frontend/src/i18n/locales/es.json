@@ -225,6 +225,8 @@
     "plansSaved": "PLANES GUARDADOS",
     "diversityRating": "NIVEL DE DIVERSIFICACIÓN",
     "avgRisk": "TOLERANCIA AL RIESGO PROM.",
+    "other": "Otros",
+    "notAvailable": "N/D",
     "ratings": { "High": "Alto", "Medium": "Medio", "Low": "Bajo" }
   },
   "auth": {

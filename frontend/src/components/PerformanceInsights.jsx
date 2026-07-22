@@ -4,7 +4,6 @@ import piggyBank from '../assets/piggy-bank.svg'
 import clipboardList from '../assets/clipboard-list.svg'
 import chartPie from '../assets/chart-pie.svg'
 import gauge from '../assets/gauge.svg'
-import { RISK_LABELS } from '../lib/labels'
 
 function formatCurrency(value) {
   return Number(value || 0).toLocaleString('en-US', {
@@ -76,7 +75,6 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
 
     const plansCreated = totalSaved
     const diversityRating = allocatedMix.length >= 3 ? 'High' : allocatedMix.length >= 2 ? 'Medium' : 'Low'
-    const averageRiskTolerance = mostCommonRisk === 'None' ? 'N/A' : RISK_LABELS[mostCommonRisk] || mostCommonRisk
 
     return {
       totalSaved,
@@ -85,7 +83,9 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
       portfolioSegments,
       plansCreated,
       diversityRating,
-      averageRiskTolerance,
+      // Raw risk key ('low'/'medium'/'high' or 'None'); translated at render so
+      // the value follows the active language instead of a fixed English label.
+      riskKey: mostCommonRisk,
     }
   }, [recommendations])
 
@@ -116,7 +116,7 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
                     style={{ position: 'relative' }}
                   >
                     <div className="portfolio-row-header">
-                      <span>{segment.name}</span>
+                      <span>{segment.name === 'Other' ? t('performanceInsights.other') : segment.name}</span>
                       <strong>{segment.percent}%</strong>
                     </div>
 
@@ -198,7 +198,7 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
 
             <div className="profile-stat-content">
               <span>{t('performanceInsights.avgRisk')}</span>
-              <strong>{profileStats.averageRiskTolerance}</strong>
+              <strong>{profileStats.riskKey === 'None' ? t('performanceInsights.notAvailable') : t(`results.riskLevel.${profileStats.riskKey}`, profileStats.riskKey)}</strong>
             </div>
           </div>
         </div>
