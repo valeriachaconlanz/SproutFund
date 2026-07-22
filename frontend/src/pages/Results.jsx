@@ -263,12 +263,7 @@ function Results() {
     setSaveState('saving')
     
     const now = new Date()
-    const finalTitle =
-      customTitle.trim() ||
-      `Plan - ${now.toLocaleDateString('en-US')}, ${now.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-      })}`
+    const finalTitle = customTitle.trim() || null
 
     try {
       const response = await fetch('http://localhost:8080/api/investment/save', {
@@ -277,15 +272,14 @@ function Results() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           title: finalTitle,
-          isPinned: false,
-          budget: plan.budget, 
-          timeline: plan.timeline, 
-          riskTolerance: plan.riskTolerance || plan.riskLevel, 
-          strategies: plan.strategies || [], 
-          disclaimer: plan.disclaimer 
-        }),
+          budget: plan.budget,
+          timeline: plan.timeline,
+          riskTolerance: plan.riskTolerance || plan.riskLevel,
+          strategies: plan.strategies || [],
+          disclaimer: plan.disclaimer,
+        })
       })
       if (!response.ok) throw new Error('Save failed.')
       
@@ -382,35 +376,39 @@ function Results() {
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-container">
-            <h3>Name Your Investment Plan</h3>
-            <p>Give your plan a title to distinguish it easily on your profile.</p>
-            <input
+           <h3>{t('results.namePlanTitle')}</h3>
+
+            <p>{t('results.namePlanDescription')}</p>
+
+           <input
               type="text"
-              placeholder="e.g., House Fund, Retirement Fund"
+              placeholder={t('results.namePlanPlaceholder')}
               value={customTitle}
               onChange={(e) => setCustomTitle(e.target.value)}
               maxLength={50}
               autoFocus
             />
+
             <div className="modal-buttons">
-              <button 
-                type="button" 
-                className="modal-btn-cancel" 
+              <button
+                type="button"
+                className="modal-btn-cancel"
                 onClick={() => setIsModalOpen(false)}
               >
-                Cancel
+                {t('results.cancel')}
               </button>
-              <button 
-                type="button" 
-                className="modal-btn-confirm" 
-                onClick={handleFinalSaveConfirm}
+
+             <button
+                type="button"
+                className="modal-btn-confirm"
+               onClick={handleFinalSaveConfirm}
               >
-                Confirm Save
-              </button>
-            </div>
+               {t('results.confirmSave')}
+             </button>
           </div>
-        </div>
-      )}
+       </div>
+     </div>
+    )}
     </div>
   )
 }

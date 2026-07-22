@@ -81,6 +81,9 @@ public class InvestmentRecommendation {
     public boolean isPinned() { return isPinned; }
 
     @JsonProperty("isPinned")
+    public boolean getIsPinned() { return isPinned; }
+
+    @JsonProperty("isPinned")
     public void setPinned(boolean pinned) { this.isPinned = pinned; }
 
     public Instant getCreatedAt() { return createdAt; }
