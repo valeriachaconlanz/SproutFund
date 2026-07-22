@@ -195,7 +195,7 @@
     "riskLabel": "Riesgo {{level}}",
     "viewPlan": "Ver plan →",
     "openPlanAria": "Abrir el plan del {{date}} por {{amount}}",
-    "defaultPlanTitle": "Plan de inversión {{number}}",
+    "defaultPlanTitle": "Plan de inversión #{{number}}",
     "pinPlan": "Fijar plan",
     "unpinPlan": "Dejar de fijar el plan",
     "save": "Guardar",

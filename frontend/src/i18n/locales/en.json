@@ -195,7 +195,7 @@
     "riskLabel": "{{level}} Risk",
     "viewPlan": "View plan →",
     "openPlanAria": "Open plan from {{date}} for {{amount}}",
-    "defaultPlanTitle": "Investment Plan {{number}}",
+    "defaultPlanTitle": "Investment Plan #{{number}}",
     "pinPlan": "Pin plan",
     "unpinPlan": "Unpin plan",
     "save": "Save",

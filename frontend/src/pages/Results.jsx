@@ -262,17 +262,8 @@ function Results() {
     setIsModalOpen(false)
     setSaveState('saving')
     
-    const finalTitle =
-      customTitle.trim() ||
-      `${t('history.defaultPlanTitle', { number: '' }).trim()} - ${now.toLocaleDateString(
-        i18n.language === 'es' ? 'es-ES' : 'en-US'
-      )}, ${now.toLocaleTimeString(
-        i18n.language === 'es' ? 'es-ES' : 'en-US',
-        {
-          hour: 'numeric',
-          minute: '2-digit',
-        }
-      )}`
+    const now = new Date()
+    const finalTitle = customTitle.trim() || null
 
     try {
       const response = await fetch('http://localhost:8080/api/investment/save', {
@@ -281,13 +272,13 @@ function Results() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           title: finalTitle,
           budget: plan.budget,
           timeline: plan.timeline,
           riskTolerance: plan.riskTolerance || plan.riskLevel,
           strategies: plan.strategies || [],
-          disclaimer: plan.disclaimer
+          disclaimer: plan.disclaimer,
         })
       })
       if (!response.ok) throw new Error('Save failed.')
@@ -414,9 +405,9 @@ function Results() {
               >
                {t('results.confirmSave')}
              </button>
-            </div>
-         </div>
-        </div>
+          </div>
+       </div>
+     </div>
     )}
     </div>
   )
