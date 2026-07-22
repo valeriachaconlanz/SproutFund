@@ -1,5 +1,6 @@
 package com.sproutfund.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -42,6 +43,11 @@ public class InvestmentRecommendation {
     // User-assigned label, set later via rename — blank until then.
     private String title;
 
+    // Pinned plans sort to the top of Saved Plans. Defaults to false so rows
+    // that pre-date this column behave as unpinned.
+    @Column(name = "is_pinned", nullable = false)
+    private boolean isPinned = false;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -67,5 +73,15 @@ public class InvestmentRecommendation {
     public String getDisclaimer() { return disclaimer; }
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
+
+    // Explicitly named so the JSON stays "isPinned" — Jackson's bean naming
+    // would otherwise expose a boolean getter isPinned() as "pinned", which
+    // is not what the client sends or reads.
+    @JsonProperty("isPinned")
+    public boolean isPinned() { return isPinned; }
+
+    @JsonProperty("isPinned")
+    public void setPinned(boolean pinned) { this.isPinned = pinned; }
+
     public Instant getCreatedAt() { return createdAt; }
 }
