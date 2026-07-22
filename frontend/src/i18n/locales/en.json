@@ -194,7 +194,38 @@
     "createPlan": "Create a Plan",
     "riskLabel": "{{level}} Risk",
     "viewPlan": "View plan →",
-    "openPlanAria": "Open plan from {{date}} for {{amount}}"
+    "openPlanAria": "Open plan from {{date}} for {{amount}}",
+    "defaultPlanTitle": "Investment Plan #{{number}}",
+    "pinPlan": "Pin plan",
+    "unpinPlan": "Unpin plan",
+    "save": "Save",
+    "cancel": "Cancel",
+    "view": "View",
+    "rename": "Rename",
+    "delete": "Delete",
+    "deleteFailed": "Could not delete the plan. Please try again.",
+    "deleteModal": {
+      "label": "Delete saved plan",
+      "title": "Are you sure?",
+      "copy": "This will permanently delete “{{title}}”. You will not be able to recover it later.",
+      "keep": "Keep plan",
+      "confirm": "Delete plan"
+    }
+  },
+  "performanceInsights": {
+    "overview": "Overview",
+    "title": "Performance Insights",
+    "accountStatistics": "ACCOUNT STATISTICS",
+    "portfolioMix": "Portfolio mix",
+    "loadingStats": "Loading stats...",
+    "loadFailed": "Failed to load portfolios",
+    "noAllocation": "No allocation data yet",
+    "additionalAllocations": "Additional allocations",
+    "totalInvested": "TOTAL INVESTED",
+    "plansSaved": "PLANS SAVED",
+    "diversityRating": "DIVERSITY RATING",
+    "avgRisk": "AVG. RISK TOLERANCE",
+    "ratings": { "High": "High", "Medium": "Medium", "Low": "Low" }
   },
   "auth": {
     "signInTab": "Sign In",

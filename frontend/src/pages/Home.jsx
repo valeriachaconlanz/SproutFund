@@ -72,15 +72,17 @@ function Home() {
 
     if (token) {
       loadHistory();
-    } else {
-      // If there's no token, stop showing the loading state for insights
-      setRecStatus("ready");
     }
 
     return () => {
       cancelled = true;
     };
   }, [token]);
+
+  /* With no token there is nothing to fetch, so "ready" is derived during
+     render rather than pushed through setState inside the effect — which
+     would trigger an extra render pass on every logged-out visit. */
+  const insightsStatus = token ? recStatus : "ready";
 
   return (
     <main className="home-page">
@@ -147,7 +149,7 @@ function Home() {
           <div className="profile-shell">
             <PerformanceInsights
               recommendations={recommendations}
-              recStatus={recStatus}
+              recStatus={insightsStatus}
             />
           </div>
         </section>

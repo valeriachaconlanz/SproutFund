@@ -1,13 +1,7 @@
 .tips-page {
-<<<<<<< HEAD
   --tips-accent-readable: var(--accent-ink);
   --tips-background: var(--background);
   --tips-texture-dot: rgba(15, 28, 21, 0.035);
-=======
-  --tips-background: #f7f8f2;
-  --tips-texture-dot: rgba(17, 14, 8, 0.06);
-  --tips-texture-line: rgba(17, 14, 8, 0.035);
->>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
 
   min-height: 100vh;
   /* Dot grid only — matches the home page. The 135° diagonal stripe that used
@@ -21,14 +15,8 @@
 }
 
 html[data-theme="dark"] .tips-page {
-<<<<<<< HEAD
   --tips-accent-readable: var(--accent);
   --tips-texture-dot: rgba(255, 255, 255, 0.04);
-=======
-  --tips-background: var(--background);
-  --tips-texture-dot: rgba(0, 0, 0, 0.36);
-  --tips-texture-line: rgba(0, 0, 0, 0.24);
->>>>>>> 8e8bf30 (Rework saved plans and profile statistics)
 }
 
 .tips-header {

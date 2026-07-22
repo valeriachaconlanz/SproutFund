@@ -1,23 +1,25 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useAuth } from '../context/AuthContext'
-import { TIMELINE_LABELS, RISK_LABELS } from '../lib/labels'
+import { useTranslation } from 'react-i18next'
+import { motion, AnimatePresence } from 'motion/react'
+import { useAuth } from '../context/useAuth'
 import './History.css'
 
 const API = 'http://localhost:8080/api/investment'
 
-function formatDate(iso) {
-  return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
-}
-
-function formatCurrency(amount) {
-  return Number(amount).toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
-}
-
 function History() {
   const navigate = useNavigate()
   const { token } = useAuth()
+  const { t, i18n } = useTranslation()
+  const locale = i18n.language === 'es' ? 'es-ES' : 'en-US'
+
+  function formatDate(iso) {
+    return new Date(iso).toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' })
+  }
+
+  function formatCurrency(amount) {
+    return Number(amount).toLocaleString(locale, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
+  }
 
   const [recommendations, setRecommendations] = useState([])
   const [editingPlanId, setEditingPlanId] = useState(null)
@@ -26,7 +28,7 @@ function History() {
   const [status, setStatus] = useState('loading')
 
   function getPlanTitle(rec, index) {
-    return rec.title || `Investment Plan #${index + 1}`
+    return rec.title || t('history.defaultPlanTitle', { number: index + 1 })
   }
 
   async function handleTogglePin(id) {
@@ -124,7 +126,7 @@ function History() {
       setRecommendations((prev) => prev.filter((rec) => rec.id !== id))
     } catch (err) {
       console.error(err)
-      alert('Could not delete the plan. Please try again.')
+      alert(t('history.deleteFailed'))
     } finally {
       setPendingDeleteId(null)
     }
@@ -175,21 +177,19 @@ function History() {
   const pendingDeleteIndex = recommendations.findIndex((rec) => rec.id === pendingDeleteId)
 
   if (status === 'loading') {
-    return <div className="history-status">Loading history...</div>
+    return <div className="history-status">{t('history.loading')}</div>
   }
 
   if (status === 'error') {
-    return <div className="history-status error">Failed to load investment history.</div>
+    return <div className="history-status error">{t('history.error')}</div>
   }
 
   return (
     <main className="history-page">
       <div className="history-content">
         <div className="history-header">
-          <h1 className="history-title">Saved Plans</h1>
-          <p className="history-subtitle">
-            Investment plans you've saved for later.
-          </p>
+          <h1 className="history-title">{t('history.title')}</h1>
+          <p className="history-subtitle">{t('history.subtitle')}</p>
         </div>
 
         <div className="recommendations-list">
@@ -220,7 +220,7 @@ function History() {
                         <button 
                           className={`pin-btn ${rec.isPinned ? 'pinned' : ''}`}
                           onClick={() => handleTogglePin(rec.id)}
-                          aria-label={rec.isPinned ? "Unpin plan" : "Pin plan"}
+                          aria-label={rec.isPinned ? t('history.unpinPlan') : t('history.pinPlan')}
                         >
                           ★
                         </button>
@@ -246,9 +246,9 @@ function History() {
 
                     <div className="rec-metrics">
                       <span>{formatCurrency(rec.budget)}</span>
-                      <span>{TIMELINE_LABELS[rec.timeline] || rec.timeline}</span>
+                      <span>{t(`common.timeline.${rec.timeline}.label`, rec.timeline)}</span>
                       <span className={`risk-badge risk-${rec.riskTolerance?.toLowerCase()}`}>
-                        {RISK_LABELS[rec.riskTolerance] || rec.riskTolerance} Risk
+                        {t('history.riskLabel', { level: t(`results.riskLevel.${rec.riskTolerance}`, rec.riskTolerance) })}
                       </span>
                     </div>
 
@@ -263,14 +263,14 @@ function History() {
                     <div className="rec-actions">
                       {isEditing ? (
                         <>
-                          <button className="rec-action-btn" onClick={() => handleSaveRename(rec.id)}>Save</button>
-                          <button className="rec-action-btn" onClick={handleCancelRename}>Cancel</button>
+                          <button className="rec-action-btn" onClick={() => handleSaveRename(rec.id)}>{t('history.save')}</button>
+                          <button className="rec-action-btn" onClick={handleCancelRename}>{t('history.cancel')}</button>
                         </>
                       ) : (
                         <>
-                          <button className="rec-action-btn" onClick={() => handleViewRecommendation(rec)}>View</button>
-                          <button className="rec-action-btn" onClick={() => handleStartRename(rec, originalIndex)}>Rename</button>
-                          <button className="rec-action-btn danger" onClick={() => handleRequestDelete(rec.id)}>Delete</button>
+                          <button className="rec-action-btn" onClick={() => handleViewRecommendation(rec)}>{t('history.view')}</button>
+                          <button className="rec-action-btn" onClick={() => handleStartRename(rec, originalIndex)}>{t('history.rename')}</button>
+                          <button className="rec-action-btn danger" onClick={() => handleRequestDelete(rec.id)}>{t('history.delete')}</button>
                         </>
                       )}
                     </div>
@@ -278,7 +278,7 @@ function History() {
                 )
               })
             ) : (
-              <p className="recommendations-empty">No saved plans yet.</p>
+              <p className="recommendations-empty">{t('history.empty')}</p>
             )}
           </AnimatePresence>
         </div>
@@ -298,16 +298,15 @@ function History() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="delete-modal-icon">!</div>
-            <p className="profile-label">Delete saved plan</p>
-            <h2 id="delete-modal-title">Are you sure?</h2>
+            <p className="profile-label">{t('history.deleteModal.label')}</p>
+            <h2 id="delete-modal-title">{t('history.deleteModal.title')}</h2>
             <p className="delete-modal-copy">
-              This will permanently delete "{getPlanTitle(pendingDeletePlan, pendingDeleteIndex)}".
-              You will not be able to recover it later.
+              {t('history.deleteModal.copy', { title: getPlanTitle(pendingDeletePlan, pendingDeleteIndex) })}
             </p>
 
             <div className="delete-modal-actions">
-              <button type="button" className="delete-modal-btn secondary" onClick={() => setPendingDeleteId(null)}>Keep plan</button>
-              <button type="button" className="delete-modal-btn danger" onClick={() => handleConfirmDelete(pendingDeletePlan.id)}>Delete plan</button>
+              <button type="button" className="delete-modal-btn secondary" onClick={() => setPendingDeleteId(null)}>{t('history.deleteModal.keep')}</button>
+              <button type="button" className="delete-modal-btn danger" onClick={() => handleConfirmDelete(pendingDeletePlan.id)}>{t('history.deleteModal.confirm')}</button>
             </div>
           </div>
         </div>

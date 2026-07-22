@@ -194,7 +194,38 @@
     "createPlan": "Crear un plan",
     "riskLabel": "Riesgo {{level}}",
     "viewPlan": "Ver plan →",
-    "openPlanAria": "Abrir el plan del {{date}} por {{amount}}"
+    "openPlanAria": "Abrir el plan del {{date}} por {{amount}}",
+    "defaultPlanTitle": "Plan de inversión n.º {{number}}",
+    "pinPlan": "Fijar plan",
+    "unpinPlan": "Dejar de fijar el plan",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "view": "Ver",
+    "rename": "Renombrar",
+    "delete": "Eliminar",
+    "deleteFailed": "No se pudo eliminar el plan. Inténtalo de nuevo.",
+    "deleteModal": {
+      "label": "Eliminar plan guardado",
+      "title": "¿Estás seguro?",
+      "copy": "Esto eliminará permanentemente «{{title}}». No podrás recuperarlo más tarde.",
+      "keep": "Conservar plan",
+      "confirm": "Eliminar plan"
+    }
+  },
+  "performanceInsights": {
+    "overview": "Resumen",
+    "title": "Análisis de rendimiento",
+    "accountStatistics": "ESTADÍSTICAS DE LA CUENTA",
+    "portfolioMix": "Composición del portafolio",
+    "loadingStats": "Cargando estadísticas...",
+    "loadFailed": "No se pudieron cargar los portafolios",
+    "noAllocation": "Aún no hay datos de distribución",
+    "additionalAllocations": "Asignaciones adicionales",
+    "totalInvested": "TOTAL INVERTIDO",
+    "plansSaved": "PLANES GUARDADOS",
+    "diversityRating": "NIVEL DE DIVERSIFICACIÓN",
+    "avgRisk": "TOLERANCIA AL RIESGO PROM.",
+    "ratings": { "High": "Alto", "Medium": "Medio", "Low": "Bajo" }
   },
   "auth": {
     "signInTab": "Iniciar sesión",

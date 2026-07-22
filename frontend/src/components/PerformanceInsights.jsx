@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import piggyBank from '../assets/piggy-bank.svg'
 import clipboardList from '../assets/clipboard-list.svg'
 import chartPie from '../assets/chart-pie.svg'
@@ -14,6 +15,8 @@ function formatCurrency(value) {
 }
 
 function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
+  const { t } = useTranslation()
+
   const profileStats = useMemo(() => {
     const totalSaved = recommendations.length
 
@@ -89,27 +92,23 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
   return (
     <section className="profile-panel profile-recommendations-panel">
       <div className="profile-panel-heading">
-        <p className="profile-label">Overview</p>
-        <h2>Performance Insights</h2>
+        <p className="profile-label">{t('performanceInsights.overview')}</p>
+        <h2>{t('performanceInsights.title')}</h2>
       </div>
 
       <div className="account-statistics-section">
         <div className="account-statistics-chart-card">
           <div className="account-statistics-heading">
-            <p className="profile-label">ACCOUNT STATISTICS</p>
-            <h3>Portfolio mix</h3>
+            <p className="profile-label">{t('performanceInsights.accountStatistics')}</p>
+            <h3>{t('performanceInsights.portfolioMix')}</h3>
           </div>
           <div className="portfolio-breakdown">
             {recStatus === 'loading' ? (
-              <div className="portfolio-bar-empty">Loading stats...</div>
+              <div className="portfolio-bar-empty">{t('performanceInsights.loadingStats')}</div>
             ) : recStatus === 'error' ? (
-              <div className="portfolio-bar-empty">Failed to load portfolios</div>
+              <div className="portfolio-bar-empty">{t('performanceInsights.loadFailed')}</div>
             ) : profileStats.portfolioSegments.length ? (
               profileStats.portfolioSegments.map((segment) => {
-                const tooltipText = segment.hiddenSegments?.length
-                  ? segment.hiddenSegments.map((item) => `${item.name}: ${item.percent}%`).join(' • ')
-                  : null
-
                 return (
                   <div
                     key={segment.name}
@@ -130,7 +129,7 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
 
                     {segment.hiddenSegments?.length > 0 && (
                       <div className="portfolio-hover-tooltip">
-                        <span className="tooltip-title">Additional allocations</span>
+                        <span className="tooltip-title">{t('performanceInsights.additionalAllocations')}</span>
                         <div className="tooltip-items">
                           {segment.hiddenSegments.map((item) => (
                             <div key={item.name} className="tooltip-item">
@@ -145,7 +144,7 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
                 )
               })
             ) : (
-              <div className="portfolio-bar-empty">No allocation data yet</div>
+              <div className="portfolio-bar-empty">{t('performanceInsights.noAllocation')}</div>
             )}
           </div>
         </div>
@@ -159,7 +158,7 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
             </div>
 
             <div className="profile-stat-content">
-              <span>TOTAL INVESTED</span>
+              <span>{t('performanceInsights.totalInvested')}</span>
               <strong>{formatCurrency(profileStats.totalBudget)}</strong>
             </div>
           </div>
@@ -172,7 +171,7 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
             </div>
 
             <div className="profile-stat-content">
-              <span>PLANS SAVED</span>
+              <span>{t('performanceInsights.plansSaved')}</span>
               <strong>{profileStats.plansCreated}</strong>
             </div>
           </div>
@@ -185,8 +184,8 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
             </div>
 
             <div className="profile-stat-content">
-              <span>DIVERSITY RATING</span>
-              <strong>{profileStats.diversityRating}</strong>
+              <span>{t('performanceInsights.diversityRating')}</span>
+              <strong>{t(`performanceInsights.ratings.${profileStats.diversityRating}`, profileStats.diversityRating)}</strong>
             </div>
           </div>
 
@@ -198,7 +197,7 @@ function PerformanceInsights({ recommendations = [], recStatus = 'ready' }) {
             </div>
 
             <div className="profile-stat-content">
-              <span>AVG. RISK TOLERANCE</span>
+              <span>{t('performanceInsights.avgRisk')}</span>
               <strong>{profileStats.averageRiskTolerance}</strong>
             </div>
           </div>

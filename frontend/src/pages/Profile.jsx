@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../context/useAuth'
 import { AVATAR_OPTIONS, getInitials } from '../lib/avatar'
 import './Profile.css'
 

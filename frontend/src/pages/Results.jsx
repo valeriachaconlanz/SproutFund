@@ -190,13 +190,23 @@ function Results() {
   const [customTitle, setCustomTitle] = useState('')
 
   const [plan, setPlan] = useState(() => state || readPendingPlan())
+  const [syncedState, setSyncedState] = useState(state)
 
+  /* When the router hands us a different plan (e.g. opening a saved plan from
+     History), adjust during render instead of in an effect. This is React's
+     documented pattern for deriving state from changing props — an effect here
+     renders the stale plan first and then immediately re-renders. */
+  if (state && state !== syncedState) {
+    setSyncedState(state)
+    setPlan(state)
+    if (state.isSavedPlan || state.id) {
+      setSaveState('saved')
+    }
+  }
+
+  /* Clearing the stash is a side effect, so it stays in an effect. */
   useEffect(() => {
     if (state) {
-      setPlan(state)
-      if (state.isSavedPlan || state.id) {
-        setSaveState('saved')
-      }
       sessionStorage.removeItem(PENDING_PLAN_KEY)
     }
   }, [state])
