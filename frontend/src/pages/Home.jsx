@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, useReducedMotion } from "motion/react";
 import { useTranslation } from "react-i18next";
@@ -7,8 +8,11 @@ import Reveal from "../components/Reveal";
 import Stagger from "../components/Stagger";
 import GrowthChart from "../components/GrowthChart";
 import BudgetPreview from "../components/BudgetPreview";
+import PerformanceInsights from "../components/PerformanceInsights";
 import Faq from "../components/Faq";
 import "./Home.css";
+
+const API = "http://localhost:8080/api/investment";
 
 const TICKER_ITEMS = [
   { symbol: "AAPL", change: "+2.4%", up: true },
@@ -20,9 +24,12 @@ const TICKER_ITEMS = [
 
 function Home() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const { t } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
+
+  const [recommendations, setRecommendations] = useState([]);
+  const [recStatus, setRecStatus] = useState("loading");
 
   const steps = t("home.steps", { returnObjects: true });
   const whyItems = t("home.whyItems", { returnObjects: true });
@@ -36,6 +43,46 @@ function Home() {
      Everything below it uses Reveal/Stagger and waits to be scrolled to. */
   const heroContainer = resolveVariants(staggerContainer(0.09), shouldReduceMotion);
   const heroItem = resolveVariants(fadeUp, shouldReduceMotion);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadHistory() {
+      try {
+        const response = await fetch(`${API}/history`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) throw new Error();
+
+        const data = await response.json();
+
+        if (!cancelled) {
+          setRecommendations(data);
+          setRecStatus("ready");
+        }
+      } catch {
+        if (!cancelled) {
+          setRecStatus("error");
+        }
+      }
+    }
+
+    if (token) {
+      loadHistory();
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token]);
+
+  /* With no token there is nothing to fetch, so "ready" is derived during
+     render rather than pushed through setState inside the effect — which
+     would trigger an extra render pass on every logged-out visit. */
+  const insightsStatus = token ? recStatus : "ready";
 
   return (
     <main className="home-page">
@@ -96,11 +143,23 @@ function Home() {
         </Reveal>
       </section>
 
+      {/* ── Performance Insights (Logged In) ── */}
+      {token && (
+        <section className="dashboard-section">
+          <div className="profile-shell">
+            <PerformanceInsights
+              recommendations={recommendations}
+              recStatus={insightsStatus}
+            />
+          </div>
+        </section>
+      )}
+
       {/* ── How it works ── */}
       <section className="home-section how-it-works">
         <Reveal as="h2" className="section-title">{t("home.howItWorksTitle")}</Reveal>
         <Stagger className="how-it-works-steps" stagger={0.09}>
-          {steps.map((step, index) => (
+          {Array.isArray(steps) && steps.map((step, index) => (
             <Stagger.Item className="how-step" key={index}>
               <div className="step-header">
                 <span className="step-number">{String(index + 1).padStart(2, "0")}</span>
@@ -118,7 +177,7 @@ function Home() {
       <section className="home-section features-section">
         <Reveal as="h2" className="section-title">{t("home.featuresTitle")}</Reveal>
         <Stagger className="feature-grid" stagger={0.08}>
-          {features.map((feature, index) => (
+          {Array.isArray(features) && features.map((feature, index) => (
             <Stagger.Item className="feature-card" key={index}>
               <div className="feature-stat">
                 <span className="feature-stat-value">{feature.stat}</span>
@@ -138,7 +197,7 @@ function Home() {
       <section className="home-section why-sproutfund">
         <Reveal as="h2" className="section-title">{t("home.whyTitle")}</Reveal>
         <Stagger as="ul" className="why-list" stagger={0.06}>
-          {whyItems.map((item) => (
+          {Array.isArray(whyItems) && whyItems.map((item) => (
             <Stagger.Item as="li" key={item} className="why-item">{item}</Stagger.Item>
           ))}
         </Stagger>

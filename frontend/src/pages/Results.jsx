@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { motion, useReducedMotion } from 'motion/react'
@@ -12,8 +12,6 @@ import './Results.css'
 
 const COLORS = ['#ccff00', '#7eb8f7', '#f7a07e']
 
-// A logged-out visitor who hits "Save" gets bounced to /auth; we stash their
-// built plan here so they land back on it (and can save) after signing up.
 const PENDING_PLAN_KEY = 'sproutfund_pending_plan'
 
 function readPendingPlan() {
@@ -94,8 +92,6 @@ function AllocationBar({ strategies }) {
   return (
     <Reveal className="allocation-wrap">
       <p className="allocation-heading">{t('results.allocation')}</p>
-      {/* Segments grow out from zero in sequence, so the bar reads as the plan
-          being composed rather than a static graphic that was always there. */}
       <div className="allocation-bar">
         {strategies.map((s, i) => (
           <motion.div
@@ -186,10 +182,34 @@ function Results() {
   const { token } = useAuth()
   const { t, i18n } = useTranslation()
   const shouldReduceMotion = useReducedMotion()
-  const [saveState, setSaveState] = useState('idle') // idle | saving | saved | error
-  // Prefer a freshly-navigated plan (router state); otherwise fall back to a
-  // plan stashed before an auth detour so it survives the round trip.
-  const [plan] = useState(() => state || readPendingPlan())
+
+  const isHistoricallySaved = state?.isSavedPlan || !!state?.id
+
+  const [saveState, setSaveState] = useState(isHistoricallySaved ? 'saved' : 'idle')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [customTitle, setCustomTitle] = useState('')
+
+  const [plan, setPlan] = useState(() => state || readPendingPlan())
+  const [syncedState, setSyncedState] = useState(state)
+
+  /* When the router hands us a different plan (e.g. opening a saved plan from
+     History), adjust during render instead of in an effect. This is React's
+     documented pattern for deriving state from changing props — an effect here
+     renders the stale plan first and then immediately re-renders. */
+  if (state && state !== syncedState) {
+    setSyncedState(state)
+    setPlan(state)
+    if (state.isSavedPlan || state.id) {
+      setSaveState('saved')
+    }
+  }
+
+  /* Clearing the stash is a side effect, so it stays in an effect. */
+  useEffect(() => {
+    if (state) {
+      sessionStorage.removeItem(PENDING_PLAN_KEY)
+    }
+  }, [state])
 
   if (!plan || !plan.budget) {
     return (
@@ -227,16 +247,29 @@ function Results() {
     printWindow.print()
   }
 
-  async function handleSave() {
-    // Saving requires an account. Stash the plan and send them to sign up;
-    // they'll return here (via readPendingPlan) able to save it.
+  function handleSaveClick() {
+    if (isHistoricallySaved) return
     if (!token) {
       sessionStorage.setItem(PENDING_PLAN_KEY, JSON.stringify(plan))
       navigate('/auth', { state: { from: { pathname: '/results' } } })
       return
     }
+    setCustomTitle('')
+    setIsModalOpen(true)
+  }
 
+  async function handleFinalSaveConfirm() {
+    setIsModalOpen(false)
     setSaveState('saving')
+    
+    const now = new Date()
+    const finalTitle =
+      customTitle.trim() ||
+      `Plan - ${now.toLocaleDateString('en-US')}, ${now.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+      })}`
+
     try {
       const response = await fetch('http://localhost:8080/api/investment/save', {
         method: 'POST',
@@ -244,9 +277,18 @@ function Results() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ budget, timeline, riskTolerance: selectedRisk, strategies, disclaimer }),
+        body: JSON.stringify({ 
+          title: finalTitle,
+          isPinned: false,
+          budget: plan.budget, 
+          timeline: plan.timeline, 
+          riskTolerance: plan.riskTolerance || plan.riskLevel, 
+          strategies: plan.strategies || [], 
+          disclaimer: plan.disclaimer 
+        }),
       })
       if (!response.ok) throw new Error('Save failed.')
+      
       sessionStorage.removeItem(PENDING_PLAN_KEY)
       setSaveState('saved')
     } catch {
@@ -258,16 +300,16 @@ function Results() {
     <div className="results-page">
       <div className="results-content">
         <div className="results-header">
-          <h1 className="results-title">{t('results.title')}</h1>
-          <p className="results-subtitle">{t('results.subtitle')}</p>
+          <h1 className="results-title">{plan.title || t('results.title')}</h1>
+          <p className="results-subtitle">
+            {isHistoricallySaved ? 'Reviewing your saved strategy.' : t('results.subtitle')}
+          </p>
         </div>
 
         <Stagger className="summary-grid" stagger={0.08}>
           <Stagger.Item className="summary-item">
             <span className="summary-label">{t('results.budget')}</span>
             <span className="summary-value">
-              {/* The headline figure counts up — it's the number the whole
-                  plan is derived from, and it earns the extra beat. */}
               <CountUp
                 value={Number(budget)}
                 format={(n) => `$${n.toLocaleString(i18n.language === 'es' ? 'es-ES' : 'en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
@@ -306,8 +348,8 @@ function Results() {
           <motion.button
             type="button"
             className="results-action-btn primary"
-            onClick={handleSave}
-            disabled={saveState === 'saving' || saveState === 'saved'}
+            onClick={handleSaveClick}
+            disabled={isHistoricallySaved || saveState === 'saving' || saveState === 'saved'}
             whileHover={shouldReduceMotion ? undefined : liftHover}
             whileTap={shouldReduceMotion ? undefined : liftTap}
           >
@@ -333,9 +375,42 @@ function Results() {
           <p className="save-error">{t('results.saveError')}</p>
         )}
         <button className="back-btn" onClick={() => navigate('/dashboard')}>
-          {t('results.adjustPlan')}
+          {isHistoricallySaved ? 'Back to Dashboard' : t('results.adjustPlan')}
         </button>
       </div>
+
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-container">
+            <h3>Name Your Investment Plan</h3>
+            <p>Give your plan a title to distinguish it easily on your profile.</p>
+            <input
+              type="text"
+              placeholder="e.g., House Fund, Retirement Fund"
+              value={customTitle}
+              onChange={(e) => setCustomTitle(e.target.value)}
+              maxLength={50}
+              autoFocus
+            />
+            <div className="modal-buttons">
+              <button 
+                type="button" 
+                className="modal-btn-cancel" 
+                onClick={() => setIsModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                className="modal-btn-confirm" 
+                onClick={handleFinalSaveConfirm}
+              >
+                Confirm Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

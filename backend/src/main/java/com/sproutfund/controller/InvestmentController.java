@@ -1,6 +1,6 @@
 package com.sproutfund.controller;
 
-import com.sproutfund.dto.RenameInvestmentRequest;
+import com.sproutfund.dto.UpdateInvestmentRequest;
 import com.sproutfund.dto.SaveInvestmentRequest;
 import com.sproutfund.model.InvestmentRecommendation;
 import com.sproutfund.model.InvestmentRequest;
@@ -56,14 +56,23 @@ public class InvestmentController {
         return ResponseEntity.ok(recommendationRepository.findByUserIdOrderByCreatedAtDesc(userId));
     }
 
+    // Partial update: renaming and pinning both come through here, so only the
+    // fields the client actually sent are applied. This used to call setTitle()
+    // unconditionally, which meant a pin request (carrying no title) silently
+    // erased the plan's name.
     @PatchMapping("/{id}")
-    public ResponseEntity<InvestmentRecommendation> rename(@PathVariable Long id,
-                                                             @RequestBody RenameInvestmentRequest request,
+    public ResponseEntity<InvestmentRecommendation> update(@PathVariable Long id,
+                                                             @RequestBody UpdateInvestmentRequest request,
                                                              @AuthenticationPrincipal Jwt jwt) {
         UUID userId = UUID.fromString(jwt.getSubject());
         return recommendationRepository.findByIdAndUserId(id, userId)
                 .map(recommendation -> {
-                    recommendation.setTitle(request.getTitle());
+                    if (request.getTitle() != null) {
+                        recommendation.setTitle(request.getTitle());
+                    }
+                    if (request.getIsPinned() != null) {
+                        recommendation.setPinned(request.getIsPinned());
+                    }
                     return ResponseEntity.ok(recommendationRepository.save(recommendation));
                 })
                 .orElse(ResponseEntity.notFound().build());

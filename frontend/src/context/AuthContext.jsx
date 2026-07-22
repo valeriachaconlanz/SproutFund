@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback } from 'react'
 import { AuthContext } from './authContextObject'
 import { supabase } from '../lib/supabaseClient'
 
-
 function toUser(session) {
   if (!session?.user) return null
   const meta = session.user.user_metadata || {}
@@ -84,4 +83,3 @@ export function AuthProvider({ children }) {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
-

@@ -6,14 +6,13 @@ import { ThemeProvider } from './context/ThemeContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import PageTransition from './components/PageTransition'
 import CommandPalette from './components/CommandPalette'
-import ScrollToTop from './components/ScrollToTop'
+import ScrollService from './components/ScrollService'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 
 /* Home stays eagerly imported — it's the landing route, so lazy-loading it
    would only add a round trip before first paint. Everything else splits into
-   its own chunk and loads on navigation, which is what keeps the initial
-   bundle from carrying the whole app. */
+   its own chunk and loads on navigation, which keeps the initial bundle lightweight. */
 const InvestmentForm = lazy(() => import('./pages/InvestmentForm'))
 const Results = lazy(() => import('./pages/Results'))
 const History = lazy(() => import('./pages/History'))
@@ -27,15 +26,14 @@ function AppRoutes() {
 
   return (
     <>
-      <ScrollToTop />
+      <ScrollService />
       <Navbar />
       <CommandPalette />
 
       {/* Keyed on pathname so AnimatePresence sees each route as a distinct
           child and can play the outgoing page's exit before the next mounts.
           Suspense sits inside so a still-loading chunk doesn't tear down the
-          exit animation; the fallback is a plain spacer rather than a spinner,
-          since these chunks are small enough that a flash would distract. */}
+          exit animation. */}
       <AnimatePresence mode="wait" initial={false}>
         <Suspense fallback={<div className="route-fallback" />}>
           <Routes location={location} key={location.pathname}>
@@ -52,12 +50,7 @@ function AppRoutes() {
             <Route path="/dashboard" element={<PageTransition><InvestmentForm /></PageTransition>} />
 
             {/* Deliberately NOT behind ProtectedRoute. Results handles the
-                logged-out case itself: the save button reads "Create an account
-                to save", and handleSave stashes the plan in sessionStorage
-                before the auth detour so the user returns to it. Gating the
-                whole route made all of that unreachable — a logged-out visitor
-                waited through plan generation and got bounced to /auth without
-                ever seeing it. */}
+                logged-out case itself: the save button prompts to save/login. */}
             <Route
               path="/results"
               element={

@@ -63,8 +63,16 @@ create table if not exists public.investment_recommendations (
   strategies jsonb not null,
   disclaimer text,
   title text,
+  is_pinned boolean not null default false,
   created_at timestamptz not null default now()
 );
+
+-- Added after the table shipped, so `create table if not exists` above will
+-- not add it to an existing database — this ALTER is what backfills it.
+-- Safe to re-run. The backend runs with hibernate ddl-auto=validate, so it
+-- will refuse to start until this column exists.
+alter table public.investment_recommendations
+  add column if not exists is_pinned boolean not null default false;
 
 alter table public.investment_recommendations enable row level security;
 

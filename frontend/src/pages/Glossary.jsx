@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import glossaryMeta from "../assets/glossaryTerm";
 import { bounceSpring, duration, ease, resolveTransition, softSpring } from "../lib/motion";
@@ -11,6 +12,7 @@ function Glossary() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("All");
   const shouldReduceMotion = useReducedMotion();
+  const location = useLocation();
 
   // Term/definition text is translated; topic/level stay as the English keys from
   // glossaryTerm.js so filtering logic doesn't depend on the active language.
@@ -52,6 +54,30 @@ function Glossary() {
 
   const alphabetLetters = Object.keys(groupedTerms).sort();
 
+  useEffect(() => {
+    if (!location.hash) return;
+
+    const id = location.hash.substring(1);
+
+    // Wait until the glossary has rendered
+    requestAnimationFrame(() => {
+      const element = document.getElementById(id);
+
+      if (!element) return;
+
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+
+      element.classList.add("highlighted");
+
+      setTimeout(() => {
+        element.classList.remove("highlighted");
+      }, 2000);
+    });
+  }, [location]);
+
   return (
     <main className="glossary-page">
       <section className="glossary-hero">
@@ -60,7 +86,6 @@ function Glossary() {
         <p className="glossary-description">
           {t('glossary.description')}
         </p>
-
 
         <div className="glossary-search-card">
           <input
